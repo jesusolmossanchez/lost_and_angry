@@ -43,6 +43,7 @@ var Game = function() {
 
     //Explosiones
     this.explosions_     = [],
+    this.bullets_     = [],
 
     //Numeros para pintar... igual me hacen falta
     this.numeros_ = {
@@ -217,6 +218,21 @@ var Game = function() {
         currX += size + addX;
     };
 
+
+    this.randInt_ = function(min, max, positive) {
+
+        var num;
+        if (positive === false) {
+            num = Math.floor(Math.random() * max) - min;
+            num *= Math.floor(Math.random() * 2) === 1 ? 1 : -1;
+        } else {
+            num = Math.floor(Math.random() * max) + min;
+        }
+
+        return num;
+
+    };
+
     //-------------------------------------------------------------------------
     // FIN UTILITIES
     //-------------------------------------------------------------------------
@@ -311,6 +327,8 @@ var Game = function() {
         ctx.clearRect(0, 0, this.ancho_total_, this.alto_total_);
 
         this.render_map_(ctx, dt);
+        this.render_bullets_(ctx);
+
         this.render_player_(ctx, dt);
         this.render_explosion_(ctx);
     };
@@ -359,11 +377,11 @@ var Game = function() {
                     continue;
                 }
 
-                ctx.beginPath();
+                //ctx.beginPath();
                 //ctx.arc(particle.x, particle.y, particle.size, Math.PI * 2, 0, false);
                 ctx.fillRect(particle.x, particle.y, particle.size, particle.size);
 
-                ctx.closePath();
+                //ctx.closePath();
                 ctx.fillStyle = 'rgb(' + particle.r + ',' + particle.g + ',' + particle.b + ')';
                 ctx.fill();
 
@@ -378,6 +396,47 @@ var Game = function() {
         }
     };
 
+
+    this.render_bullets_ = function (ctx) {
+        for (var i = 0; i < this.bullets_.length; i++) {
+            var disparo = this.bullets_[i];
+            var size_bala = disparo.size * 8;
+
+
+            if (disparo.size <= 0.8) {
+                this.bullets_.slice();
+                this.bullets_.slice().splice(i, 1);
+                continue;
+            }
+            else if(disparo.size === 1){
+                ctx.beginPath();
+
+                ctx.fillStyle = 'rgba(255,255,255,0.4)';
+                ctx.arc(disparo.x, disparo.y, size_bala * 5, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
+    
+            }
+
+
+        
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(255,255,0,0.8)';
+            ctx.arc(disparo.x-4, disparo.y, size_bala*1.4, Math.PI * 2, 0, false);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(255,250,250,1)';
+            ctx.arc(disparo.x, disparo.y, size_bala, Math.PI * 2, 0, false);
+            ctx.closePath();
+            ctx.fill();
+
+            disparo.x += disparo.xv;
+            disparo.y += disparo.yv;
+            disparo.size -= 0.004;
+        }
+    }
 
 
     //Pinta el logo

@@ -25,6 +25,8 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
     this.limite_derecha_    = juego.ancho_total_;
     this.limite_izquierda_  = 0;
+
+    this.no_dispares_counter_ = 0;
  
 
     this.update = function(dt) {
@@ -48,8 +50,15 @@ var Player = function(juego, x, y, gravedad, impulso) {
         }
 
         //Si se pulsa acción
-        if(this.accion){
-            
+        if(this.accion && juego.counter > this.no_dispares_counter_){
+            this.no_dispares_counter_ = juego.counter + 3;
+            var derecha = true;
+            if(this.dx < 0){
+                derecha = false;
+            }
+            juego.bullets_.push(
+                new Bullet(this.x, this.y, derecha, juego, this)
+            );
         }
         
 
@@ -117,6 +126,21 @@ var Player = function(juego, x, y, gravedad, impulso) {
                         [  ,  ,  ,  ,  ,  ],
                 ];
 
+        var player_izq =  [
+                        [  ,  ,  ,  , 1,  ],
+                        [ 1, 1, 1, 1, 1,  ],
+                        [ 1, 1, 1, 1, 1,  ],
+                        [  ,  , 1, 1, 1,  ],
+                        [ 1, 1, 1, 1, 1,  ],
+                        [ 1, 1, 1, 1, 1,  ],
+                        [ 1, 1, 1, 1, 1,  ],
+                        [ 1, 1, 1, 1, 1,  ],
+                        [ 1, 1, 1, 1, 1,  ],
+                        [ 1, 1, 1, 1, 1,  ],
+                        [ 1, 1, 1, 1, 1, 1],
+                        [  ,  ,  ,  ,  ,  ],
+                ];
+
         var pistola =  [
                         [  ,  , 1,  ,  ,  , 1, 1,  ,  ,  ],
                         [  , 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -124,6 +148,15 @@ var Player = function(juego, x, y, gravedad, impulso) {
                         [  ,  ,  , 1,  ,  ,  ,  ,  ,  ,  ],
                         [  ,  ,  , 1,  ,  ,  ,  ,  ,  ,  ],
                         [  ,  , 1, 1,  ,  ,  ,  ,  ,  ,  ]
+                ];
+
+        var pistola_izq =  [
+                        [  ,  ,  , 1, 1,  ,  ,  , 1,  ,  ],
+                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  ],
+                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1,  ,  ],
+                        [  ,  ,  ,  ,  ,  ,  , 1,  ,  ,  ],
+                        [  ,  ,  ,  ,  ,  ,  , 1,  ,  ,  ],
+                        [  ,  ,  ,  ,  ,  ,  , 1, 1,  ,  ]
                 ];
 
         var size_pistola_pixel = 3;
@@ -155,6 +188,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
         ctx.translate(x_player, y_player);
 
         //Pinto el halo ese chungo
+        /*
         radius = juego.ancho_total_/3;
         ctx.beginPath();
         ctx.arc(this.ancho_ / 2, this.alto_/2, 300, 0, Math.PI * 2, false);
@@ -164,12 +198,22 @@ var Player = function(juego, x, y, gravedad, impulso) {
         gradient.addColorStop(1,"rgba(251, 255, 223, 0.6)");
         ctx.fillStyle = gradient;
         ctx.fill();
+        */
         //Fin del halo chungo
 
         //efecto de saltitos
         ctx.rotate(this.angulo*Math.PI/180);
         //Pinta jugador
-        juego.pinta_filas_columnas_(ctx, 0, 0, player, this.size_player_pixel, "#D2E4F1");
+        var que_jugador = player;
+        var que_pistola = pistola;
+        var x_pistola = 0;
+
+        if(this.left){
+            que_jugador = player_izq;
+            que_pistola = pistola_izq;
+            x_pistola = -this.ancho_;
+        }
+        juego.pinta_filas_columnas_(ctx, 0, 0, que_jugador, this.size_player_pixel, "#D2E4F1");
         //Pinta pies
         juego.pinta_filas_columnas_(ctx, 0, this.alto_ - this.size_player_pixel, pieses[this.que_pie], this.size_player_pixel, "#D2E4F1");
   
@@ -179,7 +223,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
         this.angulo = 0;
         ctx.translate(this.ancho_/2.5,  this.alto_/2);
         ctx.rotate(this.angulo*Math.PI/180);
-        juego.pinta_filas_columnas_(ctx, 0, 0, pistola, size_pistola_pixel, "#8FACC0");
+        juego.pinta_filas_columnas_(ctx, x_pistola, 0, que_pistola, size_pistola_pixel, "#8FACC0");
         ctx.restore();
        
 
