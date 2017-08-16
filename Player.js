@@ -24,8 +24,8 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
     this.gravity_               = gravedad;
 
-    this.maxdx_                 = 250;
-    this.maxdy_                 = 600;
+    this.maxdx_                 = 170;
+    this.maxdy_                 = 500;
 
     this.impulse_               = 30000;   
 
@@ -120,7 +120,52 @@ var Player = function(juego, x, y, gravedad, impulso) {
         }
         
         
+        
 
+        /*
+        var tile_izquierda          = juego.p2t_(this.x),
+        tile_arriba                 = juego.p2t_(this.y),
+        celda_arriba_izquierda      = juego.tcell_(tile_izquierda, tile_arriba),
+        cellright                   = juego.tcell_(tx + 1, ty),
+        celldown                    = juego.tcell_(tx,     ty + 1),
+        celldiag                    = juego.tcell_(tx + 1, ty + 1);
+
+    */
+        var punto_1 = [this.x, this.y];
+        var punto_2 = [this.x + this.ancho_, this.y];
+        var punto_3 = [this.x + this.ancho_, this.y + this.alto];
+        var punto_4 = [this.x, this.y + this.alto];
+
+        var izquierda_exacto    = this.x % juego.MAP_.ancho_bloques_;
+        var derecha_exacto      = (this.x + this.ancho_) % juego.MAP_.ancho_bloques_;
+        var abajo_exacto        = this.y % juego.MAP_.ancho_bloques_;
+        var arriba_exacto       = (this.y - this.alto_) % juego.MAP_.ancho_bloques_;
+
+
+        var tiene_up = false;
+        for (var i = this.x + 5; i <= this.x + this.ancho_ - 5; i++) {
+            if(juego.cell_(i, this.y - 2)){
+                tiene_up = true;
+            }
+        }
+        var tiene_down = false;
+        for (var j = this.x + 5; j <= this.x + this.ancho_ - 5; j++) {
+            if(juego.cell_(j, this.y + this.alto_ + 2)){
+                tiene_down = true;
+            }
+        }
+        var tiene_left = false;
+        for (var k = this.y + 5 ; k <= this.y + this.alto_ - 5; k++) {
+            if(juego.cell_(this.x - 2, k)){
+                tiene_left = true;
+            }
+        }
+        var tiene_right = false;
+        for (var l = this.y + 5; l <= this.y + this.alto_ - 5; l++) {
+            if(juego.cell_(this.x + this.ancho_ + 2, l)){
+                tiene_right = true;
+            }
+        }
 
         //SI va pabajo
         if (this.dy >= 0) {
@@ -130,14 +175,23 @@ var Player = function(juego, x, y, gravedad, impulso) {
                 this.jumping = false;
                 this.falling = false;
             }
+            if(tiene_down){
+                this.dy = 0;
+                this.jumping = false;
+                this.falling = false;
+                if(!abajo_exacto){
+                    this.y = (Math.floor(this.y % 20) - 1)*20;
+                }
+            }
         }
 
         //Si va parriba
-        /* Lo comento, porque nunca debería tocar el techo, no? ... lo dejo por si hago algo al saltar
+        /* Lo comento, porque nunca debería tocar el techo, no? ... lo dejo por si hago algo al saltar */
         else if (this.dy < 0) {
-            
+            if(tiene_up && arriba_exacto){
+                this.dy = 0;
+            }
         }
-        */
         
         //Si va a la derecha
         if (this.dx > 0) {
@@ -146,12 +200,20 @@ var Player = function(juego, x, y, gravedad, impulso) {
                 this.x = this.limite_derecha_ - this.ancho_;
                 this.dx = 0;
             }
+
+            if(tiene_right){
+                this.dx = 0;
+            }
         }
         //Si va a la izquierda
         else if (this.dx < 0) {
 
             if(this.x <= this.limite_izquierda_){
                 this.x = this.limite_izquierda_;
+                this.dx = 0;
+            }
+
+            if(tiene_left){
                 this.dx = 0;
             }
         }
