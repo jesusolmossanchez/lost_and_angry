@@ -351,12 +351,35 @@ var Game = function() {
         //Aqui para renderizar el mapa
         var x, y, cell;
 
+        var empieza_y = 0;
+        if((player.centro_y - 200) > 0){
+            empieza_y = Math.floor((player.centro_y - 200) / this.MAP_.size_bloques_);
+        }
+        var fin_y = Math.floor((this.alto_total_) / this.MAP_.size_bloques_);
+        if((player.centro_y + 200) < this.alto_total_){
+            fin_y = Math.floor((player.centro_y + 200) / this.MAP_.size_bloques_);
+        }
 
-        for(y = 0 ; y <= this.MAP_.alto_bloques_ ; y++) {
-            for(x = 0 ; x <= this.MAP_.ancho_bloques_ ; x++) {
+        var empieza_x = 0;
+        if((player.centro_x - 200) > 0){
+            empieza_x = Math.floor((player.centro_x - 200) / this.MAP_.size_bloques_);
+        }
+        var fin_x = Math.floor((this.ancho_total_) / this.MAP_.size_bloques_);
+        if((player.centro_x + 200) < this.ancho_total_){
+            fin_x = Math.floor((player.centro_x + 200) / this.MAP_.size_bloques_);
+        }
+
+        var distancia_centro = 0;
+        var a = 0;
+        var b = 0;
+        for(y = empieza_y ; y <= fin_y ; y++) {
+            for(x = empieza_x ; x <= fin_x ; x++) {
                 cell = this.tcell_(x, y);
                 if (cell) {
-                    ctx.fillStyle = "#ffffff";
+                    a = Math.abs(x - Math.floor(player.centro_x/this.MAP_.size_bloques_));
+                    b = Math.abs(y - Math.floor(player.centro_y/this.MAP_.size_bloques_));
+                    distancia_centro = Math.sqrt( a*a + b*b );
+                    ctx.fillStyle = "rgba(250,250,250,"+1/distancia_centro*2.5+")";
                     ctx.fillRect(x * this.MAP_.size_bloques_, y * this.MAP_.size_bloques_, this.MAP_.size_bloques_, this.MAP_.size_bloques_);
                 }
             }
