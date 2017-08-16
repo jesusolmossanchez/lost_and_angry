@@ -40,6 +40,8 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
     this.update = function(dt) {
 
+        this.centro_x = this.x + this.ancho_/2;
+        this.centro_y = this.y + this.alto_/2;
 
         this.wasleft    = this.dx  < 0;
         this.wasright   = this.dx  > 0;
@@ -119,18 +121,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
           this.dx = 0; // clamp at zero to prevent friction from making us jiggle side to side
         }
         
-        
-        
 
-        /*
-        var tile_izquierda          = juego.p2t_(this.x),
-        tile_arriba                 = juego.p2t_(this.y),
-        celda_arriba_izquierda      = juego.tcell_(tile_izquierda, tile_arriba),
-        cellright                   = juego.tcell_(tx + 1, ty),
-        celldown                    = juego.tcell_(tx,     ty + 1),
-        celldiag                    = juego.tcell_(tx + 1, ty + 1);
-
-    */
         var punto_1 = [this.x, this.y];
         var punto_2 = [this.x + this.ancho_, this.y];
         var punto_3 = [this.x + this.ancho_, this.y + this.alto];
@@ -302,7 +293,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
         ctx.translate(x_player, y_player);
 
         //Pinto el halo ese chungo
-        /*
+        
         radius = juego.ancho_total_/3;
         ctx.beginPath();
         ctx.arc(this.ancho_ / 2, this.alto_/2, 300, 0, Math.PI * 2, false);
@@ -312,7 +303,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
         gradient.addColorStop(1,"rgba(251, 255, 223, 0.6)");
         ctx.fillStyle = gradient;
         ctx.fill();
-        */
+        
         //Fin del halo chungo
 
         //efecto de saltitos
