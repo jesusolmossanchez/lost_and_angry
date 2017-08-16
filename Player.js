@@ -17,6 +17,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
     this.friction               = 700;
     this.accel                  = 500;
+    this.shoot_back             = 1500;
 
     this.last_left              = false;
     
@@ -77,11 +78,27 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
         //Si se pulsa acción
         if(this.accion && juego.counter > this.no_dispares_counter_){
-            this.no_dispares_counter_ = juego.counter + 3;
+            this.no_dispares_counter_ = juego.counter + 2;
             var derecha = true;
-            if(this.dx < 0){
+            if(this.last_left){
                 derecha = false;
+                this.ddx = this.ddx + this.shoot_back;
             }
+            else{
+                this.ddx = this.ddx - this.shoot_back;
+
+            }
+            var seft = this;
+            setTimeout(function () { 
+                juego.bullets_.push(
+                    new Bullet(seft.x, seft.y + 15, derecha, juego, seft)
+                );
+            },dt/3);
+            setTimeout(function () {
+                juego.bullets_.push(
+                    new Bullet(seft.x, seft.y - 15, derecha, juego, seft)
+                );
+            },2*dt/3);
             juego.bullets_.push(
                 new Bullet(this.x, this.y, derecha, juego, this)
             );
