@@ -24,6 +24,8 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
     this.gravity_               = gravedad;
 
+    this.tiempo_saltando_       = juego.timestamp_();
+
     this.maxdx_                 = 170;
     this.maxdy_                 = 500;
 
@@ -71,10 +73,11 @@ var Player = function(juego, x, y, gravedad, impulso) {
         }
 
         //Salto
-        if (this.jump && !this.jumping){
+        if (this.jump && !this.jumping && this.tiempo_saltando_ < juego.timestamp_()){
             this.ddy = this.ddy - this.impulse_; 
             this.jumping = true;
             this.falling = true;
+            this.tiempo_saltando_ = juego.timestamp_() + 300;
         }
 
 
@@ -123,7 +126,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
         
 
         var abajo_exacto        = (this.y + this.alto_) % juego.MAP_.ancho_bloques_;
-        var arriba_exacto       = (this.y - this.alto_) % juego.MAP_.ancho_bloques_;
+        var arriba_exacto       = this.y % juego.MAP_.ancho_bloques_;
 
 
         var tiene_up = false;
@@ -134,7 +137,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
         }
         var tiene_down = false;
         for (var j = this.x + 5; j <= this.x + this.ancho_ - 5; j++) {
-            if(juego.cell_(j, this.y + this.alto_ + 2)){
+            if(juego.cell_(j, this.y + this.alto_)){
                 tiene_down = true;
             }
         }
@@ -159,10 +162,13 @@ var Player = function(juego, x, y, gravedad, impulso) {
                 this.jumping = false;
                 this.falling = false;
             }
-            if(tiene_down && abajo_exacto){
+            if(tiene_down){
                 this.dy = 0;
                 this.jumping = false;
                 this.falling = false;
+                if(abajo_exacto){
+                    this.y = Math.floor((this.y + this.alto_)/ 20) * 20 - this.alto_;
+                }
             }
         }
 
