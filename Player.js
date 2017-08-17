@@ -11,7 +11,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
     this.x                      = x;
     this.y                      = y;
     this.alto_                  = this.size_player_pixel * 12;
-    this.ancho_                 = this.size_player_pixel * 6;
+    this.ancho_                 = this.size_player_pixel * 6 + 20;
     this.dx                     = 0;
     this.dy                     = 0;
 
@@ -30,7 +30,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
     this.impulse_               = 30000;   
 
     this.limite_derecha_        = juego.ancho_total_;
-    this.limite_izquierda_      = 0;
+    this.limite_izquierda_      = 10;
 
     this.no_dispares_counter_   = 0;
 
@@ -122,10 +122,6 @@ var Player = function(juego, x, y, gravedad, impulso) {
         }
         
 
-        var punto_1 = [this.x, this.y];
-        var punto_2 = [this.x + this.ancho_, this.y];
-        var punto_3 = [this.x + this.ancho_, this.y + this.alto];
-        var punto_4 = [this.x, this.y + this.alto];
 
         var izquierda_exacto    = this.x % juego.MAP_.ancho_bloques_;
         var derecha_exacto      = (this.x + this.ancho_) % juego.MAP_.ancho_bloques_;
@@ -147,7 +143,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
         }
         var tiene_left = false;
         for (var k = this.y + 5 ; k <= this.y + this.alto_ - 5; k++) {
-            if(juego.cell_(this.x - 2, k)){
+            if(juego.cell_(this.x - 16, k)){
                 tiene_left = true;
             }
         }
@@ -311,12 +307,12 @@ var Player = function(juego, x, y, gravedad, impulso) {
         //Pinta jugador
         var que_jugador = player;
         var que_pistola = pistola;
-        var x_pistola = 0;
+        var x_pistola = -10;
 
         if(this.last_left){
             que_jugador = player_izq;
             que_pistola = pistola_izq;
-            x_pistola = -this.ancho_;
+            x_pistola = -this.ancho_ + 10;
         }
         juego.pinta_filas_columnas_(ctx, 0, 0, que_jugador, this.size_player_pixel, "#D2E4F1");
         //Pinta pies
