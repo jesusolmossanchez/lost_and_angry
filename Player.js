@@ -122,10 +122,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
         }
         
 
-
-        var izquierda_exacto    = this.x % juego.MAP_.ancho_bloques_;
-        var derecha_exacto      = (this.x + this.ancho_) % juego.MAP_.ancho_bloques_;
-        var abajo_exacto        = this.y % juego.MAP_.ancho_bloques_;
+        var abajo_exacto        = (this.y + this.alto_) % juego.MAP_.ancho_bloques_;
         var arriba_exacto       = (this.y - this.alto_) % juego.MAP_.ancho_bloques_;
 
 
@@ -162,13 +159,10 @@ var Player = function(juego, x, y, gravedad, impulso) {
                 this.jumping = false;
                 this.falling = false;
             }
-            if(tiene_down){
+            if(tiene_down && abajo_exacto){
                 this.dy = 0;
                 this.jumping = false;
                 this.falling = false;
-                if(!abajo_exacto){
-                    this.y = (Math.floor(this.y % 20) - 1)*20;
-                }
             }
         }
 
