@@ -446,14 +446,56 @@ var Game = function() {
 
 
     this.render_bullets_ = function (ctx) {
+        console.log(this.bullets_.length)
         for (var i = 0; i < this.bullets_.length; i++) {
             var disparo = this.bullets_[i];
             var size_bala = disparo.size * 8;
 
 
-            if (disparo.size <= 0.8) {
-                this.bullets_.slice();
-                this.bullets_.slice().splice(i, 1);
+            var distancia_centro = 0;
+            var a = 0;
+            var b = 0;
+            a = Math.abs(disparo.x - player.centro_x);
+            b = Math.abs(disparo.y - player.centro_y);
+            distancia_centro = Math.sqrt( a*a + b*b );
+
+            if(this.cell_(disparo.x,disparo.y) || this.cell_(disparo.x - 5 ,disparo.y) || this.cell_(disparo.x + 5 ,disparo.y) || this.cell_(disparo.x - 10 ,disparo.y) || this.cell_(disparo.x + 10 ,disparo.y)){
+
+                var rand_exp1 = (Math.random() - 0.5) * 10;
+                var rand_exp2 = (Math.random() - 0.5) * 10;
+                var rand_exp3 = (Math.random() - 0.5) * 10;
+
+                var rand_size1 = Math.random() * 45;
+                var rand_size2 = Math.random() * 45;
+                var rand_size3 = Math.random() * 45;
+
+         
+                var blue = Math.floor(Math.random() * 255);
+
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(255,'+blue+',0,0.1)';
+                ctx.arc(disparo.x+rand_exp1, disparo.y+rand_exp2, rand_size1, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(255,255,'+blue+',0.1)';
+                ctx.arc(disparo.x+rand_exp2, disparo.y+rand_exp3, rand_size2, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
+                ctx.beginPath();
+
+                ctx.fillStyle = 'rgba(255,255,'+blue+',0.1)';
+                ctx.arc(disparo.x+rand_exp3, disparo.y+rand_exp1, rand_size3, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
+
+                this.bullets_.splice(i, 1);
+                continue;
+            }
+
+            if (disparo.x > this.ancho_total_ || disparo.x < 0) {
+                this.bullets_.splice(i, 1);
                 continue;
             }
             else if(disparo.size === 1){
@@ -467,18 +509,22 @@ var Game = function() {
             }
 
 
-        
-            ctx.beginPath();
-            ctx.fillStyle = 'rgba(255,255,0,0.8)';
-            ctx.arc(disparo.x-4, disparo.y, size_bala*1.4, Math.PI * 2, 0, false);
-            ctx.closePath();
-            ctx.fill();
+            if(distancia_centro < 450){
+                var opacidad = 1 - distancia_centro/300;
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(255,255,0,'+opacidad+')';
+                ctx.arc(disparo.x-4, disparo.y, size_bala*1.4, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
 
-            ctx.beginPath();
-            ctx.fillStyle = 'rgba(255,250,250,1)';
-            ctx.arc(disparo.x, disparo.y, size_bala, Math.PI * 2, 0, false);
-            ctx.closePath();
-            ctx.fill();
+                
+
+                ctx.beginPath();
+                ctx.fillStyle = "rgba(250,250,250,"+opacidad+")";
+                ctx.arc(disparo.x, disparo.y, size_bala, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
+            }
 
             disparo.x += disparo.xv;
             disparo.y += disparo.yv;
