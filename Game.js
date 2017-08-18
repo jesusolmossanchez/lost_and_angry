@@ -548,7 +548,12 @@ var Game = function() {
             b = Math.abs(disparo.y - player.centro_y);
             distancia_centro = Math.sqrt( a*a + b*b );
 
-            if(this.cell_(disparo.x,disparo.y) || this.cell_(disparo.x - 5 ,disparo.y) || this.cell_(disparo.x + 5 ,disparo.y) || this.cell_(disparo.x - 1 ,disparo.y) || this.cell_(disparo.x + 1 ,disparo.y)){
+            if(this.cell_(disparo.x,disparo.y) || 
+                this.cell_(disparo.x - 5 ,disparo.y) || 
+                this.cell_(disparo.x + 5 ,disparo.y) || 
+                this.cell_(disparo.x - 10 ,disparo.y) || 
+                this.cell_(disparo.x + 10 ,disparo.y)
+                ){
 
                 var rand_exp1 = (Math.random() - 0.5) * 10;
                 var rand_exp2 = (Math.random() - 0.5) * 10;
