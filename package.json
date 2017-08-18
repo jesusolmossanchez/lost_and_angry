@@ -1,7 +1,7 @@
 {
-  "name": "tiny-dude-volley",
+  "name": "lost-and-angry",
   "version": "1.0.0",
-  "description": "TINY DUDE VOLLEY",
+  "description": "LOST & ANGRY 13kGame",
   "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,6 +22,7 @@
     "gulp-replace": "^0.6.1",
     "gulp-sass": "^2.3.2",
     "gulp-uglify": "^2.0.0",
-    "gulp-watch": "^4.3.10"
+    "gulp-watch": "^4.3.10",
+    "gulp-zip": "^4.0.0"
   }
 }
