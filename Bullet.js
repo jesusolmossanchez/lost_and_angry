@@ -1,7 +1,7 @@
 /**************************************************
 *** BULLET CLASSes
 **************************************************/
-var Bullet = function(x, y, derecha, juego, jugador) {
+var Bullet = function(x, y, dx, dy, derecha, juego, jugador) {
     this.x    = x;
     this.y    = y + jugador.alto_/2;
     var negativo = 1;
@@ -14,8 +14,8 @@ var Bullet = function(x, y, derecha, juego, jugador) {
     this.x = x_disparo;
     
     this.size = 1;
-    this.xv   = negativo * 35;
-    this.yv   = (Math.random() - 0.5) * 8;
+    this.xv   = negativo * 35 + dx;
+    this.yv   = (Math.random() - 0.5) * 7 + dy;
 
 
 };
