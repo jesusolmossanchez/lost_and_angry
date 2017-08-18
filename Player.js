@@ -11,7 +11,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
     this.x                      = x;
     this.y                      = y;
     this.alto_                  = this.size_player_pixel * 12;
-    this.ancho_                 = this.size_player_pixel * 6 + 20;
+    this.ancho_                 = this.size_player_pixel * 6 + 5;
     this.dx                     = 0;
     this.dy                     = 0;
 
@@ -145,7 +145,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
         }
         var tiene_left = false;
         for (var k = this.y + 5 ; k <= this.y + this.alto_ - 5; k++) {
-            if(juego.cell_(this.x - 16, k)){
+            if(juego.cell_(this.x - 6, k)){
                 tiene_left = true;
             }
         }
