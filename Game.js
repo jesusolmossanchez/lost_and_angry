@@ -9,16 +9,21 @@ var Game = function() {
 
 
     this.crea_plataformas_ = function(){
+
+        //Cosas horizontales
         var cuantas_plataformas = Math.floor(Math.random()*10) + 30;
         var new_array = [];
-        var espera_linea = 0;
+        var espera_linea = 2;
         var largo_plataforma = 3;
         var pintando = false;
         var pintado = 0;
+        var en_esta_linea = false;
+        var espera_x = 0;
+
         for (var i = 0; i < 30; i++) {
             for (var j = 0; j < 42; j++) {
                 var rand = Math.random();
-                if(cuantas_plataformas > 0 && ((j >= espera_linea  && rand > 0.991) || pintando)){
+                if(cuantas_plataformas > 0 && ((i >= espera_linea && j >= espera_x && rand > 0.3) || pintando)){
                     if(pintado <= largo_plataforma){
                         new_array.push(1);
                         pintando = true;
@@ -29,16 +34,63 @@ var Game = function() {
                         pintando = false;
                         pintado = 0;
                         cuantas_plataformas--;
+                        espera_x = (j + 5)%42;
+                        espera_linea = i + 3;
+
                     }
                 }
                 else{
+                    en_esta_linea = false;
                     pintando = false;
                     pintado = 0;
-                    largo_plataforma = Math.floor(Math.random()*10) + 3;
+                    largo_plataforma = Math.floor(Math.random()*15) + 5;
                 }
                 new_array.push(0);
             }
         }
+
+        
+        //Cosas verticales
+        var cuantas_plataformas_vert = Math.floor(Math.random()*10) + 1;
+        var alto_plataforma = 3;
+        var espera_columna = 42;
+        var pintando_vert = false;
+        var pintado_vert = 0;
+        for (var j = 41; j >= 0; j--) {
+            for (var i = 29; i >= 0; i--) {
+                var rand = Math.random();
+                var indice = j + i * 42;
+                if(cuantas_plataformas_vert > 0 && ((j < espera_columna  && rand > 0.4 && new_array[indice] === 1) || pintando_vert)){
+                    if(pintado_vert <= alto_plataforma){
+                        new_array[indice] = 1;
+                        pintando_vert = true;
+                        pintado_vert++;
+                        continue;
+                    }
+                    else{
+                        pintando_vert = false;
+                        pintado_vert = 0;
+                        cuantas_plataformas_vert--;
+                        espera_columna = j - (Math.floor(Math.random()*10) + 4);
+                    }
+                }
+                else{
+                    pintando_vert = false;
+                    pintado_vert = 0;
+                    alto_plataforma = Math.floor(Math.random()*5) + 2;
+                }
+            }
+        }
+        
+        //Dejo limpio el sitio del jugador
+        for (var i = 0; i < 6; i++) {
+            for (var j = 23; j < 30; j++) {
+                var indice = i + j * 42;
+                new_array[indice] = 0;
+            }
+        }    
+
+
         return new_array;
     };
 
@@ -296,7 +348,7 @@ var Game = function() {
 
     //SET-UP de las cosas del juego... ahora mismo un jugador
     this.setup_ = function() {
-        player = new Player(this, 96, 1107, 800, 30000, 1);
+        player = new Player(this, 20, 1107, 800, 30000, 1);
     };
 
 
@@ -416,7 +468,7 @@ var Game = function() {
                     a = Math.abs(x - Math.floor(player.centro_x/this.MAP_.size_bloques_));
                     b = Math.abs(y - Math.floor(player.centro_y/this.MAP_.size_bloques_));
                     distancia_centro = Math.sqrt( a*a + b*b );
-                    ctx.fillStyle = "rgba(250,250,250,"+1/distancia_centro*4.5+")";
+                    ctx.fillStyle = "rgba(250,250,250,"+1/distancia_centro*3.5+")";
                     ctx.fillRect(x * this.MAP_.size_bloques_, y * this.MAP_.size_bloques_, this.MAP_.size_bloques_, this.MAP_.size_bloques_);
                 }
             }
