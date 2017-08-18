@@ -31,8 +31,8 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
     this.impulse_               = 30000;   
 
-    this.limite_derecha_        = juego.ancho_total_;
-    this.limite_izquierda_      = 10;
+    this.limite_derecha_        = juego.ancho_total_ + this.ancho_;
+    this.limite_izquierda_      = - this.ancho_;
 
     this.no_dispares_counter_   = 0;
 
@@ -184,8 +184,8 @@ var Player = function(juego, x, y, gravedad, impulso) {
         if (this.dx > 0) {
 
             if(this.x + this.ancho_ >= this.limite_derecha_){
-                this.x = this.limite_derecha_ - this.ancho_;
-                this.dx = 0;
+                this.x = 10;
+                this.dx = -this.dx;
             }
 
             if(tiene_right){
@@ -196,8 +196,8 @@ var Player = function(juego, x, y, gravedad, impulso) {
         else if (this.dx < 0) {
 
             if(this.x <= this.limite_izquierda_){
-                this.x = this.limite_izquierda_;
-                this.dx = 0;
+                this.x = juego.ancho_total_ - this.ancho_;
+                this.dx = -this.dx;
             }
 
             if(tiene_left){
