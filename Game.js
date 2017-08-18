@@ -600,17 +600,36 @@ var Game = function() {
 
             if(distancia_centro < 450){
                 var opacidad = 1 - distancia_centro/300;
+                var new_size_bala = size_bala*1.14
                 ctx.beginPath();
-                ctx.fillStyle = 'rgba(255,255,0,'+opacidad+')';
-                ctx.arc(disparo.x-4, disparo.y, size_bala*1.4, Math.PI * 2, 0, false);
+
+                var negativo = 1;
+                if(disparo.xv < 0){
+                    negativo = - 1;
+                }
+
+                ctx.fillStyle = 'rgba(255,255,0,'+opacidad/24+')';
+                ctx.arc(disparo.x, disparo.y, new_size_bala*0.8, Math.PI * 2, 0, false);
+                ctx.fillStyle = 'rgba(255,255,20,'+opacidad/20+')';
+                ctx.arc(disparo.x + 2*negativo, disparo.y, new_size_bala*0.85, Math.PI * 2, 0, false);
+                ctx.fillStyle = 'rgba(255,255,40,'+opacidad/16+')';
+                ctx.arc(disparo.x + 4*negativo, disparo.y, new_size_bala*0.9, Math.PI * 2, 0, false);
+                ctx.fillStyle = 'rgba(255,255,60,'+opacidad/12+')';
+                ctx.arc(disparo.x + 6*negativo, disparo.y, new_size_bala*0.92, Math.PI * 2, 0, false);
+                ctx.fillStyle = 'rgba(255,255,80,'+opacidad/8+')';
+                ctx.arc(disparo.x + 8*negativo, disparo.y, new_size_bala*0.94, Math.PI * 2, 0, false);
+                ctx.fillStyle = 'rgba(255,255,100,'+opacidad/4+')';
+                ctx.arc(disparo.x + 10*negativo, disparo.y, new_size_bala*0.96, Math.PI * 2, 0, false);
+                ctx.fillStyle = 'rgba(255,255,120,'+opacidad+')';
+                ctx.arc(disparo.x + 12*negativo, disparo.y, new_size_bala*0.98, Math.PI * 2, 0, false);
                 ctx.closePath();
                 ctx.fill();
-
                 
 
                 ctx.beginPath();
-                ctx.fillStyle = "rgba(250,250,250,"+opacidad+")";
-                ctx.arc(disparo.x, disparo.y, size_bala, Math.PI * 2, 0, false);
+                ctx.fillStyle = "rgba(250,250,250,"+opacidad/2+")";
+                ctx.arc(disparo.x+12*negativo, disparo.y, new_size_bala, Math.PI * 2, 0, false);
+                ctx.arc(disparo.x+14*negativo, disparo.y, new_size_bala, Math.PI * 2, 0, false);
                 ctx.closePath();
                 ctx.fill();
             }
