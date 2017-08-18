@@ -552,7 +552,9 @@ var Game = function() {
                 this.cell_(disparo.x - 5 ,disparo.y) || 
                 this.cell_(disparo.x + 5 ,disparo.y) || 
                 this.cell_(disparo.x - 10 ,disparo.y) || 
-                this.cell_(disparo.x + 10 ,disparo.y)
+                this.cell_(disparo.x + 10 ,disparo.y) ||
+                this.cell_(disparo.x - 15 ,disparo.y) || 
+                this.cell_(disparo.x + 15 ,disparo.y)
                 ){
 
                 var rand_exp1 = (Math.random() - 0.5) * 10;
