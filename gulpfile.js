@@ -5,6 +5,7 @@ var uglify = require('gulp-uglify');
 var cleanCSS = require('gulp-clean-css');
 var htmlmin = require('gulp-htmlmin');
 var replace = require('gulp-replace');
+var zip = require('gulp-zip');
 var fs = require("fs");
 
 
@@ -36,7 +37,7 @@ gulp.task('html-deploy', ['styles-deploy', 'deploy-js'], function() {
 });
 
 gulp.task('deploy-js', function () {
-    return gulp.src(['Explosion.js','Player.js','tiny_music.js','player-small.js','Game.js'])
+    return gulp.src(['Explosion.js','Bullet.js','Player.js','tiny_music.js','player-small.js','Game.js'])
       .pipe(concat('lost.min.js'))
       .pipe(uglify(option_ugly))
       .pipe(gulp.dest('prod/'));
@@ -50,14 +51,17 @@ gulp.task('html-inject', ['styles-deploy', 'deploy-js'], function() {
         }))
         .pipe(replace(/SCRIPTS_PRO/, function() {
             var scripts = fs.readFileSync('prod/lost.min.js', 'utf8');
-            console.log(scripts);
             return scripts;
         }))
         .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest('prod'));
 });
 
+gulp.task('comprime', ['html-inject'], function(){
+    gulp.src('prod/index_prod.html')
+        .pipe(zip('index_prod.zip'))
+        .pipe(gulp.dest('prod'));
+});
 
 
-
-gulp.task('deploy', ['html-deploy', 'html-inject']);
+gulp.task('deploy', ['html-deploy', 'html-inject', 'comprime']);
