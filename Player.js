@@ -83,7 +83,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
         //Si se pulsa acción
         if(this.accion && juego.counter > this.no_dispares_counter_){
-            this.no_dispares_counter_ = juego.counter + 2;
+            this.no_dispares_counter_ = juego.counter + 3;
             var derecha = true;
             if(this.last_left){
                 derecha = false;
@@ -96,16 +96,18 @@ var Player = function(juego, x, y, gravedad, impulso) {
             var seft = this;
             setTimeout(function () { 
                 juego.bullets_.push(
-                    new Bullet(seft.x, seft.y + 15, derecha, juego, seft)
+                    new Bullet(seft.x, seft.y - 10, -10, -3, derecha, juego, seft)
                 );
             },dt/3);
+            
             setTimeout(function () {
                 juego.bullets_.push(
-                    new Bullet(seft.x, seft.y - 15, derecha, juego, seft)
+                    new Bullet(seft.x, seft.y + 10, 10, 3, derecha, juego, seft)
                 );
             },2*dt/3);
+
             juego.bullets_.push(
-                new Bullet(this.x, this.y, derecha, juego, this)
+                new Bullet(this.x, this.y, 0, 0, derecha, juego, this)
             );
         }
   
