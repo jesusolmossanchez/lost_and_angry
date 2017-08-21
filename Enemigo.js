@@ -158,7 +158,7 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         this.x  = this.x  + (dt * this.dx);
         this.y  = this.y  + (dt * this.dy);
 
-        if(this.muerto){
+        if(!this.muerto){
             this.dx = juego.bound_(this.dx + (dt * this.ddx), -this.maxdx_, this.maxdx_);
             this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);
         }
