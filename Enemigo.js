@@ -152,22 +152,20 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
             }
 
 
-            this.dx = juego.bound_(this.dx + (dt * this.ddx), -this.maxdx_, this.maxdx_);
-            this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);
     
         }
-        else{
-            
-            this.dx = 0;
-            this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);    
-        }
     
-
         this.x  = this.x  + (dt * this.dx);
         this.y  = this.y  + (dt * this.dy);
 
-        
-
+        if(this.muerto){
+            this.dx = juego.bound_(this.dx + (dt * this.ddx), -this.maxdx_, this.maxdx_);
+            this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);
+        }
+        else{
+            this.dx = 0;
+            this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);    
+        }
         
       
         if ((this.wasleft  && (this.dx > 0)) ||
@@ -436,6 +434,7 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
                 que_pistola = pistola;
                 new_y = -30;
                 new_x = -50;
+                color_enemigo = "rgba(255, 153, 153, 0.3)";
             }
         }
 
