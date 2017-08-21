@@ -35,8 +35,10 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
 
     this.no_dispares_counter_   = 0;
 
-    this.izquierdo_              = (Math.random()>0.5)?true:false;
-    //this.izquierdo_              = true;
+    this.izquierdo_             = (Math.random()>0.5)?true:false;
+    this.tiempo_parado_         = juego.timestamp_();
+    this.muriendo               = juego.timestamp_();
+
 
 
 
@@ -44,6 +46,9 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
 
     this.update = function(dt) {
 
+        if(juego.wait_start_ > juego.timestamp_()){
+            return;
+        }
         var distancia_al_jugador = 0;
         var a = 0;
         var b = 0;
@@ -51,7 +56,7 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         b = Math.abs(this.y - juego.player_.centro_y);
         distancia_al_jugador = Math.sqrt( a*a + b*b );
 
-        if(distancia_al_jugador < 600){
+        if(distancia_al_jugador < 300){
             if(distancia_al_jugador > 250 || (b < 60 && distancia_al_jugador < juego.ancho_total_/2)){
                 if(juego.player_.x < this.x){
                     this.izquierdo_ = true;
@@ -77,86 +82,91 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         this.ddy = this.gravity_;
 
 
-        if (this.izquierdo_){
-          this.ddx = this.ddx - accel;
-          this.last_left = true;
-        }
-        else if (this.wasleft){
-          this.ddx = this.ddx + friction;
-        }
-      
-        if (!this.izquierdo_){
-          this.ddx = this.ddx + accel;
-          this.last_left = false;
-        }
-        else if (this.wasright){
-          this.ddx = this.ddx - friction;
-        }
-
-        var random_jump = (Math.random()>0.8)?true:false;
-
-        if(this.hay_borde_() && random_jump){
-            this.jump = true;
-        }
-        else if(this.hay_alcanzable_() && random_jump){
-            this.jump = true;
-        }
-        else{
-            this.jump = false;
-
-        }
-
-        //Salto
-        if (this.jump && !this.jumping && this.tiempo_saltando_ < juego.timestamp_()){
-            this.ddy = this.ddy - this.impulse_; 
-            this.jumping = true;
-            this.falling = true;
-            this.tiempo_saltando_ = juego.timestamp_() + 300;
-        }
 
 
-        //Si se pulsa acción
-        if(this.accion && juego.counter > this.no_dispares_counter_){
+        if(!this.muerto){
 
-            //TODO: ver que hago, si disparo o que...
-
-            /*
-            this.no_dispares_counter_ = juego.counter + 3;
-            var derecha = true;
-            if(this.last_left){
-                derecha = false;
-                this.ddx = this.ddx + this.shoot_back;
+            var hay_borde = this.hay_borde_();
+            if(hay_borde){
+                var random_decision = Math.random();
+                var random_parado = (random_decision<0.1)?true:false;
+                var random_vuelta = (random_decision<0.6)?true:false;
+                var random_jump = (random_decision>0.8)?true:false;
+                
+                if(random_parado){
+                    this.tiempo_parado_ = juego.timestamp_() + 1000;
+                }
+                else if(random_vuelta){
+                    this.izquierdo_ = !this.izquierdo_;
+                }
+                
             }
             else{
-                this.ddx = this.ddx - this.shoot_back;
+                random_jump = false;
+            }
+
+            
+           
+            if (this.izquierdo_ && juego.timestamp_() > this.tiempo_parado_){
+              this.ddx = this.ddx - accel;
+              this.last_left = true;
+            }
+            else if (this.wasleft){
+              this.ddx = this.ddx + friction;
+            }
+          
+            if (!this.izquierdo_ && juego.timestamp_() > this.tiempo_parado_){
+              this.ddx = this.ddx + accel;
+              this.last_left = false;
+            }
+            else if (this.wasright){
+              this.ddx = this.ddx - friction;
+            }
+
+            
+            var random_alcanzable = (Math.random()>0.8)?true:false;
+            if(random_jump){
+                this.jump = true;
+            }
+            else if(this.hay_alcanzable_() && random_jump){
+                this.jump = true;
+            }
+            else{
+                this.jump = false;
 
             }
-            var seft = this;
-            setTimeout(function () { 
-                juego.bullets_.push(
-                    new Bullet(seft.x, seft.y - 10, -10, -3, derecha, juego, seft)
-                );
-            },dt/3);
-            
-            setTimeout(function () {
-                juego.bullets_.push(
-                    new Bullet(seft.x, seft.y + 10, 10, 3, derecha, juego, seft)
-                );
-            },2*dt/3);
 
-            juego.bullets_.push(
-                new Bullet(this.x, this.y, 0, 0, derecha, juego, this)
-            );
-            */
+            //Salto
+            if (this.jump && !this.jumping && this.tiempo_saltando_ < juego.timestamp_()){
+                this.ddy = this.ddy - this.impulse_; 
+                this.jumping = true;
+                this.falling = true;
+                this.tiempo_saltando_ = juego.timestamp_() + 300;
+            }
 
+
+            //Si se pulsa acción
+            if(this.accion && juego.counter > this.no_dispares_counter_){
+
+
+            }
+
+
+            this.dx = juego.bound_(this.dx + (dt * this.ddx), -this.maxdx_, this.maxdx_);
+            this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);
+    
         }
-  
+        else{
+            
+            this.dx = 0;
+            this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);    
+        }
+    
+
         this.x  = this.x  + (dt * this.dx);
         this.y  = this.y  + (dt * this.dy);
 
         
-        this.dx = juego.bound_(this.dx + (dt * this.ddx), -this.maxdx_, this.maxdx_);
-        this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);
 
         
       
@@ -346,21 +356,95 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         //Fin del halo chungo
 
         //efecto de saltitos
+
+
+        if(this.muerto){
+            if(this.muriendo > juego.timestamp_()){
+                
+            }
+
+            else if(this.last_left){
+                this.angulo = 90;
+            }
+            else{
+                this.angulo = -90;
+            }
+        }
+
         ctx.rotate(this.angulo*Math.PI/180);
         //Pinta jugador
         var que_jugador = enemigo;
         var que_pistola = pistola;
         var x_pistola = -10;
 
+        var new_y = 0;
+        var new_x = 0;
+
         if(this.last_left){
             que_jugador = enemigo_izq;
             que_pistola = pistola_izq;
             x_pistola = -this.ancho_ + 10;
         }
-        juego.pinta_filas_columnas_(ctx, 0, 0, que_jugador, this.size_enemigo_pixel, "#FF9999");
+
+        var color_enemigo = "rgba(255, 153, 153, 1)";
+        if(this.muerto){
+            if(this.muriendo > juego.timestamp_()){
+                color_enemigo = "rgba(255, 255, 255, 1)";
+                var rand_exp1 = (Math.random() - 0.5) * 10;
+                var rand_exp2 = (Math.random() - 0.5) * 10;
+                var rand_exp3 = (Math.random() - 0.5) * 10;
+
+                var rand_size1 = Math.random() * 100;
+                var rand_size2 = Math.random() * 100;
+                var rand_size3 = Math.random() * 100;
+
+         
+                var blue = Math.floor(Math.random() * 255);
+
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(255,'+blue+',0.4)';
+                ctx.arc(rand_exp1, rand_exp2, rand_size1, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(255,255,'+blue+',0.4)';
+                ctx.arc(rand_exp2, rand_exp3, rand_size2, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
+                ctx.beginPath();
+
+                ctx.fillStyle = 'rgba(255,255,'+blue+',0.4)';
+                ctx.arc(rand_exp3, rand_exp1, rand_size3, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
+                new_y = 0;
+                new_x = 0;
+
+
+            }
+
+            else if(this.last_left){
+                que_jugador = enemigo_izq;
+                que_pistola = pistola_izq;
+                new_y = -50;
+                new_x = 20;
+                color_enemigo = "rgba(255, 153, 153, 0.3)";
+            }
+            else{
+                que_jugador = enemigo;
+                que_pistola = pistola;
+                new_y = -30;
+                new_x = -50;
+            }
+        }
+
+
+        juego.pinta_filas_columnas_(ctx, new_x, new_y, que_jugador, this.size_enemigo_pixel, color_enemigo);
         //Pinta pies
-        juego.pinta_filas_columnas_(ctx, 0, this.alto_ - this.size_enemigo_pixel, pieses[this.que_pie], this.size_enemigo_pixel, "#FF9999");
-  
+        if(!this.muerto){
+            juego.pinta_filas_columnas_(ctx, 0, this.alto_ - this.size_enemigo_pixel, pieses[this.que_pie], this.size_enemigo_pixel, color_enemigo);
+        }
 
         //Pinta pistola
         //cambio el angulo de la pistola?
@@ -389,8 +473,8 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
     };
 
     this.resitua_ = function() {
-        this.x = juego.randInt_ (300, juego.ancho_total_ - 100, true);
-        this.y = juego.randInt_ (0, juego.alto_total_ / 1.8, true);
+        this.x = juego.randInt_ (400, juego.ancho_total_ - 400, true);
+        this.y = juego.randInt_ (0, juego.alto_total_ / 2, true);
     };
 
 
