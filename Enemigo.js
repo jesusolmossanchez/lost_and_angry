@@ -27,7 +27,7 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
 
     this.tiempo_saltando_       = juego.timestamp_();
 
-    this.maxdx_                 = 170;
+    this.maxdx_                 = 140;
     this.maxdy_                 = 500;
 
     this.limite_derecha_        = juego.ancho_total_ + this.ancho_;
@@ -44,8 +44,24 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
 
     this.update = function(dt) {
 
+        var distancia_al_jugador = 0;
+        var a = 0;
+        var b = 0;
+        a = Math.abs(this.x - juego.player_.centro_x);
+        b = Math.abs(this.y - juego.player_.centro_y);
+        distancia_al_jugador = Math.sqrt( a*a + b*b );
 
-        
+        if(distancia_al_jugador < 600){
+            if(distancia_al_jugador > 250 || (b < 60 && distancia_al_jugador < juego.ancho_total_/2)){
+                if(juego.player_.x < this.x){
+                    this.izquierdo_ = true;
+                }
+                else{
+                    this.izquierdo_ = false;
+                }
+            }
+        }
+
 
         this.centro_x = this.x + this.ancho_/2;
         this.centro_y = this.y + this.alto_/2;
@@ -167,13 +183,13 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
             }
         }
         var tiene_left = false;
-        for (var k = this.y + 5 ; k <= this.y + this.alto_ - 10; k++) {
+        for (var k = this.y + 5 ; k <= this.y + this.alto_ - 5; k++) {
             if(juego.cell_(this.x - 6, k)){
                 tiene_left = true;
             }
         }
         var tiene_right = false;
-        for (var l = this.y + 5; l <= this.y + this.alto_ - 10; l++) {
+        for (var l = this.y + 5; l <= this.y + this.alto_ - 5; l++) {
             if(juego.cell_(this.x + this.ancho_ + 2, l)){
                 tiene_right = true;
             }
@@ -213,6 +229,7 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
                 this.dx = -this.dx;
             }
             else if(tiene_right){
+                this.dx = 0;
                 this.izquierdo_ = !this.izquierdo_;
             }
         }
@@ -224,6 +241,7 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
                 this.dx = -this.dx;
             }
             else if(tiene_left){
+                this.dx = 0;
                 this.izquierdo_ = !this.izquierdo_;
             }
         }
@@ -372,7 +390,7 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
 
     this.resitua_ = function() {
         this.x = juego.randInt_ (300, juego.ancho_total_ - 100, true);
-        this.y = juego.randInt_ (0, juego.alto_total_ - 100, true);
+        this.y = juego.randInt_ (0, juego.alto_total_ / 1.8, true);
     };
 
 
