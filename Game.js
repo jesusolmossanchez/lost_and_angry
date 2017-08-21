@@ -5,7 +5,7 @@
 **************************************************/
 var Game = function() {
 
-
+    this.debug_ = true;
 
 
     this.crea_plataformas_ = function(){
@@ -101,6 +101,12 @@ var Game = function() {
     this.pausa_ = false;
     this.is_game_over_ = false;
 
+
+    this.radio_vision_ = 220;
+    if(this.debug_){
+        this.radio_vision_ = 2200;
+    }
+
     //Preparado para el mapa
     this.MAP_ = {};
     //this.MAP_.datos = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1];
@@ -110,6 +116,8 @@ var Game = function() {
     this.MAP_.ancho_bloques_ = 42;
     this.MAP_.alto_bloques_ = 30;
 
+
+    this.enemigos_ = [];
 
     this.ancho_total_ = 840,
     this.alto_total_  = 600,
@@ -349,6 +357,23 @@ var Game = function() {
     //SET-UP de las cosas del juego... ahora mismo un jugador
     this.setup_ = function() {
         player = new Player(this, 20, 1107, 800, 30000, 1);
+        
+        var cuantos_enemigos = this.randInt_ (5, 20, true);
+        for (var i = 0; i <= cuantos_enemigos; i++) {
+            var x_enemigo = this.randInt_ (300, this.ancho_total_ - 100, true);
+            var y_enemigo = this.randInt_ (0, this.alto_total_ - 100, true);
+
+            var enemigo = new Enemigo(this, x_enemigo, y_enemigo, 800, 30000, 1);
+
+            while(enemigo.mal_situado_()){
+                enemigo.resitua_();
+            }
+
+
+            this.enemigos_.push(enemigo);
+        }
+
+
     };
 
 
@@ -402,6 +427,11 @@ var Game = function() {
     //Actualizo entidades del juego
     this.update_ = function(dt) {
         player.update(dt);
+
+        for (var i = 0; i < this.enemigos_.length; i++) {
+            this.enemigos_[i].update(dt);
+        }
+
     };
 
     //-------------------------------------------------------------------------
@@ -431,6 +461,11 @@ var Game = function() {
         this.render_bullets_(ctx);
 
         this.render_player_(ctx, dt);
+
+        this.render_enemigos_(ctx, dt);
+
+
+
         this.render_explosion_(ctx);
     };
 
@@ -441,21 +476,21 @@ var Game = function() {
         var x, y, cell;
 
         var empieza_y = 0;
-        if((player.centro_y - 200) > 0){
-            empieza_y = Math.floor((player.centro_y - 200) / this.MAP_.size_bloques_);
+        if((player.centro_y - this.radio_vision_) > 0){
+            empieza_y = Math.floor((player.centro_y - this.radio_vision_) / this.MAP_.size_bloques_);
         }
         var fin_y = Math.floor((this.alto_total_) / this.MAP_.size_bloques_);
-        if((player.centro_y + 200) < this.alto_total_){
-            fin_y = Math.floor((player.centro_y + 200) / this.MAP_.size_bloques_);
+        if((player.centro_y + this.radio_vision_) < this.alto_total_){
+            fin_y = Math.floor((player.centro_y + this.radio_vision_) / this.MAP_.size_bloques_);
         }
 
         var empieza_x = 0;
-        if((player.centro_x - 200) > 0){
-            empieza_x = Math.floor((player.centro_x - 200) / this.MAP_.size_bloques_);
+        if((player.centro_x - this.radio_vision_) > 0){
+            empieza_x = Math.floor((player.centro_x - this.radio_vision_) / this.MAP_.size_bloques_);
         }
         var fin_x = Math.floor((this.ancho_total_) / this.MAP_.size_bloques_);
-        if((player.centro_x + 200) < this.ancho_total_){
-            fin_x = Math.floor((player.centro_x + 200) / this.MAP_.size_bloques_);
+        if((player.centro_x + this.radio_vision_) < this.ancho_total_){
+            fin_x = Math.floor((player.centro_x + this.radio_vision_) / this.MAP_.size_bloques_);
         }
 
         var distancia_centro = 0;
@@ -481,6 +516,24 @@ var Game = function() {
     //Llama a la funcion del objeto de jugador para pintarlo... lo pongo así, porque igual hay que pintar el jugador diferente según algo del juego
     this.render_player_ = function(ctx, dt) {
         player.pinta_player_(dt, ctx, this.counter);
+    };
+
+    //Llama a la funcion del objeto de jugador para pintarlo... lo pongo así, porque igual hay que pintar el jugador diferente según algo del juego
+    this.render_enemigos_ = function(ctx, dt) {
+        var distancia_centro = 0;
+        var a = 0;
+        var b = 0;
+        for (var i = 0; i < this.enemigos_.length; i++) {
+
+            a = Math.abs(this.enemigos_[i].x - player.centro_x);
+            b = Math.abs(this.enemigos_[i].y - player.centro_y);
+            distancia_jugador = Math.sqrt( a*a + b*b );
+            if(distancia_jugador<this.radio_vision_){
+                this.enemigos_[i].pinta_enemigo_(dt, ctx, this.counter);
+            }
+
+        }
+
     };
 
 
