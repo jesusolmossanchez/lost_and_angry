@@ -5,7 +5,22 @@
 **************************************************/
 var Game = function() {
 
-    //this.debug_ = true;
+    this.debug_ = true;
+
+
+    this.randInt_ = function(min, max, positive) {
+
+        var num;
+        if (positive === false) {
+            num = Math.floor(Math.random() * max) - min;
+            num *= Math.floor(Math.random() * 2) === 1 ? 1 : -1;
+        } else {
+            num = Math.floor(Math.random() * max) + min;
+        }
+
+        return num;
+
+    };
 
 
     this.crea_plataformas_ = function(){
@@ -100,6 +115,7 @@ var Game = function() {
     this.empezado_ = false;
     this.pausa_ = false;
     this.is_game_over_ = false;
+    this.wait_start_ = false;
 
 
     this.radio_vision_ = 220;
@@ -117,6 +133,8 @@ var Game = function() {
     this.MAP_.alto_bloques_ = 30;
 
 
+
+    this.cuantos_enemigos_ = this.randInt_ (5, 10, true);
     this.enemigos_ = [];
 
     this.ancho_total_ = 840,
@@ -327,21 +345,6 @@ var Game = function() {
         currX += size + addX;
     };
 
-
-    this.randInt_ = function(min, max, positive) {
-
-        var num;
-        if (positive === false) {
-            num = Math.floor(Math.random() * max) - min;
-            num *= Math.floor(Math.random() * 2) === 1 ? 1 : -1;
-        } else {
-            num = Math.floor(Math.random() * max) + min;
-        }
-
-        return num;
-
-    };
-
     //-------------------------------------------------------------------------
     // FIN UTILITIES
     //-------------------------------------------------------------------------
@@ -356,12 +359,13 @@ var Game = function() {
 
     //SET-UP de las cosas del juego... ahora mismo un jugador
     this.setup_ = function() {
-        this.player_ = new Player(this, 20, 1107, 800, 30000, 1);
 
-        var cuantos_enemigos = this.randInt_ (5, 16, true);
-        for (var i = 0; i <= cuantos_enemigos; i++) {
-            var x_enemigo = this.randInt_ (300, this.ancho_total_ - 100, true);
-            var y_enemigo = this.randInt_ (0, this.alto_total_ / 1.8, true);
+        this.wait_start_ = this.timestamp_() + 3000;
+
+        this.player_ = new Player(this, 20, 1107, 800, 30000, 1);
+        for (var i = 0; i <= this.cuantos_enemigos_; i++) {
+            var x_enemigo = this.randInt_ (400, this.ancho_total_ - 400, true);
+            var y_enemigo = this.randInt_ (0, this.alto_total_ / 2, true);
 
             var enemigo = new Enemigo(this, x_enemigo, y_enemigo, 800, 30000, 1);
 
@@ -600,6 +604,59 @@ var Game = function() {
             a = Math.abs(disparo.x - this.player_.centro_x);
             b = Math.abs(disparo.y - this.player_.centro_y);
             distancia_centro = Math.sqrt( a*a + b*b );
+
+
+            /***
+
+                TODO: choque de balas con enemigos
+    
+            */
+
+            for (var j = 0; j <= this.cuantos_enemigos_; j++) {
+                
+                if(!this.enemigos_[j].muerto){
+                    if(this.overlap_(this.enemigos_[j].x, this.enemigos_[j].y, this.enemigos_[j].ancho_, this.enemigos_[j].alto_, disparo.x - size_bala/2, disparo.y - size_bala/2, size_bala, size_bala)){
+                        var rand_exp1 = (Math.random() - 0.5) * 10;
+                        var rand_exp2 = (Math.random() - 0.5) * 10;
+                        var rand_exp3 = (Math.random() - 0.5) * 10;
+
+                        var rand_size1 = Math.random() * 45;
+                        var rand_size2 = Math.random() * 45;
+                        var rand_size3 = Math.random() * 45;
+
+                 
+                        var blue = Math.floor(Math.random() * 255);
+
+                        ctx.beginPath();
+                        ctx.fillStyle = 'rgba(255,'+blue+',1)';
+                        ctx.arc(disparo.x+rand_exp1, disparo.y+rand_exp2, rand_size1, Math.PI * 2, 0, false);
+                        ctx.closePath();
+                        ctx.fill();
+
+                        ctx.beginPath();
+                        ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
+                        ctx.arc(disparo.x+rand_exp2, disparo.y+rand_exp3, rand_size2, Math.PI * 2, 0, false);
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.beginPath();
+
+                        ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
+                        ctx.arc(disparo.x+rand_exp3, disparo.y+rand_exp1, rand_size3, Math.PI * 2, 0, false);
+                        ctx.closePath();
+                        ctx.fill();
+
+                        this.bullets_.splice(i, 1);
+                        this.enemigos_[j].muriendo = this.timestamp_() + 200;
+                        this.enemigos_[j].muerto = true;
+                        continue;
+
+
+                    }
+                }
+                
+            }
+
+
 
             if(this.cell_(disparo.x,disparo.y) || 
                 this.cell_(disparo.x - 5 ,disparo.y) || 
