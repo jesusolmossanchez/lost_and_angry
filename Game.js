@@ -5,7 +5,7 @@
 **************************************************/
 var Game = function() {
 
-    this.debug_ = true;
+    //this.debug_ = true;
 
 
     this.randInt_ = function(min, max, positive) {
