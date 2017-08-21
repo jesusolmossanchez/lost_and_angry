@@ -5,7 +5,7 @@
 **************************************************/
 var Game = function() {
 
-    this.debug_ = true;
+    //this.debug_ = true;
 
 
     this.crea_plataformas_ = function(){
@@ -233,27 +233,27 @@ var Game = function() {
         switch(key) {
             case this.KEY.LEFT:  
                 ev.preventDefault(); 
-                player.left  = down;
+                this.player_.left  = down;
                 return false;
             case this.KEY.RIGHT: 
                 ev.preventDefault(); 
-                player.right  = down; 
+                this.player_.right  = down; 
                 return false;
             case this.KEY.UP: 
                 ev.preventDefault(); 
-                player.jump  = down; 
+                this.player_.jump  = down; 
                 return false;
             case this.KEY.DOWN: 
                 ev.preventDefault(); 
-                player.down  = down; 
+                this.player_.down  = down; 
                 return false;
             case this.KEY.ENTER: 
                 ev.preventDefault(); 
-                player.accion  = down; 
+                this.player_.accion  = down; 
                 return false;
             case this.KEY.Z: 
                 ev.preventDefault(); 
-                player.accion  = down; 
+                this.player_.accion  = down; 
                 return false;
         }
     };
@@ -356,12 +356,12 @@ var Game = function() {
 
     //SET-UP de las cosas del juego... ahora mismo un jugador
     this.setup_ = function() {
-        player = new Player(this, 20, 1107, 800, 30000, 1);
-        
-        var cuantos_enemigos = this.randInt_ (5, 20, true);
+        this.player_ = new Player(this, 20, 1107, 800, 30000, 1);
+
+        var cuantos_enemigos = this.randInt_ (5, 16, true);
         for (var i = 0; i <= cuantos_enemigos; i++) {
             var x_enemigo = this.randInt_ (300, this.ancho_total_ - 100, true);
-            var y_enemigo = this.randInt_ (0, this.alto_total_ - 100, true);
+            var y_enemigo = this.randInt_ (0, this.alto_total_ / 1.8, true);
 
             var enemigo = new Enemigo(this, x_enemigo, y_enemigo, 800, 30000, 1);
 
@@ -426,7 +426,7 @@ var Game = function() {
 
     //Actualizo entidades del juego
     this.update_ = function(dt) {
-        player.update(dt);
+        this.player_.update(dt);
 
         for (var i = 0; i < this.enemigos_.length; i++) {
             this.enemigos_[i].update(dt);
@@ -476,21 +476,21 @@ var Game = function() {
         var x, y, cell;
 
         var empieza_y = 0;
-        if((player.centro_y - this.radio_vision_) > 0){
-            empieza_y = Math.floor((player.centro_y - this.radio_vision_) / this.MAP_.size_bloques_);
+        if((this.player_.centro_y - this.radio_vision_) > 0){
+            empieza_y = Math.floor((this.player_.centro_y - this.radio_vision_) / this.MAP_.size_bloques_);
         }
         var fin_y = Math.floor((this.alto_total_) / this.MAP_.size_bloques_);
-        if((player.centro_y + this.radio_vision_) < this.alto_total_){
-            fin_y = Math.floor((player.centro_y + this.radio_vision_) / this.MAP_.size_bloques_);
+        if((this.player_.centro_y + this.radio_vision_) < this.alto_total_){
+            fin_y = Math.floor((this.player_.centro_y + this.radio_vision_) / this.MAP_.size_bloques_);
         }
 
         var empieza_x = 0;
-        if((player.centro_x - this.radio_vision_) > 0){
-            empieza_x = Math.floor((player.centro_x - this.radio_vision_) / this.MAP_.size_bloques_);
+        if((this.player_.centro_x - this.radio_vision_) > 0){
+            empieza_x = Math.floor((this.player_.centro_x - this.radio_vision_) / this.MAP_.size_bloques_);
         }
         var fin_x = Math.floor((this.ancho_total_) / this.MAP_.size_bloques_);
-        if((player.centro_x + this.radio_vision_) < this.ancho_total_){
-            fin_x = Math.floor((player.centro_x + this.radio_vision_) / this.MAP_.size_bloques_);
+        if((this.player_.centro_x + this.radio_vision_) < this.ancho_total_){
+            fin_x = Math.floor((this.player_.centro_x + this.radio_vision_) / this.MAP_.size_bloques_);
         }
 
         var distancia_centro = 0;
@@ -500,8 +500,8 @@ var Game = function() {
             for(x = empieza_x ; x <= fin_x ; x++) {
                 cell = this.tcell_(x, y);
                 if (cell) {
-                    a = Math.abs(x - Math.floor(player.centro_x/this.MAP_.size_bloques_));
-                    b = Math.abs(y - Math.floor(player.centro_y/this.MAP_.size_bloques_));
+                    a = Math.abs(x - Math.floor(this.player_.centro_x/this.MAP_.size_bloques_));
+                    b = Math.abs(y - Math.floor(this.player_.centro_y/this.MAP_.size_bloques_));
                     distancia_centro = Math.sqrt( a*a + b*b );
                     ctx.fillStyle = "rgba(250,250,250,"+1/distancia_centro*3.5+")";
                     ctx.fillRect(x * this.MAP_.size_bloques_, y * this.MAP_.size_bloques_, this.MAP_.size_bloques_, this.MAP_.size_bloques_);
@@ -515,7 +515,7 @@ var Game = function() {
 
     //Llama a la funcion del objeto de jugador para pintarlo... lo pongo así, porque igual hay que pintar el jugador diferente según algo del juego
     this.render_player_ = function(ctx, dt) {
-        player.pinta_player_(dt, ctx, this.counter);
+        this.player_.pinta_player_(dt, ctx, this.counter);
     };
 
     //Llama a la funcion del objeto de jugador para pintarlo... lo pongo así, porque igual hay que pintar el jugador diferente según algo del juego
@@ -525,8 +525,8 @@ var Game = function() {
         var b = 0;
         for (var i = 0; i < this.enemigos_.length; i++) {
 
-            a = Math.abs(this.enemigos_[i].x - player.centro_x);
-            b = Math.abs(this.enemigos_[i].y - player.centro_y);
+            a = Math.abs(this.enemigos_[i].x - this.player_.centro_x);
+            b = Math.abs(this.enemigos_[i].y - this.player_.centro_y);
             distancia_jugador = Math.sqrt( a*a + b*b );
             if(distancia_jugador<this.radio_vision_){
                 this.enemigos_[i].pinta_enemigo_(dt, ctx, this.counter);
@@ -597,8 +597,8 @@ var Game = function() {
             var distancia_centro = 0;
             var a = 0;
             var b = 0;
-            a = Math.abs(disparo.x - player.centro_x);
-            b = Math.abs(disparo.y - player.centro_y);
+            a = Math.abs(disparo.x - this.player_.centro_x);
+            b = Math.abs(disparo.y - this.player_.centro_y);
             distancia_centro = Math.sqrt( a*a + b*b );
 
             if(this.cell_(disparo.x,disparo.y) || 
@@ -839,26 +839,29 @@ var Game = function() {
 
         document.getElementById('controles_mobile').style.display = "block";
 
+
+        var self = this
+
         document.getElementById('der_mobile').addEventListener('touchstart', function(e){
-            player.right = true;
+            self.player_.right = true;
             this.className = "tecla_mobile pulsada";
             e.preventDefault();
         });
 
         document.getElementById('izq_mobile').addEventListener('touchstart', function(e){ 
-            player.left = true;
+            self.player_.left = true;
             this.className = "tecla_mobile pulsada";
             e.preventDefault();
         });
 
         document.getElementById('arr_mobile').addEventListener('touchstart', function(e){ 
-            player.jump = true;
+            self.player_.jump = true;
             this.className = "tecla_mobile pulsada";
             e.preventDefault();
         });
 
         document.getElementById('accion_mobile').addEventListener('touchstart', function(e){ 
-            player.accion = true;
+            self.player_.accion = true;
             this.className = "tecla_mobile pulsada";
             e.preventDefault();
         });
@@ -866,25 +869,25 @@ var Game = function() {
 
 
         document.getElementById('der_mobile').addEventListener('touchend', function(e){
-            player.right = false;
+            self.player_.right = false;
             this.className = "tecla_mobile";
             e.preventDefault();
         });
 
         document.getElementById('izq_mobile').addEventListener('touchend', function(e){ 
-            player.left = false;
+            self.player_.left = false;
             this.className = "tecla_mobile";
             e.preventDefault();
         });
 
         document.getElementById('arr_mobile').addEventListener('touchend', function(e){ 
-            player.jump = false;
+            self.player_.jump = false;
             this.className = "tecla_mobile";
             e.preventDefault();
         });
 
         document.getElementById('accion_mobile').addEventListener('touchend', function(e){ 
-            player.accion = false;
+            self.player_.accion = false;
             this.className = "tecla_mobile";
             e.preventDefault();
         });
