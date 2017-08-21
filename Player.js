@@ -41,7 +41,6 @@ var Player = function(juego, x, y, gravedad, impulso) {
  
 
     this.update = function(dt) {
-
         this.centro_x = this.x + this.ancho_/2;
         this.centro_y = this.y + this.alto_/2;
 
@@ -275,10 +274,10 @@ var Player = function(juego, x, y, gravedad, impulso) {
         else if(this.left || this.right){
             if(juego.tween_frames_(counter, 40) < 0.5 ){
                 this.que_pie = 0;
-                this.angulo = -1;
+                this.angulo = -2;
             }
             else{
-                this.angulo = 1;
+                this.angulo = 2;
                 this.que_pie = 1;
             }
 
@@ -297,8 +296,8 @@ var Player = function(juego, x, y, gravedad, impulso) {
         ctx.arc(this.ancho_ / 2, this.alto_/2, 300, 0, Math.PI * 2, false);
 
         var gradient = ctx.createRadialGradient(this.ancho_ / 2, this.alto_/2, radius*0.9, this.ancho_ / 2, this.alto_/2, 0);
-        gradient.addColorStop(0,"rgba(251, 255, 223, 0)");
-        gradient.addColorStop(1,"rgba(251, 255, 223, 0.6)");
+        gradient.addColorStop(0,"rgba(251, 255, 243, 0)");
+        gradient.addColorStop(1,"rgba(251, 255, 243, 0.6)");
         ctx.fillStyle = gradient;
         ctx.fill();
         
@@ -309,12 +308,12 @@ var Player = function(juego, x, y, gravedad, impulso) {
         //Pinta jugador
         var que_jugador = player;
         var que_pistola = pistola;
-        var x_pistola = -10;
+        var x_pistola = -5;
 
         if(this.last_left){
             que_jugador = player_izq;
             que_pistola = pistola_izq;
-            x_pistola = -this.ancho_ + 10;
+            x_pistola = -this.ancho_ + 5;
         }
         juego.pinta_filas_columnas_(ctx, 0, 0, que_jugador, this.size_player_pixel, "#D2E4F1");
         //Pinta pies
@@ -331,7 +330,6 @@ var Player = function(juego, x, y, gravedad, impulso) {
        
 
     };
-
 
 
 };
