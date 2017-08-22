@@ -36,11 +36,21 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
     this.no_dispares_counter_   = 0;
 
+    this.salud_inicial_         = 250;
+    this.salud_                 = this.salud_inicial_;
+
 
 
  
 
     this.update = function(dt) {
+
+        if(this.salud_ < 0){
+            juego.ganador_ = "cpu";
+            juego.game_over_();
+        }
+
+
         this.centro_x = this.x + this.ancho_/2;
         this.centro_y = this.y + this.alto_/2;
 
@@ -209,9 +219,13 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
     this.pinta_player_ = function(dt, ctx, counter) {
 
+        
+
+
         //Posición
         var x_player = this.x + (this.dx * dt);
         var y_player = this.y + (this.dy * dt);
+
 
         var player =  [
                         [  , 1,  ,  ,  ,  ],
