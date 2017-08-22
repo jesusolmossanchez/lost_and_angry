@@ -135,6 +135,7 @@ var Game = function() {
 
 
     this.cuantos_enemigos_ = this.randInt_ (5, 10, true);
+    //this.cuantos_enemigos_ = 0;
     this.enemigos_ = [];
 
     this.ancho_total_ = 840,
@@ -360,11 +361,11 @@ var Game = function() {
     //SET-UP de las cosas del juego... ahora mismo un jugador
     this.setup_ = function() {
 
-        this.wait_start_ = this.timestamp_() + 3000;
+        this.wait_start_ = this.timestamp_() + 1500;
 
         this.player_ = new Player(this, 20, 1107, 800, 30000, 1);
         for (var i = 0; i <= this.cuantos_enemigos_; i++) {
-            var x_enemigo = this.randInt_ (400, this.ancho_total_ - 400, true);
+            var x_enemigo = this.randInt_ (200, this.ancho_total_ - 200, true);
             var y_enemigo = this.randInt_ (0, this.alto_total_ / 2, true);
 
             var enemigo = new Enemigo(this, x_enemigo, y_enemigo, 800, 30000, 1);
@@ -606,116 +607,108 @@ var Game = function() {
             distancia_centro = Math.sqrt( a*a + b*b );
 
 
-            /***
+            if(distancia_centro < 300){
 
-                TODO: choque de balas con enemigos
-    
-            */
+                for (var j = 0; j <= this.cuantos_enemigos_; j++) {
+                    
+                    if(!this.enemigos_[j].muerto){
+                        if(this.overlap_(this.enemigos_[j].x, this.enemigos_[j].y, this.enemigos_[j].ancho_, this.enemigos_[j].alto_, disparo.x - size_bala/2, disparo.y - size_bala/2, size_bala, size_bala)){
+                            var rand_exp1 = (Math.random() - 0.5) * 10;
+                            var rand_exp2 = (Math.random() - 0.5) * 10;
+                            var rand_exp3 = (Math.random() - 0.5) * 10;
 
-            for (var j = 0; j <= this.cuantos_enemigos_; j++) {
-                
-                if(!this.enemigos_[j].muerto){
-                    if(this.overlap_(this.enemigos_[j].x, this.enemigos_[j].y, this.enemigos_[j].ancho_, this.enemigos_[j].alto_, disparo.x - size_bala/2, disparo.y - size_bala/2, size_bala, size_bala)){
-                        var rand_exp1 = (Math.random() - 0.5) * 10;
-                        var rand_exp2 = (Math.random() - 0.5) * 10;
-                        var rand_exp3 = (Math.random() - 0.5) * 10;
+                            var rand_size1 = Math.random() * 45;
+                            var rand_size2 = Math.random() * 45;
+                            var rand_size3 = Math.random() * 45;
 
-                        var rand_size1 = Math.random() * 45;
-                        var rand_size2 = Math.random() * 45;
-                        var rand_size3 = Math.random() * 45;
+                     
+                            var blue = Math.floor(Math.random() * 255);
 
-                 
-                        var blue = Math.floor(Math.random() * 255);
+                            ctx.beginPath();
+                            ctx.fillStyle = 'rgba(255,'+blue+',1)';
+                            ctx.arc(disparo.x+rand_exp1, disparo.y+rand_exp2, rand_size1, Math.PI * 2, 0, false);
+                            ctx.closePath();
+                            ctx.fill();
 
-                        ctx.beginPath();
-                        ctx.fillStyle = 'rgba(255,'+blue+',1)';
-                        ctx.arc(disparo.x+rand_exp1, disparo.y+rand_exp2, rand_size1, Math.PI * 2, 0, false);
-                        ctx.closePath();
-                        ctx.fill();
+                            ctx.beginPath();
+                            ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
+                            ctx.arc(disparo.x+rand_exp2, disparo.y+rand_exp3, rand_size2, Math.PI * 2, 0, false);
+                            ctx.closePath();
+                            ctx.fill();
+                            ctx.beginPath();
 
-                        ctx.beginPath();
-                        ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
-                        ctx.arc(disparo.x+rand_exp2, disparo.y+rand_exp3, rand_size2, Math.PI * 2, 0, false);
-                        ctx.closePath();
-                        ctx.fill();
-                        ctx.beginPath();
+                            ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
+                            ctx.arc(disparo.x+rand_exp3, disparo.y+rand_exp1, rand_size3, Math.PI * 2, 0, false);
+                            ctx.closePath();
+                            ctx.fill();
 
-                        ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
-                        ctx.arc(disparo.x+rand_exp3, disparo.y+rand_exp1, rand_size3, Math.PI * 2, 0, false);
-                        ctx.closePath();
-                        ctx.fill();
-
-                        this.bullets_.splice(i, 1);
-                        this.enemigos_[j].muriendo = this.timestamp_() + 200;
-                        this.enemigos_[j].muerto = true;
-                        continue;
+                            this.bullets_.splice(i, 1);
+                            this.enemigos_[j].muriendo = this.timestamp_() + 200;
+                            this.enemigos_[j].muerto = true;
+                            continue;
 
 
+                        }
                     }
+                    
                 }
-                
-            }
 
 
 
-            if(this.cell_(disparo.x,disparo.y) || 
-                this.cell_(disparo.x - 5 ,disparo.y) || 
-                this.cell_(disparo.x + 5 ,disparo.y) || 
-                this.cell_(disparo.x - 10 ,disparo.y) || 
-                this.cell_(disparo.x + 10 ,disparo.y) ||
-                this.cell_(disparo.x - 15 ,disparo.y) || 
-                this.cell_(disparo.x + 15 ,disparo.y)
-                ){
+                if(this.cell_(disparo.x,disparo.y) || 
+                    this.cell_(disparo.x - 5 ,disparo.y) || 
+                    this.cell_(disparo.x + 5 ,disparo.y) || 
+                    this.cell_(disparo.x - 10 ,disparo.y) || 
+                    this.cell_(disparo.x + 10 ,disparo.y) ||
+                    this.cell_(disparo.x - 15 ,disparo.y) || 
+                    this.cell_(disparo.x + 15 ,disparo.y)
+                    ){
 
-                var rand_exp1 = (Math.random() - 0.5) * 10;
-                var rand_exp2 = (Math.random() - 0.5) * 10;
-                var rand_exp3 = (Math.random() - 0.5) * 10;
+                    var rand_exp1 = (Math.random() - 0.5) * 10;
+                    var rand_exp2 = (Math.random() - 0.5) * 10;
+                    var rand_exp3 = (Math.random() - 0.5) * 10;
 
-                var rand_size1 = Math.random() * 45;
-                var rand_size2 = Math.random() * 45;
-                var rand_size3 = Math.random() * 45;
+                    var rand_size1 = Math.random() * 45;
+                    var rand_size2 = Math.random() * 45;
+                    var rand_size3 = Math.random() * 45;
 
-         
-                var blue = Math.floor(Math.random() * 255);
+             
+                    var blue = Math.floor(Math.random() * 255);
 
-                ctx.beginPath();
-                ctx.fillStyle = 'rgba(255,'+blue+',0,0.1)';
-                ctx.arc(disparo.x+rand_exp1, disparo.y+rand_exp2, rand_size1, Math.PI * 2, 0, false);
-                ctx.closePath();
-                ctx.fill();
+                    ctx.beginPath();
+                    ctx.fillStyle = 'rgba(255,'+blue+',0,0.1)';
+                    ctx.arc(disparo.x+rand_exp1, disparo.y+rand_exp2, rand_size1, Math.PI * 2, 0, false);
+                    ctx.closePath();
+                    ctx.fill();
 
-                ctx.beginPath();
-                ctx.fillStyle = 'rgba(255,255,'+blue+',0.1)';
-                ctx.arc(disparo.x+rand_exp2, disparo.y+rand_exp3, rand_size2, Math.PI * 2, 0, false);
-                ctx.closePath();
-                ctx.fill();
-                ctx.beginPath();
+                    ctx.beginPath();
+                    ctx.fillStyle = 'rgba(255,255,'+blue+',0.1)';
+                    ctx.arc(disparo.x+rand_exp2, disparo.y+rand_exp3, rand_size2, Math.PI * 2, 0, false);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.beginPath();
 
-                ctx.fillStyle = 'rgba(255,255,'+blue+',0.1)';
-                ctx.arc(disparo.x+rand_exp3, disparo.y+rand_exp1, rand_size3, Math.PI * 2, 0, false);
-                ctx.closePath();
-                ctx.fill();
+                    ctx.fillStyle = 'rgba(255,255,'+blue+',0.1)';
+                    ctx.arc(disparo.x+rand_exp3, disparo.y+rand_exp1, rand_size3, Math.PI * 2, 0, false);
+                    ctx.closePath();
+                    ctx.fill();
 
-                this.bullets_.splice(i, 1);
-                continue;
-            }
+                    this.bullets_.splice(i, 1);
+                    continue;
+                }
 
-            if (disparo.x > this.ancho_total_ || disparo.x < 0) {
-                this.bullets_.splice(i, 1);
-                continue;
-            }
-            else if(disparo.size === 1){
-                ctx.beginPath();
+                if(disparo.size === 1){
+                    ctx.beginPath();
 
-                ctx.fillStyle = 'rgba(255,255,255,0.4)';
-                ctx.arc(disparo.x, disparo.y, size_bala * 5, Math.PI * 2, 0, false);
-                ctx.closePath();
-                ctx.fill();
-    
-            }
+                    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+                    ctx.arc(disparo.x, disparo.y, size_bala * 5, Math.PI * 2, 0, false);
+                    ctx.closePath();
+                    ctx.fill();
+        
+                }
 
 
-            if(distancia_centro < 450){
+            
                 var opacidad = 1 - distancia_centro/300;
                 var new_size_bala = size_bala*1.14
                 ctx.beginPath();
@@ -749,6 +742,13 @@ var Game = function() {
                 ctx.arc(disparo.x+14*negativo, disparo.y, new_size_bala, Math.PI * 2, 0, false);
                 ctx.closePath();
                 ctx.fill();
+            }
+
+
+
+            if (disparo.x > this.ancho_total_ || disparo.x < 0) {
+                this.bullets_.splice(i, 1);
+                continue;
             }
 
             disparo.x += disparo.xv;
