@@ -390,7 +390,7 @@ var Game = function() {
     };
 
 
-    this.game_over_ = function(ctx) {
+    this.game_over_ = function() {
         //Preparado para el game over
         var game_over;
         if(this.ganador_ === "1_cpu"){
@@ -413,7 +413,7 @@ var Game = function() {
                         ];
         }
 
-        this.pinta_filas_columnas_(ctx, this.ancho_total_/2 - 330, 250, game_over, 16);
+        this.pinta_filas_columnas_(this.ctx, this.ancho_total_/2 - 330, 250, game_over, 16);
         this.is_game_over_ = true;
 
     };
