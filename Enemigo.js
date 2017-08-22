@@ -56,16 +56,20 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         b = Math.abs(this.y - juego.player_.centro_y);
         distancia_al_jugador = Math.sqrt( a*a + b*b );
 
-        if(distancia_al_jugador < 300){
-            if(distancia_al_jugador > 250 || (b < 60 && distancia_al_jugador < juego.ancho_total_/2)){
-                if(juego.player_.x < this.x){
-                    this.izquierdo_ = true;
-                }
-                else{
-                    this.izquierdo_ = false;
-                }
+        
+        if(b < 60 && a < juego.ancho_total_/2){
+            this.rapido = true;
+            if(juego.player_.x < this.x){
+                this.izquierdo_ = true;
+            }
+            else{
+                this.izquierdo_ = false;
             }
         }
+        else{
+            this.rapido = false;
+        }
+        
 
 
         this.centro_x = this.x + this.ancho_/2;
@@ -84,25 +88,45 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
 
 
 
-        if(!this.muerto){
+        if(!this.muerto && !this.colisiona_player_()){
+
+            var random_alcanzable = (Math.random()>0.9)?true:false;
+            var random_saltable = (Math.random()>0.9)?true:false;
 
             var hay_borde = this.hay_borde_();
-            if(hay_borde){
+            if(hay_borde && !this.jumping){
                 var random_decision = Math.random();
                 var random_parado = (random_decision<0.1)?true:false;
                 var random_vuelta = (random_decision<0.6)?true:false;
                 var random_jump = (random_decision>0.8)?true:false;
                 
-                if(random_parado){
+                if(random_jump){
+                    this.jump = true;
+                }
+                else if(this.hay_alcanzable_() && random_alcanzable){
+                    this.jump = true;
+                }
+                else if(random_parado){
                     this.tiempo_parado_ = juego.timestamp_() + 1000;
+                    this.jump = false;
                 }
                 else if(random_vuelta){
-                    this.izquierdo_ = !this.izquierdo_;
+                    //this.izquierdo_ = !this.izquierdo_;
+                    this.jump = false;
+                }
+                else{
+                    this.jump = false;
                 }
                 
             }
+            else if(this.borde_saltable_() && random_saltable){
+                this.jump = true;
+            }
+            else if(this.hay_alcanzable_() && random_alcanzable){
+                this.jump = true;
+            }
             else{
-                random_jump = false;
+                this.jump = false;
             }
 
             
@@ -124,24 +148,13 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
             }
 
             
-            var random_alcanzable = (Math.random()>0.8)?true:false;
-            if(random_jump){
-                this.jump = true;
-            }
-            else if(this.hay_alcanzable_() && random_jump){
-                this.jump = true;
-            }
-            else{
-                this.jump = false;
-
-            }
 
             //Salto
             if (this.jump && !this.jumping && this.tiempo_saltando_ < juego.timestamp_()){
                 this.ddy = this.ddy - this.impulse_; 
                 this.jumping = true;
                 this.falling = true;
-                this.tiempo_saltando_ = juego.timestamp_() + 300;
+                this.tiempo_saltando_ = juego.timestamp_() + 1000;
             }
 
 
@@ -158,8 +171,16 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         this.x  = this.x  + (dt * this.dx);
         this.y  = this.y  + (dt * this.dy);
 
-        if(!this.muerto){
-            this.dx = juego.bound_(this.dx + (dt * this.ddx), -this.maxdx_, this.maxdx_);
+        var max_dx = this.maxdx_;
+        var acelera = this.ddx;
+        if(!this.rapido && !this.jumping){
+            max_dx = this.maxdx_ * 0.5;
+            acelera = this.ddx * 0.5;
+        }
+
+
+        if(!this.muerto && !this.colisiona_player_()){
+            this.dx = juego.bound_(this.dx + (dt * this.ddx), -max_dx, max_dx);
             this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);
         }
         else{
@@ -266,11 +287,11 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
                         [  ,  , 1, 1, 1, 1],
                         [  , 1, 1, 1, 1, 1],
                         [ 1, 1, 1, 1,  ,  ],
-                        [ 1, 1, 1, 1, 1, 1],
-                        [ 1, 1, 1, 1, 1, 1],
+                        [  , 1, 1, 1, 1, 1],
+                        [  , 1, 1, 1, 1, 1],
                         [  , 1, 1, 1,  ,  ],
-                        [  , 1, 1, 1, 1,  ],
-                        [  , 1, 1, 1, 1,  ],
+                        [  ,  , 1, 1,  ,  ],
+                        [ 1,  , 1, 1, 1,  ],
                         [ 1, 1, 1, 1, 1,  ],
                         [ 1, 1, 1, 1, 1,  ],
                         [  ,  ,  ,  ,  ,  ],
@@ -282,11 +303,11 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
                         [ 1, 1, 1, 1,  ,  ],
                         [ 1, 1, 1, 1, 1,  ],
                         [  ,  , 1, 1, 1, 1],
-                        [ 1, 1, 1, 1, 1, 1],
-                        [ 1, 1, 1, 1, 1, 1],
+                        [ 1, 1, 1, 1, 1,  ],
+                        [ 1, 1, 1, 1, 1,  ],
                         [  ,  , 1, 1, 1,  ],
-                        [  , 1, 1, 1, 1,  ],
-                        [  , 1, 1, 1, 1,  ],
+                        [  ,  , 1, 1,  ,  ],
+                        [  , 1, 1, 1,  , 1],
                         [  , 1, 1, 1, 1, 1],
                         [  , 1, 1, 1, 1, 1],
                         [  ,  ,  ,  ,  ,  ],
@@ -314,21 +335,21 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         var size_pistola_pixel = 3;
 
         var pieses = [];
-        pieses[0] = [[  ,  , 1,  ,  , 1,  ]];
+        pieses[0] = [[  , 1,  ,  , 1,  ,  ]];
         pieses[1] = [[  ,  , 1,  , 1,  ,  ]];
        
         if(this.jumping){
             this.que_pie = 1;
             this.angulo = 0;
         }
-        else if(this.left || this.right){
+        else if(Math.abs(this.dx) > 0){
             if(juego.tween_frames_(counter, 40) < 0.5 ){
                 this.que_pie = 0;
-                this.angulo = -1;
+                this.angulo = -2;
             }
             else{
-                this.angulo = 1;
                 this.que_pie = 1;
+                this.angulo = 2;
             }
 
         }
@@ -472,7 +493,7 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
     };
 
     this.resitua_ = function() {
-        this.x = juego.randInt_ (400, juego.ancho_total_ - 400, true);
+        this.x = juego.randInt_ (200, juego.ancho_total_ - 200, true);
         this.y = juego.randInt_ (0, juego.alto_total_ / 2, true);
     };
 
@@ -514,6 +535,38 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
             }
         }
         return borde;
+    };
+
+    this.borde_saltable_ = function() {
+        var saltable = false;
+        var hay_izquierda = false;
+        var hay_derecha = false;
+        if(this.last_left){
+            for (var k = this.y - this.alto_ ; k <= this.y + this.alto_ - 5; k++) {
+                if(juego.cell_(this.x - 5, k)){
+                    hay_izquierda = true;
+                }
+                if(!juego.cell_(this.x - 5, k)){
+                    saltable = true;
+                }
+            }
+
+        }
+        else{
+            for (var l = this.y - this.alto_ ; l <= this.y + this.alto_ - 5; l++) {
+                if(juego.cell_(this.x + this.ancho_ + 5, l)){
+                    hay_derecha = true;
+                }
+                if(!juego.cell_(this.x + this.ancho_ + 5, l)){
+                    saltable = true;
+                }
+            }
+        }
+        return saltable && (hay_izquierda || hay_derecha);
+    };
+
+    this.colisiona_player_ = function() {
+        return juego.overlap_(this.x, this.y, this.ancho_, this.alto_, juego.player_.x, juego.player_.y, juego.player_.ancho_, juego.player_.alto_);
     };
 
 };
