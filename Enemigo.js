@@ -86,9 +86,13 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         this.ddy = this.gravity_;
 
 
+        var colisiona = false;
+        if(this.colisiona_player_() && !this.muerto){
+            colisiona = true;
+            juego.player_.salud_--;
+        }
 
-
-        if(!this.muerto && !this.colisiona_player_()){
+        if(!this.muerto && !colisiona){
 
             var random_alcanzable = (Math.random()>0.9)?true:false;
             var random_saltable = (Math.random()>0.9)?true:false;
@@ -179,7 +183,7 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         }
 
 
-        if(!this.muerto && !this.colisiona_player_()){
+        if(!this.muerto && !colisiona){
             this.dx = juego.bound_(this.dx + (dt * this.ddx), -max_dx, max_dx);
             this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);
         }
@@ -282,6 +286,36 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         var x_enemigo = this.x + (this.dx * dt);
         var y_enemigo = this.y + (this.dy * dt);
 
+              //Posición
+        var x_player = juego.player_.x + (juego.player_.dx * dt);
+        var y_player = juego.player_.y + (juego.player_.dy * dt);
+
+        if(this.colisiona_player_() && !this.muerto){
+            var ancho_cargador = juego.player_.ancho_*2;
+            var alto_cargador = 5;
+            var percent = juego.player_.salud_/juego.player_.salud_inicial_;
+            
+            ctx.fillStyle="#0bcc00";
+            if(percent < 0.8){
+                ctx.fillStyle="#e0ef14";
+            }
+            if(percent < 0.6){
+                ctx.fillStyle="#ccc700";
+            }
+            if(percent < 0.4){
+                ctx.fillStyle="#ef5c14";
+            }
+            if(percent < 0.2){
+                ctx.fillStyle="#ff0000";
+            }
+
+            ctx.fillRect(x_player - juego.player_.ancho_/2, y_player - 10, percent * ancho_cargador, alto_cargador);
+
+            ctx.strokeStyle="#ffffff";
+            ctx.lineWidth=1;
+            ctx.strokeRect(x_player - juego.player_.ancho_/2, y_player - 10, ancho_cargador, alto_cargador);
+        }
+
         var enemigo =  [
                         [  ,  ,  , 1, 1, 1],
                         [  ,  , 1, 1, 1, 1],
@@ -380,6 +414,12 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         if(this.muerto){
             if(this.muriendo > juego.timestamp_()){
                 
+                if(this.last_left){
+                    this.angulo = this.angulo++;
+                }
+                else{
+                    this.angulo = this.angulo--;
+                }
             }
 
             else if(this.last_left){
