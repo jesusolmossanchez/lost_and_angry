@@ -372,7 +372,26 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         pieses[0] = [[  , 1,  ,  , 1,  ,  ]];
         pieses[1] = [[  ,  , 1,  , 1,  ,  ]];
        
-        if(this.jumping){
+
+        if(this.muerto){
+            if(this.muriendo > juego.timestamp_()){
+                
+                if(this.last_left){
+                    this.angulo = this.angulo+1;
+                }
+                else{
+                    this.angulo = this.angulo-1;
+                }
+            }
+
+            else if(this.last_left){
+                this.angulo = 90;
+            }
+            else{
+                this.angulo = -90;
+            }
+        }
+        else if(this.jumping){
             this.que_pie = 1;
             this.angulo = 0;
         }
@@ -411,24 +430,7 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         //efecto de saltitos
 
 
-        if(this.muerto){
-            if(this.muriendo > juego.timestamp_()){
-                
-                if(this.last_left){
-                    this.angulo = this.angulo++;
-                }
-                else{
-                    this.angulo = this.angulo--;
-                }
-            }
-
-            else if(this.last_left){
-                this.angulo = 90;
-            }
-            else{
-                this.angulo = -90;
-            }
-        }
+        
 
         ctx.rotate(this.angulo*Math.PI/180);
         //Pinta jugador
@@ -448,32 +450,37 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         var color_enemigo = "rgba(255, 153, 153, 1)";
         if(this.muerto){
             if(this.muriendo > juego.timestamp_()){
+
+
+                var ancho_explo = this.muriendo - juego.timestamp_();
+                ancho_explo = (410 - ancho_explo)/3;
+
                 color_enemigo = "rgba(255, 255, 255, 1)";
                 var rand_exp1 = (Math.random() - 0.5) * 10;
                 var rand_exp2 = (Math.random() - 0.5) * 10;
                 var rand_exp3 = (Math.random() - 0.5) * 10;
 
-                var rand_size1 = Math.random() * 100;
-                var rand_size2 = Math.random() * 100;
-                var rand_size3 = Math.random() * 100;
+                var rand_size1 = Math.random() * ancho_explo + this.alto_/2;
+                var rand_size2 = Math.random() * ancho_explo + this.alto_/2;
+                var rand_size3 = Math.random() * ancho_explo + this.alto_/2;
 
          
-                var blue = Math.floor(Math.random() * 255);
+                var blue = Math.floor(Math.random() * 155) + 100;
 
                 ctx.beginPath();
-                ctx.fillStyle = 'rgba(255,'+blue+',0.4)';
+                ctx.fillStyle = 'rgba(255,'+blue+',0.1)';
                 ctx.arc(rand_exp1, rand_exp2, rand_size1, Math.PI * 2, 0, false);
                 ctx.closePath();
                 ctx.fill();
 
                 ctx.beginPath();
-                ctx.fillStyle = 'rgba(255,255,'+blue+',0.4)';
+                ctx.fillStyle = 'rgba(255,255,'+blue+',0.2)';
                 ctx.arc(rand_exp2, rand_exp3, rand_size2, Math.PI * 2, 0, false);
                 ctx.closePath();
                 ctx.fill();
                 ctx.beginPath();
 
-                ctx.fillStyle = 'rgba(255,255,'+blue+',0.4)';
+                ctx.fillStyle = 'rgba(255,255,'+blue+',0.3)';
                 ctx.arc(rand_exp3, rand_exp1, rand_size3, Math.PI * 2, 0, false);
                 ctx.closePath();
                 ctx.fill();
@@ -488,14 +495,14 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
                 que_pistola = pistola_izq;
                 new_y = -50;
                 new_x = 20;
-                color_enemigo = "rgba(255, 153, 153, 0.3)";
+                color_enemigo = "rgba(200, 193, 255, 0.3)";
             }
             else{
                 que_jugador = enemigo;
                 que_pistola = pistola;
                 new_y = -30;
                 new_x = -50;
-                color_enemigo = "rgba(255, 153, 153, 0.3)";
+                color_enemigo = "rgba(200, 193, 255, 0.3)";
             }
         }
 

@@ -1,7 +1,7 @@
 /**************************************************
 *** EXPLOSION CLASSes
 **************************************************/
-var Explosion = function(x, y, supertiro, punto, bullet) {
+var Explosion = function(x, y, supertiro, punto) {
     this.particles_ = [];
     this.particulas_por_explosion_ = 15;
     if(supertiro){
@@ -10,14 +10,14 @@ var Explosion = function(x, y, supertiro, punto, bullet) {
 
     for (var i = 0; i < this.particulas_por_explosion_; i++) {
         this.particles_.push(
-            new Particle(x, y, supertiro, punto, bullet)
+            new Particle(x, y, supertiro, punto)
         );
     }
 };
 
 
 
-var Particle = function(x, y, supertiro, punto, bullet) {
+var Particle = function(x, y, supertiro, punto) {
     
     this.randInt_ = function(min, max, positive) {
 
@@ -36,34 +36,40 @@ var Particle = function(x, y, supertiro, punto, bullet) {
 
     //TODO: parametrizar
     this.particlesMinSpeed_      = 3;
-    this.particlesMaxSpeed_      = 8;
-    this.particlesMinSize_       = 1;
-    this.max_particulas_size_       = 8;
+    this.particlesMaxSpeed_      = 15;
+    this.particlesMinSize_       = 2;
+    this.max_particulas_size_    = 11;
 
     if(supertiro){
         this.max_particulas_size_ = this.max_particulas_size_ * 1.5;
     }
 
-    if(punto){
-        this.r    = this.randInt_(0, 255);
-        this.g    = '0';
-        this.b    = '0';
-    }
-    else if(supertiro){
-        this.r    = this.randInt_(0, 255);
-        this.g    = '255';
-        this.b    = this.randInt_(0, 255);
-    }
-    else{
-        this.r    = '255';
-        this.g    = '255';
-        this.b    = this.randInt_(0, 255);
-    }
+    
+    this.r    = this.randInt_(0, 255);
+    this.g    = '0';
+    this.b    = '0';
 
+  
     this.x    = x;
     this.y    = y;
-    this.xv   = this.randInt_(this.particlesMinSpeed_, this.particlesMaxSpeed_, false) + bullet.dx/300;
-    this.yv   = this.randInt_(this.particlesMinSpeed_/2, this.particlesMaxSpeed_/2, false) + bullet.dy/300;
+    this.xv   = this.randInt_(this.particlesMinSpeed_, this.particlesMaxSpeed_, false);
+    this.yv   = this.randInt_(this.particlesMinSpeed_/2, this.particlesMaxSpeed_/2, false);
+    if(this.xv > 0){
+	    this.max_x = x + Math.random()*100;
+    }
+    else{
+    	this.max_x = x - Math.random()*100;
+    }
+    if(this.yv > 0){
+	    this.max_y = y + Math.random()*100;
+    }
+    else{
+	    this.max_y = y - Math.random()*100;
+    }
+
+    this.opacidad = Math.random();
+
+
     this.size = this.randInt_(this.particlesMinSize_, this.max_particulas_size_, true);
     
 };

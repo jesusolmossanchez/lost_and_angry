@@ -8,6 +8,12 @@ var Game = function() {
     //this.debug_ = true;
 
 
+
+    //devuelve el tiempo en milisegundos
+    this.timestamp_ = function() {
+        return new Date().getTime();
+    };
+
     this.randInt_ = function(min, max, positive) {
 
         var num;
@@ -161,79 +167,8 @@ var Game = function() {
     this.explosions_     = [],
     this.bullets_     = [],
 
-    //Numeros para pintar... igual me hacen falta
-    this.numeros_ = {
-                '0': [
-                    [1, 1, 1],
-                    [1, ,  1],
-                    [1, ,  1],
-                    [1, ,  1],
-                    [1, 1, 1]
-                ],
-                '1': [
-                    [ , , 1],
-                    [ , , 1],
-                    [ , , 1],
-                    [ , , 1],
-                    [ , , 1]
-                ],
-                '2': [
-                    [ 1, 1, 1],
-                    [  ,  , 1],
-                    [ 1, 1, 1],
-                    [ 1,  ,  ],
-                    [ 1, 1, 1]
-                ],
-                '3': [
-                    [ 1, 1, 1],
-                    [  ,  , 1],
-                    [ 1, 1, 1],
-                    [  ,  , 1],
-                    [ 1, 1, 1]
-                ],
-                '4': [
-                    [ 1,  , 1],
-                    [ 1,  , 1],
-                    [ 1, 1, 1],
-                    [  ,  , 1],
-                    [  ,  , 1]
-                ],
-                '5': [
-                    [ 1, 1, 1],
-                    [ 1,  ,  ],
-                    [ 1, 1, 1],
-                    [  ,  , 1],
-                    [ 1, 1, 1]
-                ],
-                '6': [
-                    [ 1, 1, 1],
-                    [ 1,  ,  ],
-                    [ 1, 1, 1],
-                    [ 1,  , 1],
-                    [ 1, 1, 1]
-                ],
-                '7': [
-                    [ 1, 1, 1],
-                    [  ,  , 1],
-                    [  ,  , 1],
-                    [  ,  , 1],
-                    [  ,  , 1]
-                ],
-                '8': [
-                    [ 1, 1, 1],
-                    [ 1,  , 1],
-                    [ 1, 1, 1],
-                    [ 1,  , 1],
-                    [ 1, 1, 1]
-                ],
-                '9': [
-                    [ 1, 1, 1],
-                    [ 1,  , 1],
-                    [ 1, 1, 1],
-                    [  ,  , 1],
-                    [ 1, 1, 1]
-                ],
-            };
+   	this.tiempo_muerte_ = this.timestamp_(),
+   	this.tiempo_shacke_ = this.timestamp_();
 
 
 
@@ -275,11 +210,6 @@ var Game = function() {
                 this.player_.accion  = down; 
                 return false;
         }
-    };
-
-    //devuelve el tiempo en milisegundos
-    this.timestamp_ = function() {
-        return new Date().getTime();
     };
 
     //Limite entre dos máximos
@@ -462,7 +392,9 @@ var Game = function() {
         //borro lo que hay y vuelvo a renderizar cosas
         ctx.clearRect(0, 0, this.ancho_total_, this.alto_total_);
 
-        this.render_map_(ctx, dt);
+        this.render_map_(ctx, dt, true);
+        this.render_explosion_(ctx);
+        this.render_map_(ctx, dt, false);
         this.render_bullets_(ctx);
 
         this.render_player_(ctx, dt);
@@ -471,12 +403,47 @@ var Game = function() {
 
 
 
-        this.render_explosion_(ctx);
     };
 
 
 
-    this.render_map_ = function(ctx, dt) {
+    this.pre_shake_ = function() {
+        if(this.tiempo_shacke_ > this.timestamp_()){
+        	var cuanto_shake = 3;
+        	if(this.tiempo_muerte_ > this.timestamp_()){
+        		cuanto_shake = cuanto_shake*8;
+        	}
+            this.ctx.save();
+            if(!this.dx_shacke && !this.dy_shacke){
+                this.dx_shacke = (Math.random() - 0.5) * cuanto_shake;
+                this.dy_shacke = (Math.random() - 0.5) * cuanto_shake;
+
+            }
+            else{
+            	if(this.tiempo_muerte_ > this.timestamp_()){
+	        		this.dx_shacke = (Math.random() - 0.5) * cuanto_shake;
+                	this.dy_shacke = (Math.random() - 0.5) * cuanto_shake;
+	        	}
+	        	else{
+                	this.dy_shacke = this.dy_shacke * (-0.9);
+                	this.dx_shacke = this.dx_shacke * (-0.9);
+            	}
+            }
+            
+            this.ctx.translate(this.dx_shacke, this.dy_shacke); 
+        }
+        else{
+                this.dx_shacke = 0;
+                this.dy_shacke = 0;
+
+        }
+    };
+
+    this.post_shake_ = function() {
+        this.ctx.restore();
+    };
+
+    this.render_map_ = function(ctx, dt, pre) {
         //Aqui para renderizar el mapa
         var x, y, cell;
 
@@ -508,7 +475,11 @@ var Game = function() {
                     a = Math.abs(x - Math.floor(this.player_.centro_x/this.MAP_.size_bloques_));
                     b = Math.abs(y - Math.floor(this.player_.centro_y/this.MAP_.size_bloques_));
                     distancia_centro = Math.sqrt( a*a + b*b );
-                    ctx.fillStyle = "rgba(250,250,250,"+1/distancia_centro*3.5+")";
+                    opacidad = 1/distancia_centro*2.5;
+                    if(pre){
+                    	opacidad = opacidad/2;
+                    }
+                    ctx.fillStyle = "rgba(250,250,250,"+opacidad+")";
                     ctx.fillRect(x * this.MAP_.size_bloques_, y * this.MAP_.size_bloques_, this.MAP_.size_bloques_, this.MAP_.size_bloques_);
                 }
             }
@@ -562,23 +533,60 @@ var Game = function() {
 
             var particlesAfterRemoval = particles.slice();
             for (var ii = 0; ii < particles.length; ii++) {
-
                 var particle = particles[ii];
+
+                var distancia_centro = 0;
+            	var a = 0;
+            	var b = 0;
+				a = Math.abs(particle.x - this.player_.centro_x);
+            	b = Math.abs(particle.y - this.player_.centro_y);
+            	distancia_centro = Math.sqrt( a*a + b*b );
+
+
+            	if(distancia_centro > 250){
+            		continue;
+            	}
+				var opacidad = (1 - distancia_centro/120)*particle.opacidad;
 
                 // Check particle size
                 // If 0, remove
-                if (particle.size <= 0) {
-                    particlesAfterRemoval.splice(ii, 1);
+                
+
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.size, Math.PI * 2, 0, false);
+
+                //ctx.closePath();
+                ctx.fillStyle = 'rgba(' + particle.r + ',' + particle.g + ',' + particle.b + ','+opacidad+')';
+                //ctx.fillRect(particle.x, particle.y, particle.size, particle.size);
+                ctx.fill();
+
+                if (particle.size <= 2 ) {
+                    //particlesAfterRemoval.splice(ii, 1);
                     continue;
                 }
 
-                //ctx.beginPath();
-                //ctx.arc(particle.x, particle.y, particle.size, Math.PI * 2, 0, false);
-                ctx.fillRect(particle.x, particle.y, particle.size, particle.size);
 
-                //ctx.closePath();
-                ctx.fillStyle = 'rgb(' + particle.r + ',' + particle.g + ',' + particle.b + ')';
-                ctx.fill();
+
+                if(particle.xv > 0){
+				    if((particle.max_x - particle.x) < 0){
+				    	continue;
+				    }
+			    }
+			    else{
+				    if((particle.x - particle.max_x) < 0){
+				    	continue;
+				    }
+			    }
+                if(particle.yv > 0){
+				    if((particle.max_y - particle.y) < 0){
+				    	continue;
+				    }
+			    }
+			    else{
+				    if((particle.y - particle.max_y) < 0){
+				    	continue;
+				    }
+			    }
 
                 // Update
                 particle.x += particle.xv;
@@ -607,12 +615,14 @@ var Game = function() {
             distancia_centro = Math.sqrt( a*a + b*b );
 
 
-            if(distancia_centro < 300){
+            if(distancia_centro < 250){
 
                 for (var j = 0; j <= this.cuantos_enemigos_; j++) {
                     
-                    if(!this.enemigos_[j].muerto){
+                    if(!this.enemigos_[j].muerto && this.timestamp_()>this.enemigos_[j].muriendo){
                         if(this.overlap_(this.enemigos_[j].x, this.enemigos_[j].y, this.enemigos_[j].ancho_, this.enemigos_[j].alto_, disparo.x - size_bala/2, disparo.y - size_bala/2, size_bala, size_bala)){
+                            this.tiempo_muerte_ = this.timestamp_()+200;
+
                             var rand_exp1 = (Math.random() - 0.5) * 10;
                             var rand_exp2 = (Math.random() - 0.5) * 10;
                             var rand_exp3 = (Math.random() - 0.5) * 10;
@@ -622,10 +632,10 @@ var Game = function() {
                             var rand_size3 = Math.random() * 45;
 
                      
-                            var blue = Math.floor(Math.random() * 255);
-
+                            var blue = Math.floor(Math.random() * 155) + 100;
+                            
                             ctx.beginPath();
-                            ctx.fillStyle = 'rgba(255,'+blue+',1)';
+                            ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
                             ctx.arc(disparo.x+rand_exp1, disparo.y+rand_exp2, rand_size1, Math.PI * 2, 0, false);
                             ctx.closePath();
                             ctx.fill();
@@ -641,9 +651,15 @@ var Game = function() {
                             ctx.arc(disparo.x+rand_exp3, disparo.y+rand_exp1, rand_size3, Math.PI * 2, 0, false);
                             ctx.closePath();
                             ctx.fill();
+            				
+                            var x_explosion = this.enemigos_[j].x + this.enemigos_[j].ancho_/2;
+            				var y_explosion = this.enemigos_[j].y + this.enemigos_[j].alto_/2;
+                            this.explosions_.push(
+			                    new Explosion(x_explosion, y_explosion, true, false)
+			                );
 
                             this.bullets_.splice(i, 1);
-                            this.enemigos_[j].muriendo = this.timestamp_() + 200;
+                            this.enemigos_[j].muriendo = this.timestamp_() + 400;
                             this.enemigos_[j].muerto = true;
                             continue;
 
@@ -1020,7 +1036,10 @@ var Game = function() {
         now,
         last = juego.timestamp_();
   
-    //Bucle principal
+    
+    var fps_muerte = 1000 / 50;
+
+    var then = juego.timestamp_();
     function frame() {
         if(!juego.empezado_ || juego.pausa_){
             requestAnimationFrame(frame, canvas);
@@ -1030,9 +1049,27 @@ var Game = function() {
         dt = dt + Math.min(1, (now - last) / 1000);
         while(dt > juego.step_) {
             dt = dt - juego.step_;
-            juego.update_(juego.step_);
+            if(!juego.hay_punto_){
+                juego.update_(juego.step_);
+            }
         }
-        juego.render(juego.ctx, juego.counter, dt);
+        if(juego.tiempo_muerte_ > juego.timestamp_()){
+            var elapsed = now - then;
+
+            if (elapsed > fps_muerte) {
+                juego.pre_shake_();
+                juego.render(juego.ctx, juego.counter, dt);
+                juego.post_shake_();
+                juego.update_(juego.step_);
+                then = now - (elapsed % fps_muerte);
+            }
+        }
+        else{
+            juego.pre_shake_();
+            juego.render(juego.ctx, juego.counter, dt);
+            juego.post_shake_();
+        }
+
         last = now;
         juego.counter++;
         requestAnimationFrame(frame, canvas);
@@ -1180,7 +1217,7 @@ var Game = function() {
             window.punto_audio.src = URL.createObjectURL(new Blob([wave6], {type: "audio/wav"}));
         
         }
-    }, 40);
+    }, 10);
 
 
 })();
