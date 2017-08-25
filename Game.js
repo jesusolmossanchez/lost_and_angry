@@ -291,7 +291,7 @@ var Game = function() {
     //SET-UP de las cosas del juego... ahora mismo un jugador
     this.setup_ = function() {
 
-        this.wait_start_ = this.timestamp_() + 500;
+        this.wait_start_ = this.timestamp_() + 1500;
 
         this.player_ = new Player(this, 20, 1107, 800, 30000, 1);
         for (var i = 0; i <= this.cuantos_enemigos_; i++) {
