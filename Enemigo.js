@@ -399,24 +399,6 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         ctx.save();
         ctx.translate(x_enemigo, y_enemigo);
 
-        //Pinto el halo ese chungo
-        /*
-        radius = juego.ancho_total_/3;
-        ctx.beginPath();
-        ctx.arc(this.ancho_ / 2, this.alto_/2, 300, 0, Math.PI * 2, false);
-
-        var gradient = ctx.createRadialGradient(this.ancho_ / 2, this.alto_/2, radius*0.9, this.ancho_ / 2, this.alto_/2, 0);
-        gradient.addColorStop(0,"rgba(251, 255, 223, 0)");
-        gradient.addColorStop(1,"rgba(251, 255, 223, 0.6)");
-        ctx.fillStyle = gradient;
-        ctx.fill();
-        */
-        //Fin del halo chungo
-
-        //efecto de saltitos
-
-
-        
 
         ctx.rotate(this.angulo*Math.PI/180);
         //Pinta jugador
@@ -433,7 +415,18 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
             x_pistola = -this.ancho_ + 10;
         }
 
-        var color_enemigo = "rgba(255, 153, 153, 1)";
+
+        var distancia_al_jugador = 0;
+        var a = 0;
+        var b = 0;
+        a = Math.abs(this.x - juego.player_.centro_x);
+        b = Math.abs(this.y - juego.player_.centro_y);
+        distancia_al_jugador = Math.sqrt( a*a + b*b );
+
+        var opacidad = (1 - distancia_al_jugador/250);
+
+
+        var color_enemigo = "rgba(255, 153, 153, "+opacidad+")";
         if(this.muerto){
             if(this.muriendo > juego.timestamp_()){
 
@@ -481,14 +474,14 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
                 que_pistola = pistola_izq;
                 new_y = -50;
                 new_x = 20;
-                color_enemigo = "rgba(200, 193, 255, 0.3)";
+                color_enemigo = "rgba(200, 193, 255, "+opacidad/4+")";
             }
             else{
                 que_jugador = enemigo;
                 que_pistola = pistola;
                 new_y = -30;
                 new_x = -50;
-                color_enemigo = "rgba(200, 193, 255, 0.3)";
+                color_enemigo = "rgba(200, 193, 255, "+opacidad/4+")";
             }
         }
 
