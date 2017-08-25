@@ -168,7 +168,7 @@ var Game = function() {
     this.bullets_     = [],
 
    	this.tiempo_muerte_ = this.timestamp_(),
-   	this.tiempo_shacke_ = this.timestamp_();
+   	this.tiempo_shacke_ = this.timestamp_(),
 
 
 
@@ -291,7 +291,7 @@ var Game = function() {
     //SET-UP de las cosas del juego... ahora mismo un jugador
     this.setup_ = function() {
 
-        this.wait_start_ = this.timestamp_() + 1500;
+        this.wait_start_ = this.timestamp_() + 500;
 
         this.player_ = new Player(this, 20, 1107, 800, 30000, 1);
         for (var i = 0; i <= this.cuantos_enemigos_; i++) {
@@ -392,14 +392,14 @@ var Game = function() {
         //borro lo que hay y vuelvo a renderizar cosas
         ctx.clearRect(0, 0, this.ancho_total_, this.alto_total_);
 
-        this.render_map_(ctx, dt, true);
+        //this.render_map_(ctx, dt, true);
         this.render_explosion_(ctx);
-        this.render_map_(ctx, dt, false);
+        this.render_enemigos_(ctx, dt);
+        this.render_map_(ctx, dt, true);
         this.render_bullets_(ctx);
 
         this.render_player_(ctx, dt);
 
-        this.render_enemigos_(ctx, dt);
 
 
 
@@ -476,7 +476,7 @@ var Game = function() {
                     b = Math.abs(y - Math.floor(this.player_.centro_y/this.MAP_.size_bloques_));
                     distancia_centro = Math.sqrt( a*a + b*b );
                     opacidad = 1/distancia_centro*2.5;
-                    if(pre){
+                    if(!pre){
                     	opacidad = opacidad/2;
                     }
                     ctx.fillStyle = "rgba(250,250,250,"+opacidad+")";
@@ -543,14 +543,44 @@ var Game = function() {
             	distancia_centro = Math.sqrt( a*a + b*b );
 
 
-            	if(distancia_centro > 250){
+            	if(distancia_centro > 300){
             		continue;
             	}
-				var opacidad = (1 - distancia_centro/120)*particle.opacidad;
+				var opacidad = (1 - distancia_centro/150)*particle.opacidad;
 
                 // Check particle size
                 // If 0, remove
                 
+
+                
+
+
+
+                var continuar = false;
+                if(particle.xv > 0){
+				    if((particle.max_x - particle.x) < 0){
+				    	continuar = true;
+				    }
+			    }
+			    else{
+				    if((particle.x - particle.max_x) < 0){
+				    	continuar = true;
+				    }
+			    }
+                if(particle.yv > 0){
+				    if((particle.max_y - particle.y) < 0){
+				    	continuar = true;
+				    }
+			    }
+			    else{
+				    if((particle.y - particle.max_y) < 0){
+				    	continuar = true;
+				    }
+			    }
+
+                if(!continuar){
+                    opacidad = opacidad*20;
+                }
 
                 ctx.beginPath();
                 ctx.arc(particle.x, particle.y, particle.size, Math.PI * 2, 0, false);
@@ -560,33 +590,16 @@ var Game = function() {
                 //ctx.fillRect(particle.x, particle.y, particle.size, particle.size);
                 ctx.fill();
 
+
                 if (particle.size <= 2 ) {
                     //particlesAfterRemoval.splice(ii, 1);
                     continue;
                 }
 
+                if(continuar){
 
-
-                if(particle.xv > 0){
-				    if((particle.max_x - particle.x) < 0){
-				    	continue;
-				    }
-			    }
-			    else{
-				    if((particle.x - particle.max_x) < 0){
-				    	continue;
-				    }
-			    }
-                if(particle.yv > 0){
-				    if((particle.max_y - particle.y) < 0){
-				    	continue;
-				    }
-			    }
-			    else{
-				    if((particle.y - particle.max_y) < 0){
-				    	continue;
-				    }
-			    }
+                    continue;
+                }
 
                 // Update
                 particle.x += particle.xv;
@@ -655,7 +668,7 @@ var Game = function() {
                             var x_explosion = this.enemigos_[j].x + this.enemigos_[j].ancho_/2;
             				var y_explosion = this.enemigos_[j].y + this.enemigos_[j].alto_/2;
                             this.explosions_.push(
-			                    new Explosion(x_explosion, y_explosion, true, false)
+			                    new Explosion(x_explosion, y_explosion, false)
 			                );
 
                             this.bullets_.splice(i, 1);
@@ -1037,7 +1050,7 @@ var Game = function() {
         last = juego.timestamp_();
   
     
-    var fps_muerte = 1000 / 50;
+    var fps_muerte = 1000 / 30;
 
     var then = juego.timestamp_();
     function frame() {
@@ -1053,7 +1066,8 @@ var Game = function() {
                 juego.update_(juego.step_);
             }
         }
-        if(juego.tiempo_muerte_ > juego.timestamp_()){
+        //if(juego.tiempo_muerte_ > juego.timestamp_()){
+        if(false){
             var elapsed = now - then;
 
             if (elapsed > fps_muerte) {
