@@ -25,6 +25,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
     this.gravity_               = gravedad;
 
     this.tiempo_saltando_       = juego.timestamp_();
+    this.tiempo_atacado_       = juego.timestamp_();
 
     this.maxdx_                 = 170;
     this.maxdy_                 = 500;
@@ -197,7 +198,6 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
             if(this.x + this.ancho_ >= this.limite_derecha_){
                 this.x = 10;
-                this.dx = -this.dx;
             }
 
             if(tiene_right){
@@ -209,7 +209,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
             if(this.x <= this.limite_izquierda_){
                 this.x = juego.ancho_total_ - this.ancho_;
-                this.dx = -this.dx;
+                this.y = this.y - 20;
             }
 
             if(tiene_left){
@@ -219,8 +219,6 @@ var Player = function(juego, x, y, gravedad, impulso) {
     };
 
     this.pinta_player_ = function(dt, ctx, counter) {
-
-        
 
 
         //Posición
@@ -311,8 +309,15 @@ var Player = function(juego, x, y, gravedad, impulso) {
         ctx.arc(this.ancho_ / 2, this.alto_/2, 300, 0, Math.PI * 2, false);
 
         var gradient = ctx.createRadialGradient(this.ancho_ / 2, this.alto_/2, radius*0.9, this.ancho_ / 2, this.alto_/2, 0);
-        gradient.addColorStop(0,"rgba(251, 255, 243, 0)");
-        gradient.addColorStop(1,"rgba(251, 255, 243, 0.6)");
+        if((this.tiempo_atacado_ - juego.timestamp_())>1700){
+            var random_halo = Math.random()/2;
+            gradient.addColorStop(0,"rgba(255, 11, 11, 0)");
+            gradient.addColorStop(1,"rgba(255, 11, 11, "+random_halo+")");
+        }
+        else{
+            gradient.addColorStop(0,"rgba(251, 255, 243, 0)");
+            gradient.addColorStop(1,"rgba(251, 255, 243, 0.6)");
+        }
         ctx.fillStyle = gradient;
         ctx.fill();
         
@@ -342,7 +347,40 @@ var Player = function(juego, x, y, gravedad, impulso) {
         ctx.rotate(this.angulo*Math.PI/180);
         juego.pinta_filas_columnas_(ctx, x_pistola, 0, que_pistola, size_pistola_pixel, "#8FACC0");
         ctx.restore();
-       
+
+
+        if(this.tiempo_atacado_ > juego.timestamp_()){
+
+            var diff_atacado = this.tiempo_atacado_ - juego.timestamp_();
+            
+            var opacidad = diff_atacado/2000;
+
+            var ancho_cargador = this.ancho_*2;
+            var alto_cargador = 5;
+            var percent = this.salud_/this.salud_inicial_;
+            
+            ctx.fillStyle="rgba(11, 204, 0, "+opacidad+")";
+            if(percent < 0.8){
+                ctx.fillStyle="rgba(224, 239, 20, "+opacidad+")";
+            }
+            if(percent < 0.6){
+                ctx.fillStyle="rgba(204, 199, 0, "+opacidad+")";
+            }
+            if(percent < 0.4){
+                ctx.fillStyle="rgba(239, 92, 20, "+opacidad+")";
+            }
+            if(percent < 0.2){
+                ctx.fillStyle="rgba(255, 0, 0, "+opacidad+")";
+            }
+
+            ctx.fillRect(x_player - this.ancho_/2, y_player - 10, percent * ancho_cargador, alto_cargador);
+
+            ctx.strokeStyle="#ffffff";
+            ctx.lineWidth=1;
+            ctx.strokeRect(x_player - this.ancho_/2, y_player - 10, ancho_cargador, alto_cargador);
+
+        }
+
 
     };
 
