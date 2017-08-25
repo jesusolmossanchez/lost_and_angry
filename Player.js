@@ -46,6 +46,8 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
     this.update = function(dt) {
 
+        
+
         if(this.salud_ < 0){
             juego.ganador_ = "cpu";
             juego.game_over_();
@@ -93,6 +95,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
         //Si se pulsa acción
         if(this.accion && juego.counter > this.no_dispares_counter_){
+            this.suena_dispara_();
             this.no_dispares_counter_ = juego.counter + 3;
             juego.tiempo_shacke_ = juego.timestamp_() + 20;
             var derecha = true;
@@ -219,7 +222,9 @@ var Player = function(juego, x, y, gravedad, impulso) {
     };
 
     this.pinta_player_ = function(dt, ctx, counter) {
-
+        if(juego.wait_start_ > juego.timestamp_()){
+            this.pinta_home_();
+        }
 
         //Posición
         var x_player = this.x + (this.dx * dt);
@@ -279,6 +284,8 @@ var Player = function(juego, x, y, gravedad, impulso) {
         var pieses = [];
         pieses[0] = [[  ,  , 1,  ,  , 1,  ]];
         pieses[1] = [[  ,  , 1,  , 1,  ,  ]];
+        pieses[2] = [[ 1,  ,  , 1,  ,  ,  ]];
+        pieses[3] = [[  , 1,  , 1,  ,  ,  ]];
        
         if(this.jumping){
             this.que_pie = 1;
@@ -286,12 +293,21 @@ var Player = function(juego, x, y, gravedad, impulso) {
         }
         else if(this.left || this.right){
             if(juego.tween_frames_(counter, 40) < 0.5 ){
-                this.que_pie = 0;
+                if(this.left){
+                    this.que_pie = 2;
+                }
+                else{
+                    this.que_pie = 0;
+                }
                 this.angulo = -2;
             }
-            else{
+            else if(this.left){
+                this.que_pie = 3;
                 this.angulo = 2;
+            }
+            else{
                 this.que_pie = 1;
+                this.angulo = 2;
             }
 
         }
@@ -383,6 +399,72 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
 
     };
+
+    //var A;
+    //var cuantos_a = 0;
+    this.suena_dispara_ = function(){
+        /*
+        cuantos_a++;
+        if(cuantos_a>3){
+            A.close();
+        }
+        with(A = new AudioContext)for(i in D=[1,24,1,24,1,24,1,18,6,18,6,18,6,18,6,18,6,24,1,24,1,24,1,24,1,24,1,24,1,24])with(createOscillator())if(D[i])connect(destination),frequency.value=70*1.06**(13-D[i]),start(i*.03),stop(i*.03+.03);
+        */
+    }
+
+    this.pinta_home_ = function(){
+        
+        var home =  [
+                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  , 1,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1, 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1, 1,  , 1, 1,  , 1, 1,  ,  ,  ,  , 1,  ,  , 1, 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1,  , 1, 1, 1, 1,  ,  , 1, 1,  , 1, 1,  ,  , 1], 
+                        [ 1,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1,  , 1, 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1], 
+                        [ 1,  ,  , 1, 1,  , 1,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1,  , 1, 1, 1, 1,  ,  ,  ,  ,  , 1, 1,  ,  , 1], 
+                        [ 1,  ,  , 1, 1,  , 1,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1,  , 1, 1, 1, 1,  ,  ,  ,  ,  , 1, 1,  ,  , 1], 
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                        [ 1,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
+                        [ 1, 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
+                ];
+
+        var size_home = 3;
+        var x_home = this.x + this.ancho_ + 20;
+        var y_home = this.y - 60;
+
+        juego.pinta_filas_columnas_(juego.ctx, x_home, y_home, home, size_home, "#ffffff");
+    }
+
+    this.pinta_no_ = function(){
+        
+        var home =  [
+                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  , 1,  , 1, 1, 1, 1,  , 1, 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  , 1,  , 1, 1,  , 1,  , 1, 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  , 1, 1,  , 1, 1,  , 1,  , 1, 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  , 1,  , 1, 1, 1, 1,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  , 1,  , 1, 1, 1, 1,  , 1, 1,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                        [ 1,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
+                        [ 1, 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
+                ];
+
+        var size_home = 3;
+        var x_home = this.x + this.ancho_ + 20;
+        var y_home = this.y - 60;
+
+        juego.pinta_filas_columnas_(juego.ctx, x_home, y_home, home, size_home, "#ffffff");
+    }
 
 
 };
