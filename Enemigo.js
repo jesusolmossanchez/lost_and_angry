@@ -56,6 +56,9 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         b = Math.abs(this.y - juego.player_.centro_y);
         distancia_al_jugador = Math.sqrt( a*a + b*b );
 
+        if(distancia_al_jugador > juego.alto_total_/2){
+            return;
+        }
         
         if(b < 60 && a < juego.ancho_total_/2){
             this.rapido = true;
@@ -291,29 +294,12 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
         var y_player = juego.player_.y + (juego.player_.dy * dt);
 
         if(this.colisiona_player_() && !this.muerto){
-            var ancho_cargador = juego.player_.ancho_*2;
-            var alto_cargador = 5;
-            var percent = juego.player_.salud_/juego.player_.salud_inicial_;
-            
-            ctx.fillStyle="#0bcc00";
-            if(percent < 0.8){
-                ctx.fillStyle="#e0ef14";
-            }
-            if(percent < 0.6){
-                ctx.fillStyle="#ccc700";
-            }
-            if(percent < 0.4){
-                ctx.fillStyle="#ef5c14";
-            }
-            if(percent < 0.2){
-                ctx.fillStyle="#ff0000";
-            }
-
-            ctx.fillRect(x_player - juego.player_.ancho_/2, y_player - 10, percent * ancho_cargador, alto_cargador);
-
-            ctx.strokeStyle="#ffffff";
-            ctx.lineWidth=1;
-            ctx.strokeRect(x_player - juego.player_.ancho_/2, y_player - 10, ancho_cargador, alto_cargador);
+            juego.player_.tiempo_atacado_ = juego.timestamp_() + 2000;
+            var x_explosion = this.x + this.ancho_/2;
+            var y_explosion = this.y + this.alto_/2;
+            juego.explosions_.push(
+                new Explosion(x_explosion, y_explosion, true)
+            );
         }
 
         var enemigo =  [
@@ -468,19 +454,19 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
                 var blue = Math.floor(Math.random() * 155) + 100;
 
                 ctx.beginPath();
-                ctx.fillStyle = 'rgba(255,'+blue+',0.1)';
+                ctx.fillStyle = 'rgba(155,155,'+blue+',0.1)';
                 ctx.arc(rand_exp1, rand_exp2, rand_size1, Math.PI * 2, 0, false);
                 ctx.closePath();
                 ctx.fill();
 
                 ctx.beginPath();
-                ctx.fillStyle = 'rgba(255,255,'+blue+',0.2)';
+                ctx.fillStyle = 'rgba(155,155,'+blue+',0.2)';
                 ctx.arc(rand_exp2, rand_exp3, rand_size2, Math.PI * 2, 0, false);
                 ctx.closePath();
                 ctx.fill();
                 ctx.beginPath();
 
-                ctx.fillStyle = 'rgba(255,255,'+blue+',0.3)';
+                ctx.fillStyle = 'rgba(155,155,'+blue+',0.3)';
                 ctx.arc(rand_exp3, rand_exp1, rand_size3, Math.PI * 2, 0, false);
                 ctx.closePath();
                 ctx.fill();
