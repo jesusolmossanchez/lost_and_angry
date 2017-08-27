@@ -15,9 +15,12 @@ var Player = function(juego, x, y, gravedad, impulso) {
     this.dx                     = 0;
     this.dy                     = 0;
 
-    this.friction               = 700;
-    this.accel                  = 500;
-    this.shoot_back             = 1500;
+    this.friction               = 650;
+    this.accel                  = 700;
+    this.shoot_back             = 2500;
+
+    this.maxdx_                 = 200;
+    this.maxdy_                 = 500;
 
     this.last_left              = false;
     
@@ -26,9 +29,6 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
     this.tiempo_saltando_       = juego.timestamp_();
     this.tiempo_atacado_       = juego.timestamp_();
-
-    this.maxdx_                 = 170;
-    this.maxdy_                 = 500;
 
     this.impulse_               = 30000;   
 
@@ -46,7 +46,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
     this.update = function(dt) {
 
-        
+
 
         if(this.salud_ < 0){
             juego.ganador_ = "cpu";
@@ -99,12 +99,17 @@ var Player = function(juego, x, y, gravedad, impulso) {
             this.no_dispares_counter_ = juego.counter + 3;
             juego.tiempo_shacke_ = juego.timestamp_() + 20;
             var derecha = true;
+
+            var retroceso_disparo = this.shoot_back;
+            if(this.jumping){
+                retroceso_disparo = retroceso_disparo/2;
+            }
             if(this.last_left){
                 derecha = false;
-                this.ddx = this.ddx + this.shoot_back;
+                this.ddx = this.ddx + retroceso_disparo;
             }
             else{
-                this.ddx = this.ddx - this.shoot_back;
+                this.ddx = this.ddx - retroceso_disparo;
 
             }
             var seft = this;
@@ -132,7 +137,9 @@ var Player = function(juego, x, y, gravedad, impulso) {
         this.dx = juego.bound_(this.dx + (dt * this.ddx), -this.maxdx_, this.maxdx_);
         this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);
 
-        
+        if(juego.wait_start_ > juego.timestamp_() + 1000){
+            this.dx = 30;
+        }  
       
       
         if ((this.wasleft  && (this.dx > 0)) ||
@@ -292,7 +299,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
             this.angulo = 0;
         }
         else if(this.left || this.right){
-            if(juego.tween_frames_(counter, 40) < 0.5 ){
+            if(juego.tween_frames_(counter, 30) < 0.5 ){
                 if(this.left){
                     this.que_pie = 2;
                 }
@@ -391,7 +398,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
             ctx.fillRect(x_player - this.ancho_/2, y_player - 10, percent * ancho_cargador, alto_cargador);
 
-            ctx.strokeStyle="#ffffff";
+            ctx.strokeStyle= "rgba(255,255,255,"+opacidad+")";
             ctx.lineWidth=1;
             ctx.strokeRect(x_player - this.ancho_/2, y_player - 10, ancho_cargador, alto_cargador);
 

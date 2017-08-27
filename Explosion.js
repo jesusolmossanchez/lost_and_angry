@@ -20,7 +20,6 @@ var Explosion = function(x, y, propia) {
 var Particle = function(x, y, propia) {
     
     this.randInt_ = function(min, max, positive) {
-
         var num;
         if (positive === false) {
             num = Math.floor(Math.random() * max) - min;
@@ -30,7 +29,6 @@ var Particle = function(x, y, propia) {
         }
 
         return num;
-
     };
 
 

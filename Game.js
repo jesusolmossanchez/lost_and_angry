@@ -29,22 +29,39 @@ var Game = function() {
     };
 
 
-    this.crea_plataformas_ = function(){
+    this.crea_plataformas_ = function(final){
 
         //Cosas horizontales
-        var cuantas_plataformas = Math.floor(Math.random()*10) + 30;
+        var cuantas_plataformas = Math.floor(Math.random()*10) + 60;
+        if(final){
+        	cuantas_plataformas =  cuantas_plataformas * 3;
+        }
         var new_array = [];
-        var espera_linea = 2;
+        var espera_linea = 4;
         var largo_plataforma = 3;
         var pintando = false;
         var pintado = 0;
         var en_esta_linea = false;
         var espera_x = 0;
 
-        for (var i = 0; i < 30; i++) {
-            for (var j = 0; j < 42; j++) {
+        var bloques_x = 42;
+        var bloques_y = 30;
+
+        var multiplaicador_ancho_plat = 15;
+
+        var hasta_donde_x = bloques_x;
+        if(final){
+        	hasta_donde_x = 25;
+        	multiplaicador_ancho_plat = 1;
+        }
+
+        for (var i = 0; i < bloques_y; i++) {
+            for (var j = 0; j < bloques_x; j++) {
                 var rand = Math.random();
-                if(cuantas_plataformas > 0 && ((i >= espera_linea && j >= espera_x && rand > 0.3) || pintando)){
+                if( j > hasta_donde_x){
+                	
+                }
+                else if(cuantas_plataformas > 0 && (i >= espera_linea && j >= espera_x && rand > 0.3) || pintando){
                     if(pintado <= largo_plataforma){
                         new_array.push(1);
                         pintando = true;
@@ -55,7 +72,7 @@ var Game = function() {
                         pintando = false;
                         pintado = 0;
                         cuantas_plataformas--;
-                        espera_x = (j + 5)%42;
+                        espera_x = (j + 5)%hasta_donde_x;
                         espera_linea = i + 3;
 
                     }
@@ -64,7 +81,7 @@ var Game = function() {
                     en_esta_linea = false;
                     pintando = false;
                     pintado = 0;
-                    largo_plataforma = Math.floor(Math.random()*15) + 5;
+                    largo_plataforma = Math.floor(Math.random()*multiplaicador_ancho_plat) + 5;
                 }
                 new_array.push(0);
             }
@@ -72,15 +89,20 @@ var Game = function() {
 
         
         //Cosas verticales
+
         var cuantas_plataformas_vert = Math.floor(Math.random()*10) + 1;
+        if(final){
+        	cuantas_plataformas_vert =  cuantas_plataformas_vert * 3;
+        }
+
         var alto_plataforma = 3;
-        var espera_columna = 42;
+        var espera_columna = bloques_x;
         var pintando_vert = false;
         var pintado_vert = 0;
         for (var j = 41; j >= 0; j--) {
             for (var i = 29; i >= 0; i--) {
                 var rand = Math.random();
-                var indice = j + i * 42;
+                var indice = j + i * bloques_x;
                 if(cuantas_plataformas_vert > 0 && ((j < espera_columna  && rand > 0.4 && new_array[indice] === 1) || pintando_vert)){
                     if(pintado_vert <= alto_plataforma){
                         new_array[indice] = 1;
@@ -103,10 +125,11 @@ var Game = function() {
             }
         }
         
+        
         //Dejo limpio el sitio del jugador
         for (var i = 0; i < 6; i++) {
-            for (var j = 23; j < 30; j++) {
-                var indice = i + j * 42;
+            for (var j = 25; j < bloques_y; j++) {
+                var indice = i + j * bloques_x;
                 new_array[indice] = 0;
             }
         }    
@@ -131,8 +154,8 @@ var Game = function() {
 
     //Preparado para el mapa
     this.MAP_ = {};
-    //this.MAP_.datos = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1];
-    this.MAP_.datos = this.crea_plataformas_();
+    //this.MAP_.datos = this.crea_plataformas_();
+    this.MAP_.datos;
 
     this.MAP_.size_bloques_ = 20;
     this.MAP_.ancho_bloques_ = 42;
@@ -140,8 +163,8 @@ var Game = function() {
 
 
 
-    this.cuantos_enemigos_ = this.randInt_ (5, 10, true);
-    //this.cuantos_enemigos_ = 0;
+
+    this.cuantos_enemigos_ = 0;
     this.enemigos_ = [];
 
     this.ancho_total_ = 840,
@@ -289,24 +312,39 @@ var Game = function() {
     //-------------------------------------------------------------------------
 
     //SET-UP de las cosas del juego... ahora mismo un jugador
-    this.setup_ = function() {
+    this.setup_ = function(final) {
+    	this.cuantos_enemigos_ = 0;
+    	this.enemigos_ = [];
+    	this.explosions_ = [];
+    	this.moustro_final_ = final;
+    	//this.moustro_final_ = true;
+
+    	this.MAP_.datos = this.crea_plataformas_(this.moustro_final_);
 
         this.wait_start_ = this.timestamp_() + 1500;
 
-        this.player_ = new Player(this, 20, 1107, 800, 30000, 1);
-        for (var i = 0; i <= this.cuantos_enemigos_; i++) {
-            var x_enemigo = this.randInt_ (200, this.ancho_total_ - 200, true);
-            var y_enemigo = this.randInt_ (0, this.alto_total_ / 2, true);
+        this.player_ = new Player(this, 20, this.alto_total_ - 50, 800, 30000, 1);
 
-            var enemigo = new Enemigo(this, x_enemigo, y_enemigo, 800, 30000, 1);
-
-            while(enemigo.mal_situado_()){
-                enemigo.resitua_();
-            }
-
-
-            this.enemigos_.push(enemigo);
+        if(this.moustro_final_){
+        	this.final_boss_ = new Boss(this, this.ancho_total_/1.5, 100, 800, 30000, 1);
         }
+        else{
+        	this.cuantos_enemigos_ = this.randInt_ (5, 10, true);
+        	for (var i = 0; i < this.cuantos_enemigos_; i++) {
+	            var x_enemigo = this.randInt_ (200, this.ancho_total_ - 200, true);
+	            var y_enemigo = this.randInt_ (0, this.alto_total_ / 2, true);
+
+	            var enemigo = new Enemigo(this, x_enemigo, y_enemigo, 800, 30000, 1);
+
+	            while(enemigo.mal_situado_()){
+	                enemigo.resitua_();
+	            }
+
+
+	            this.enemigos_.push(enemigo);
+	        }
+        }
+
 
 
     };
@@ -363,8 +401,16 @@ var Game = function() {
     this.update_ = function(dt) {
         this.player_.update(dt);
 
+        var muertos = 0;
         for (var i = 0; i < this.enemigos_.length; i++) {
             this.enemigos_[i].update(dt);
+            if(this.enemigos_[i].muerto){
+            	muertos++;
+            }
+        }
+        if(muertos >= this.enemigos_.length && !this.moustro_final_){
+            this.setup_(true);
+
         }
 
     };
@@ -395,6 +441,7 @@ var Game = function() {
         //this.render_map_(ctx, dt, true);
         this.render_explosion_(ctx);
         this.render_enemigos_(ctx, dt);
+        this.render_boss_(ctx, dt);
         this.render_map_(ctx, dt, true);
         this.render_bullets_(ctx);
 
@@ -508,6 +555,14 @@ var Game = function() {
                 this.enemigos_[i].pinta_enemigo_(dt, ctx, this.counter);
             }
 
+        }
+
+    };
+
+    //Llama a la funcion del objeto de jugador para pintarlo... lo pongo así, porque igual hay que pintar el jugador diferente según algo del juego
+    this.render_boss_ = function(ctx, dt) {
+         if(this.moustro_final_){
+        	this.final_boss_.pinta_boss_(dt, ctx, this.counter);
         }
 
     };
@@ -630,7 +685,7 @@ var Game = function() {
 
             if(distancia_centro < 250){
 
-                for (var j = 0; j <= this.cuantos_enemigos_; j++) {
+                for (var j = 0; j < this.cuantos_enemigos_; j++) {
                     
                     if(!this.enemigos_[j].muerto && this.timestamp_()>this.enemigos_[j].muriendo){
                         if(this.overlap_(this.enemigos_[j].x, this.enemigos_[j].y, this.enemigos_[j].ancho_, this.enemigos_[j].alto_, disparo.x - size_bala/2, disparo.y - size_bala/2, size_bala, size_bala)){
@@ -1147,7 +1202,7 @@ var Game = function() {
 
             //Y básicamente se lanza el juego
             frame();
-            juego.setup_();
+            juego.setup_(false);
             juego.empieza_();
             juego.empezado_ = true;
 
