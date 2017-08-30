@@ -99,6 +99,16 @@ var Boss = function(juego, x, y, gravedad, impulso) {
             this.falling = true;
             this.tiempo_saltando_ = juego.timestamp_() + 300;
         }
+
+
+        if(this.controla_dispara_()){
+
+            juego.zapatillas_.push(
+                new Zapatilla(this.x, this.y, 0, 0, juego, this)
+            );
+
+        }
+
   
         this.x  = this.x  + (dt * this.dx);
         this.y  = this.y  + (dt * this.dy);
@@ -194,6 +204,12 @@ var Boss = function(juego, x, y, gravedad, impulso) {
     this.controla_salta_ = function() {
         var salta = (Math.random()>0.99)?true:false;
         return salta;
+    };
+
+
+    this.controla_dispara_ = function() {
+        var dispara = (Math.random()>0.99)?true:false;
+        return dispara;
     };
 
 
