@@ -37,7 +37,7 @@ gulp.task('html-deploy', ['styles-deploy', 'deploy-js'], function() {
 });
 
 gulp.task('deploy-js', function () {
-    return gulp.src(['Explosion.js','Bullet.js','Enemigo.js','Player.js','tiny_music.js','player-small.js','Game.js'])
+    return gulp.src(['Explosion.js','Bullet.js','Zapatilla.js','Enemigo.js','Player.js','tiny_music.js','player-small.js','Game.js'])
       .pipe(concat('lost.min.js'))
       .pipe(uglify(option_ugly))
       .pipe(gulp.dest('prod/'));
