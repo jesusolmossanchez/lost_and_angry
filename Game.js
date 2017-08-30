@@ -14,18 +14,9 @@ var Game = function() {
         return new Date().getTime();
     };
 
-    this.randInt_ = function(min, max, positive) {
-
-        var num;
-        if (positive === false) {
-            num = Math.floor(Math.random() * max) - min;
-            num *= Math.floor(Math.random() * 2) === 1 ? 1 : -1;
-        } else {
-            num = Math.floor(Math.random() * max) + min;
-        }
-
+    this.randInt_ = function(min, max) {
+        var num = Math.floor(Math.random()*(max-min+1)+min);
         return num;
-
     };
 
 
@@ -167,31 +158,32 @@ var Game = function() {
     this.cuantos_enemigos_ = 0;
     this.enemigos_ = [];
 
-    this.ancho_total_ = 840,
-    this.alto_total_  = 600,
-    this.ancho_total_bloques_ = 840/this.MAP_.size_bloques_,
-    this.alto_total_bloques_  = 600/this.MAP_.size_bloques_,
+    this.ancho_total_ = 840;
+    this.alto_total_  = 600;
+    this.ancho_total_bloques_ = 840/this.MAP_.size_bloques_;
+    this.alto_total_bloques_  = 600/this.MAP_.size_bloques_;
 
     //Gravedad por defecto
-    this.GRAVITY_  = 800,   
+    this.GRAVITY_  = 800;   
 
     //Mapeo de teclas
-    this.KEY      = { ENTER: 13, SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, Z: 90},
+    this.KEY      = { ENTER: 13, SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, Z: 90};
       
     //Cosas del bucle del juego
-    this.fps_            = 60,
-    this.step_           = 1/this.fps_,
-    this.canvas_         = document.getElementById('canvas'),
-    this.ctx            = this.canvas_.getContext('2d'),
-    this.canvas_.width  = this.ancho_total_,
-    this.canvas_.height = this.alto_total_,
+    this.fps_            = 60;
+    this.step_           = 1/this.fps_;
+    this.canvas_         = document.getElementById('canvas');
+    this.ctx            = this.canvas_.getContext('2d');
+    this.canvas_.width  = this.ancho_total_;
+    this.canvas_.height = this.alto_total_;
 
     //Explosiones
-    this.explosions_     = [],
-    this.bullets_     = [],
+    this.explosions_     = [];
+    this.bullets_     = [];
+    this.zapatillas_     = [];
 
-   	this.tiempo_muerte_ = this.timestamp_(),
-   	this.tiempo_shacke_ = this.timestamp_(),
+   	this.tiempo_muerte_ = this.timestamp_();
+   	this.tiempo_shacke_ = this.timestamp_();
 
 
 
@@ -316,7 +308,6 @@ var Game = function() {
 
                         var opacidad = (1 - distancia_centro/350);
 
-                        console.log(distancia_centro)
                         if(distancia_centro > 350){
                             continue;
                         }
@@ -366,10 +357,10 @@ var Game = function() {
         	this.final_boss_ = new Boss(this, this.ancho_total_/1.5, 100, 800, 30000, 1);
         }
         else{
-        	this.cuantos_enemigos_ = this.randInt_ (5, 10, true);
+        	this.cuantos_enemigos_ = this.randInt_ (5, 10);
         	for (var i = 0; i < this.cuantos_enemigos_; i++) {
-	            var x_enemigo = this.randInt_ (200, this.ancho_total_ - 200, true);
-	            var y_enemigo = this.randInt_ (0, this.alto_total_ / 2, true);
+	            var x_enemigo = this.randInt_ (200, this.ancho_total_ - 200);
+	            var y_enemigo = this.randInt_ (0, this.alto_total_ / 2);
 
 	            var enemigo = new Enemigo(this, x_enemigo, y_enemigo, 800, 30000, 1);
 
@@ -488,6 +479,7 @@ var Game = function() {
         this.render_boss_(ctx, dt);
         this.render_map_(ctx, dt, true);
         this.render_bullets_(ctx);
+        this.render_zapatillas_(ctx);
 
         this.render_player_(ctx, dt);
 
@@ -882,6 +874,62 @@ var Game = function() {
             disparo.x += disparo.xv;
             disparo.y += disparo.yv;
             disparo.size -= 0.004;
+        }
+    }
+
+
+    this.render_zapatillas_ = function (ctx) {
+
+        for (var i = 0; i < this.zapatillas_.length; i++) {
+            var disparo_boss = this.zapatillas_[i];
+            var size_bala = disparo_boss.size * 100;
+    
+
+            var negativo = 1;
+            if(disparo_boss.xv < 0){
+                negativo = - 1;
+            }
+
+            var zapatilla = [
+                [  ,  ,  ,  ,  ,  ],
+                [  , 1, 1,  ,  ,  ],
+                [ 1, 1, 1,  ,  ,  ],
+                [ 1, 1, 1, 1, 1, 1],
+                [  ,  ,  ,  ,  ,  ],
+                [  ,  ,  ,  ,  ,  ]
+            ];
+            
+            //ctx.pinta_filas_columnas_(disparo_boss.x, disparo_boss.y, size_bala, Math.PI * 2, 0, false);
+
+            ctx.beginPath();
+            ctx.fillStyle = "rgba(250,0,0,0.01)";
+            ctx.arc(disparo_boss.x, disparo_boss.y, size_bala, Math.PI * 2, 0, false);
+            ctx.closePath();
+            ctx.fill();
+            
+            var zapa_size = 15;
+            var zapa_centro_x = disparo_boss.x + (zapa_size * zapatilla[0].length / 2);
+            var zapa_centro_y = disparo_boss.y + (zapa_size * zapatilla[0].length / 2);
+            var zapa_izq_x = disparo_boss.x + (zapa_size * zapatilla[0].length / 2);
+            var zapa_izq_y = disparo_boss.y + (zapa_size * zapatilla[0].length / 2);
+
+            ctx.save();
+            ctx.translate(zapa_centro_x, zapa_centro_y);
+            ctx.rotate(disparo_boss.angulo*Math.PI/180);
+            var zapa_relative = (-1) * zapa_size * zapatilla[0].length / 2;
+            this.pinta_filas_columnas_(ctx, zapa_relative, zapa_relative, zapatilla, zapa_size);
+            ctx.restore();
+
+            if (disparo_boss.x > this.ancho_total_ || disparo_boss.x < 0) {
+                this.zapatillas_.splice(i, 1);
+                continue;
+            }
+
+
+            disparo_boss.x += disparo_boss.xv;
+            disparo_boss.y += disparo_boss.yv;
+            disparo_boss.angulo -= 10;
+
         }
     }
 
