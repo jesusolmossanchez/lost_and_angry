@@ -519,8 +519,8 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
     };
 
     this.resitua_ = function() {
-        this.x = juego.randInt_ (200, juego.ancho_total_ - 200, true);
-        this.y = juego.randInt_ (0, juego.alto_total_ / 2, true);
+        this.x = juego.randInt_ (200, juego.ancho_total_ - 200);
+        this.y = juego.randInt_ (0, juego.alto_total_ / 2);
     };
 
 
