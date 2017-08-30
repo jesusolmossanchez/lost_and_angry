@@ -8,7 +8,6 @@ var Game = function() {
     //this.debug_ = true;
 
 
-
     //devuelve el tiempo en milisegundos
     this.timestamp_ = function() {
         return new Date().getTime();
@@ -306,9 +305,9 @@ var Game = function() {
 
 
 
-                        var opacidad = (1 - distancia_centro/350);
+                        var opacidad = (1 - distancia_centro/(this.radio_vision_ * 2.5));
 
-                        if(distancia_centro > 350){
+                        if(distancia_centro > this.radio_vision_ * 2.5){
                             continue;
                         }
 
@@ -719,7 +718,7 @@ var Game = function() {
             distancia_centro = Math.sqrt( a*a + b*b );
 
 
-            if(distancia_centro < 250){
+            if(distancia_centro < this.radio_vision_ * 1.2){
 
                 for (var j = 0; j < this.cuantos_enemigos_; j++) {
                     
@@ -829,7 +828,7 @@ var Game = function() {
 
 
             
-                var opacidad = 1 - distancia_centro/300;
+                var opacidad = 1 - distancia_centro/(this.radio_vision_ * 1.2);
                 var new_size_bala = size_bala*1.14
                 ctx.beginPath();
 
@@ -890,13 +889,109 @@ var Game = function() {
                 negativo = - 1;
             }
 
+            if(disparo_boss.muriendo_ > this.timestamp_()){
+
+                var rand_exp1 = (Math.random() - 0.5) * 10;
+                var rand_exp2 = (Math.random() - 0.5) * 10;
+                var rand_exp3 = (Math.random() - 0.5) * 10;
+
+                var rand_size1 = Math.random() * 120;
+                var rand_size2 = Math.random() * 120;
+                var rand_size3 = Math.random() * 120;
+
+         
+                var blue = Math.floor(Math.random() * 255);
+
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(0,0,'+blue+',0,0.1)';
+                ctx.arc(disparo_boss.x+rand_exp1, disparo_boss.y+rand_exp2, rand_size1, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(0,0,'+blue+',0.1)';
+                ctx.arc(disparo_boss.x+rand_exp2, disparo_boss.y+rand_exp3, rand_size2, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
+                ctx.beginPath();
+
+                ctx.fillStyle = 'rgba(0,0,'+blue+',0.1)';
+                ctx.arc(disparo_boss.x+rand_exp3, disparo_boss.y+rand_exp1, rand_size3, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
+                continue;
+            }
+            else if(disparo_boss.muerto_){
+                this.zapatillas_.splice(i, 1);
+                continue;
+
+            }
+            
+
+            //TODO: optimizar esto
+            if(this.cell_(disparo_boss.x,disparo_boss.y) || 
+                    this.cell_(disparo_boss.x - 5 ,disparo_boss.y) || 
+                    this.cell_(disparo_boss.x - 10 ,disparo_boss.y) || 
+                    this.cell_(disparo_boss.x - 15 ,disparo_boss.y) || 
+                    this.cell_(disparo_boss.x, disparo_boss.y - 5) || 
+                    this.cell_(disparo_boss.x, disparo_boss.y - 10) ||  
+                    this.cell_(disparo_boss.x, disparo_boss.y + 5) || 
+                    this.cell_(disparo_boss.x, disparo_boss.y + 10) || 
+                    this.cell_(disparo_boss.x, disparo_boss.y + 20) ||
+                    this.cell_(disparo_boss.x, disparo_boss.y + 30) || 
+                    this.cell_(disparo_boss.x, disparo_boss.y + 40) || 
+                    this.cell_(disparo_boss.x, disparo_boss.y + 50)
+                    ){
+
+
+
+
+                var rand_exp1 = (Math.random() - 0.5) * 10;
+                var rand_exp2 = (Math.random() - 0.5) * 10;
+                var rand_exp3 = (Math.random() - 0.5) * 10;
+
+                var rand_size1 = Math.random() * 120;
+                var rand_size2 = Math.random() * 120;
+                var rand_size3 = Math.random() * 120;
+
+         
+                var blue = Math.floor(Math.random() * 255);
+
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(255,0,'+blue+',0,0.1)';
+                ctx.arc(disparo_boss.x+rand_exp1, disparo_boss.y+rand_exp2, rand_size1, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.fillStyle = 'rgba(255,0,'+blue+',0.1)';
+                ctx.arc(disparo_boss.x+rand_exp2, disparo_boss.y+rand_exp3, rand_size2, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
+                ctx.beginPath();
+
+                ctx.fillStyle = 'rgba(255,0,'+blue+',0.1)';
+                ctx.arc(disparo_boss.x+rand_exp3, disparo_boss.y+rand_exp1, rand_size3, Math.PI * 2, 0, false);
+                ctx.closePath();
+                ctx.fill();
+
+
+                disparo_boss.muriendo_ = this.timestamp_() + 200;
+                disparo_boss.muerto_ = true;
+
+            }
+            
+
+
             var zapatilla = [
-                [  ,  ,  ,  ,  ,  ],
-                [  , 1, 1,  ,  ,  ],
-                [ 1, 1, 1,  ,  ,  ],
-                [ 1, 1, 1, 1, 1, 1],
-                [  ,  ,  ,  ,  ,  ],
-                [  ,  ,  ,  ,  ,  ]
+                [  ,  ,  ,  ,  ,  ,  ,  ],
+                [  ,  ,  ,  ,  ,  ,  ,  ],
+                [  ,  ,  , 1, 1,  ,  ,  ],
+                [  , 1, 1, 1, 1,  ,  ,  ],
+                [ 1, 1, 1, 1, 1,  ,  ,  ],
+                [ 1, 1, 1, 1, 1, 1, 1, 1],
+                [  ,  ,  ,  ,  ,  ,  ,  ],
+                [  ,  ,  ,  ,  ,  ,  ,  ],
             ];
             
             //ctx.pinta_filas_columnas_(disparo_boss.x, disparo_boss.y, size_bala, Math.PI * 2, 0, false);
@@ -907,17 +1002,31 @@ var Game = function() {
             ctx.closePath();
             ctx.fill();
             
-            var zapa_size = 15;
+            var zapa_size = 8;
             var zapa_centro_x = disparo_boss.x + (zapa_size * zapatilla[0].length / 2);
             var zapa_centro_y = disparo_boss.y + (zapa_size * zapatilla[0].length / 2);
             var zapa_izq_x = disparo_boss.x + (zapa_size * zapatilla[0].length / 2);
             var zapa_izq_y = disparo_boss.y + (zapa_size * zapatilla[0].length / 2);
 
+
+
+
             ctx.save();
             ctx.translate(zapa_centro_x, zapa_centro_y);
             ctx.rotate(disparo_boss.angulo*Math.PI/180);
             var zapa_relative = (-1) * zapa_size * zapatilla[0].length / 2;
-            this.pinta_filas_columnas_(ctx, zapa_relative, zapa_relative, zapatilla, zapa_size);
+
+
+
+            ctx.arc(0, 0, 70, 0, Math.PI * 2, false);
+            var gradient = ctx.createRadialGradient(0, 0, 70, 0, 0, 0);
+            gradient.addColorStop(0,"rgba(151, 110, 143, 0)");
+            gradient.addColorStop(1,"rgba(151, 110, 143, 0.6)");
+            ctx.fillStyle = gradient;
+            ctx.fill();
+
+
+            this.pinta_filas_columnas_(ctx, zapa_relative, zapa_relative, zapatilla, zapa_size, "rgba(251, 110, 143, 0.7)");
             ctx.restore();
 
             if (disparo_boss.x > this.ancho_total_ || disparo_boss.x < 0) {
@@ -928,7 +1037,7 @@ var Game = function() {
 
             disparo_boss.x += disparo_boss.xv;
             disparo_boss.y += disparo_boss.yv;
-            disparo_boss.angulo -= 10;
+            disparo_boss.angulo += disparo_boss.xv;
 
         }
     }
