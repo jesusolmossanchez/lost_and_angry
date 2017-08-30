@@ -77,3 +77,15 @@ body {
     background-color: rgba(255, 0, 0, 0.4);
     box-shadow: 0 0 2px 6px rgba(255,255,255,0.2);
 }
+@media (max-width :767px) { 
+    @media ( orientation : portrait) { 
+        #canvas_mobile_gira{
+            display: block;
+        }
+    }
+    @media ( orientation : landscape) { 
+        #canvas_mobile_gira{
+            display: none;
+        }
+    }
+}
