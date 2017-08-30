@@ -202,10 +202,10 @@ var Boss = function(juego, x, y, gravedad, impulso) {
         this.right_ = false;
         var rando_mov = Math.random();
 
-        if(rando_mov > 0.7){
+        if(rando_mov > 0.6){
             this.left_ = true;
         }
-        else if(rando_mov > 0.4){
+        else if(rando_mov > 0.3){
             this.right_ = true;
         }
     };
