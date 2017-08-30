@@ -15,14 +15,14 @@ var Player = function(juego, x, y, gravedad, impulso) {
     this.dx                     = 0;
     this.dy                     = 0;
 
-    this.friction               = 650;
-    this.accel                  = 700;
-    this.shoot_back             = 2500;
+    this.friction_               = 650;
+    this.accel_                  = 700;
+    this.shoot_back_             = 2500;
 
     this.maxdx_                 = 200;
     this.maxdy_                 = 500;
 
-    this.last_left              = false;
+    this.last_left_              = false;
     
 
     this.gravity_               = gravedad;
@@ -44,7 +44,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
  
 
-    this.update = function(dt) {
+    this.update_ = function(dt) {
 
 
 
@@ -60,8 +60,8 @@ var Player = function(juego, x, y, gravedad, impulso) {
         this.wasleft    = this.dx  < 0;
         this.wasright   = this.dx  > 0;
 
-        var friction   = this.friction * (this.falling ? 0.2 : 1);
-        var accel      = this.accel;
+        var friction   = this.friction_ * (this.falling ? 0.2 : 1);
+        var accel      = this.accel_;
 
         //reseteo las velocidades
         this.ddx = 0;
@@ -70,7 +70,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
         if (this.left){
           this.ddx = this.ddx - accel;
-          this.last_left = true;
+          this.last_left_ = true;
         }
         else if (this.wasleft){
           this.ddx = this.ddx + friction;
@@ -78,7 +78,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
       
         if (this.right){
           this.ddx = this.ddx + accel;
-          this.last_left = false;
+          this.last_left_ = false;
         }
         else if (this.wasright){
           this.ddx = this.ddx - friction;
@@ -100,11 +100,11 @@ var Player = function(juego, x, y, gravedad, impulso) {
             juego.tiempo_shacke_ = juego.timestamp_() + 20;
             var derecha = true;
 
-            var retroceso_disparo = this.shoot_back;
+            var retroceso_disparo = this.shoot_back_;
             if(this.jumping){
                 retroceso_disparo = retroceso_disparo/2;
             }
-            if(this.last_left){
+            if(this.last_left_){
                 derecha = false;
                 this.ddx = this.ddx + retroceso_disparo;
             }
@@ -353,7 +353,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
         var que_pistola = pistola;
         var x_pistola = -5;
 
-        if(this.last_left){
+        if(this.last_left_){
             que_jugador = player_izq;
             que_pistola = pistola_izq;
             x_pistola = -this.ancho_ + 5;
