@@ -274,15 +274,29 @@ var Game = function() {
         return this.tcell_(this.p2t_(x),this.p2t_(y));                  
     };
 
+    this.hex_to_rgb_ = function(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
+    };
+
 
     //Para pintar cosas
-    this.pinta_filas_columnas_ = function(ctx, x, y, letra, size, color){
+    this.pinta_filas_columnas_ = function(ctx, x, y, letra, size, color, controla_distancia){
         if(!color){
             ctx.fillStyle = "#ffffff";
         }
         else{
             ctx.fillStyle = color;
         }
+
+        if(controla_distancia){
+            var new_color = this.hex_to_rgb_(color);
+        }
+
         var currX = x;
         var currY = y;
         var addX = 0;
@@ -290,7 +304,30 @@ var Game = function() {
             var row = letra[i_y];
             for (var i_x = 0; i_x < row.length; i_x++) {
                 if (row[i_x]) {
-                    ctx.fillRect(currX + i_x * size, currY, size*1.1, size*1.1);
+                    if(controla_distancia){
+                        var distancia_centro = 0;
+                        var a = 0;
+                        var b = 0;
+                        a = Math.abs(currX + i_x * size - this.player_.centro_x);
+                        b = Math.abs(currY - this.player_.centro_y);
+                        distancia_centro = Math.sqrt( a*a + b*b );
+
+
+
+                        var opacidad = (1 - distancia_centro/350);
+
+                        console.log(distancia_centro)
+                        if(distancia_centro > 350){
+                            continue;
+                        }
+
+                        ctx.fillStyle = "rgba("+new_color.r+","+new_color.g+","+new_color.b+","+opacidad+")";
+                        ctx.fillRect(currX + i_x * size, currY, size, size);
+                    }
+                    else{
+                        ctx.fillRect(currX + i_x * size, currY, size*1.1, size*1.1);
+
+                    }
                 }
             }
             addX = Math.max(addX, row.length * size);
@@ -399,18 +436,25 @@ var Game = function() {
 
     //Actualizo entidades del juego
     this.update_ = function(dt) {
-        this.player_.update(dt);
+        this.player_.update_(dt);
+
+        if(this.moustro_final_){
+            this.final_boss_.update_(dt);
+        }
+
+        //TODO: Hacerlo bien lo de sacar el moustro final
 
         var muertos = 0;
         for (var i = 0; i < this.enemigos_.length; i++) {
             this.enemigos_[i].update(dt);
             if(this.enemigos_[i].muerto){
-            	muertos++;
+                muertos++;
             }
         }
+
+
         if(muertos >= this.enemigos_.length && !this.moustro_final_){
             this.setup_(true);
-
         }
 
     };
@@ -456,9 +500,9 @@ var Game = function() {
 
     this.pre_shake_ = function() {
         if(this.tiempo_shacke_ > this.timestamp_()){
-        	var cuanto_shake = 3;
+        	var cuanto_shake = 4;
         	if(this.tiempo_muerte_ > this.timestamp_()){
-        		cuanto_shake = cuanto_shake*8;
+        		cuanto_shake = cuanto_shake*10;
         	}
             this.ctx.save();
             if(!this.dx_shacke && !this.dy_shacke){
@@ -1202,7 +1246,8 @@ var Game = function() {
 
             //Y básicamente se lanza el juego
             frame();
-            juego.setup_(false);
+
+            juego.setup_(true);
             juego.empieza_();
             juego.empezado_ = true;
 
