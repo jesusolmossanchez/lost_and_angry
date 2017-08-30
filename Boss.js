@@ -208,7 +208,7 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
 
     this.controla_dispara_ = function() {
-        var dispara = (Math.random()>0.99)?true:false;
+        var dispara = (Math.random()>0.97)?true:false;
         return dispara;
     };
 
