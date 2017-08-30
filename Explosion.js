@@ -19,15 +19,8 @@ var Explosion = function(x, y, propia) {
 
 var Particle = function(x, y, propia) {
     
-    this.randInt_ = function(min, max, positive) {
-        var num;
-        if (positive === false) {
-            num = Math.floor(Math.random() * max) - min;
-            num *= Math.floor(Math.random() * 2) === 1 ? 1 : -1;
-        } else {
-            num = Math.floor(Math.random() * max) + min;
-        }
-
+    this.randInt_ = function(min, max) {
+        var num = Math.floor(Math.random()*(max-min+1)+min);
         return num;
     };
 
@@ -51,8 +44,8 @@ var Particle = function(x, y, propia) {
   
     this.x    = x;
     this.y    = y;
-    this.xv   = this.randInt_(this.particlesMinSpeed_, this.particlesMaxSpeed_, false);
-    this.yv   = this.randInt_(this.particlesMinSpeed_/2, this.particlesMaxSpeed_/2, false);
+    this.xv   = this.randInt_(this.particlesMinSpeed_, this.particlesMaxSpeed_);
+    this.yv   = this.randInt_(this.particlesMinSpeed_/2, this.particlesMaxSpeed_/2);
     if(this.xv > 0){
 	    this.max_x = x + Math.random()*100;
     }
@@ -69,6 +62,6 @@ var Particle = function(x, y, propia) {
     this.opacidad = Math.random();
 
 
-    this.size = this.randInt_(this.particlesMinSize_, this.max_particulas_size_, true);
+    this.size = this.randInt_(this.particlesMinSize_, this.max_particulas_size_);
     
 };
