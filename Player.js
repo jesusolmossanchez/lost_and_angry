@@ -45,7 +45,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
  
 
     this.update_ = function(dt) {
-
+        
         if(this.salud_ < 0){
             juego.ganador_ = "cpu";
             juego.game_over_();
@@ -236,7 +236,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         }
     };
 
-    this.pinta_player_ = function(dt, ctx, counter) {
+    this.pinta_player_ = function(dt, ctx, counter, angulo) {
 
 
         if(juego.wait_start_ > juego.timestamp_()){
@@ -305,11 +305,21 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         pieses[3] = [[  , 1,  , 1,  ,  ,  ]];
        
         //var opacidad_jugador = 1;
+        //console.log(this.tiempo_portal_);
         if(this.tiempo_portal_ > juego.timestamp_()){
             var negativo = -1;
-            this.angulo *= (negativo*1.1);
-            this.angulo += (negativo*1);
-            ctx.globalAlpha -= 0.005;
+            if(!angulo){
+
+                this.angulo *= (negativo*1.1);
+                this.angulo += (negativo*1);
+                ctx.globalAlpha -= 0.005;
+            }
+            else{
+                angulo = angulo * negativo * 1.1;
+                this.angulo = angulo + negativo * 1;
+                ctx.globalAlpha -= 0.005;
+            }
+
             opacidad_jugador -= 0.01;
         }
         else{
@@ -433,6 +443,8 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         }
 
 
+        return this.angulo;
+
     };
 
     //var A;
@@ -507,8 +519,6 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         var mini_portal_ancho = juego.portal_.ancho_/3;
         var mini_portal_alto = juego.portal_.ancho_/3;
 
-        juego.ctx.fillStyle = "#0000ff";
-        juego.ctx.fillRect(mini_portal_x, mini_portal_y, mini_portal_ancho, mini_portal_alto);
         var overlap = juego.overlap_(this.x, this.y, this.ancho_, this.alto_, mini_portal_x, mini_portal_y, mini_portal_ancho, mini_portal_alto);
         return overlap;
     }
