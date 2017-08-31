@@ -80,12 +80,12 @@ body {
 @media (max-width :767px) { 
     @media ( orientation : portrait) { 
         #canvas_mobile_gira{
-            display: block;
+            display: block !important;
         }
     }
     @media ( orientation : landscape) { 
         #canvas_mobile_gira{
-            display: none;
+            display: none !important;
         }
     }
 }
