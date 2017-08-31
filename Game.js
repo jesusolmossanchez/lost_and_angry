@@ -346,10 +346,7 @@ var Game = function() {
     //-------------------------------------------------------------------------
 
     //SET-UP de las cosas del juego... ahora mismo un jugador
-    this.setup_ = function(final) {
-
-
-
+    this.setup_ = function(final, wait) {
 
     	this.cuantos_enemigos_ = 0;
     	this.enemigos_ = [];
@@ -359,7 +356,13 @@ var Game = function() {
 
     	this.MAP_.datos = this.crea_plataformas_(this.moustro_final_);
 
-        this.wait_start_ = this.timestamp_() + 1500;
+
+        this.ctx.globalAlpha = 1;
+        var nuevo_wait = 1500;
+        if(wait){
+            nuevo_wait = wait;
+        }
+        this.wait_start_ = this.timestamp_() + nuevo_wait;
 
         this.player_ = new Player(this, 20, this.alto_total_ - 50, 800, 30000, this.salud_actual_);
 
@@ -493,21 +496,13 @@ var Game = function() {
         if(this.moustro_final_){
             this.final_boss_.update_(dt);
         }
-
-        //TODO: Hacerlo bien lo de sacar el moustro final
-
-        var muertos = 0;
-        for (var i = 0; i < this.enemigos_.length; i++) {
-            this.enemigos_[i].update(dt);
-            if(this.enemigos_[i].muerto){
-                muertos++;
+        else{
+            for (var i = 0; i < this.enemigos_.length; i++) {
+                this.enemigos_[i].update(dt);
             }
         }
 
-
-        if(muertos >= this.enemigos_.length && !this.moustro_final_){
-            this.setup_(true);
-        }
+      
 
     };
 
@@ -1174,20 +1169,78 @@ var Game = function() {
         var size_logo_px = 8;
         var x_logo = this.ancho_total_/2 - (size_logo_px * logo[0].length)/2;
 
-        this.pinta_filas_columnas_(ctx, x_logo, 200, logo, size_logo_px);
+
+        var loading =  [
+                        [ 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1,  ,  , 1, 1,  , 1, 1,  ,  , 1,  , 1, 1, 1, 1,  ,  ,  ,  ,  ,  ,  ,  ,  ],
+                        [ 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,  ,  ,  , 1, 1,  ,  , 1,  , 1, 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
+                        [ 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1,  , 1, 1, 1,  , 1,  , 1, 1,  , 1, 1,  ,  ,  ,  ,  ,  ,  ,  ],
+                        [ 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  , 1, 1,  , 1, 1,  ,  , 1,  ,  ,  ,  ,  ,  ,  ,  ],
+                        [ 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1, 1,  ,  , 1, 1,  , 1, 1,  ,  , 1,  , 1, 1, 1, 1, 1,  , 1,  , 1,  , 1,  ,  ]
+                ];
+
+        var size_loading_px = 4;
+        var x_loading = this.ancho_total_/2 - (size_loading_px * loading[0].length)/2;
+
+        this.pinta_filas_columnas_(ctx, x_logo, 180, logo, size_logo_px);
+        this.pinta_filas_columnas_(ctx, x_loading, 260, loading, size_loading_px);
         
     };
 
 
     //Pinta el cargador con un porcentaje
     this.pinta_cargador_ = function(percent, ctx) {
+        
         var ancho_cargador = 200;
         var alto_cargador = 80;
-        ctx.fillRect((this.ancho_total_ - ancho_cargador)/2, this.alto_total_/2 + 50, percent * ancho_cargador, alto_cargador);
+        ctx.fillRect((this.ancho_total_ - ancho_cargador)/2, this.alto_total_/2 - 50, percent * ancho_cargador, alto_cargador);
 
         ctx.strokeStyle="#ffffff";
         ctx.lineWidth=10;
-        ctx.strokeRect((this.ancho_total_ - ancho_cargador)/2, this.alto_total_/2 + 50, ancho_cargador - 5, alto_cargador);
+        ctx.strokeRect((this.ancho_total_ - ancho_cargador)/2, this.alto_total_/2 - 50, ancho_cargador - 5, alto_cargador);
+    };
+
+    //Pinta el cargador con un porcentaje
+    this.angulo_intro_ = 0;
+    this.fin_intro_ = this.timestamp_();
+    this.cambia_pantalla_intro_ = false;
+    this.pinta_intro_ = function(ctx, dt) {
+
+        
+        if(this.fin_intro_ < this.timestamp_() && this.cambia_pantalla_intro_){
+            this.setup_(false, 800);
+            this.empieza_();
+            this.empezado_ = true;
+            return;
+        }
+
+
+        if(!this.cambia_pantalla_intro_){
+            this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + this.counter*2;
+        }
+
+        this.player_ = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 800, 30000, this.salud_actual_);
+
+        this.portal_ = {};
+        this.portal_.ancho_ = this.player_.alto_;
+        this.portal_.alto_ = this.player_.alto_;
+        this.portal_.x = (this.ancho_total_ / 2) + 150;
+        this.portal_.y = (this.alto_total_ / 2) + 100;
+
+        this.player_.right = true;
+        if(this.player_.x >= this.portal_.x + 10 && !this.cambia_pantalla_intro_){
+            this.cambia_pantalla_intro_ = true;
+            this.fin_intro_ = this.timestamp_() + 3000;
+        }
+        if(this.player_.x >= this.portal_.x + 10){
+            this.player_.tiempo_portal_ = this.timestamp_() + 3000;
+        }
+
+        this.render_portal_(ctx);
+        this.player_.pinta_home_();
+        this.angulo_intro_ = this.player_.pinta_player_(dt, ctx, this.counter, this.angulo_intro_);
+
+
+
     };
 
 
@@ -1411,7 +1464,6 @@ var Game = function() {
     var juego = new Game();
 
     //Muestra el logo de buenas a primeras
-    juego.muestra_logo_(juego.ctx);
 
     //Control de orientación en mobile
     juego.controla_orientacion_();
@@ -1428,17 +1480,31 @@ var Game = function() {
 
     var then = juego.timestamp_();
     function frame() {
-        if(!juego.empezado_ || juego.pausa_){
+        if(juego.pausa_){
             requestAnimationFrame(frame, canvas);
             return;
         }
         now = juego.timestamp_();
         dt = dt + Math.min(1, (now - last) / 1000);
+
+
+        if(!juego.empezado_){
+
+            juego.ctx.clearRect(0, 0, juego.ancho_total_, juego.alto_total_);
+            juego.muestra_logo_(juego.ctx);
+            //juego.pinta_cargador_(juego.music_percent, juego.ctx);
+            juego.pinta_intro_(juego.ctx, dt);
+
+            last = now;
+            juego.counter++;
+            requestAnimationFrame(frame, canvas);
+            return;
+        }
+
+
         while(dt > juego.step_) {
             dt = dt - juego.step_;
-            if(!juego.hay_punto_){
-                juego.update_(juego.step_);
-            }
+            juego.update_(juego.step_);
         }
         //if(juego.tiempo_muerte_ > juego.timestamp_()){
         if(false){
@@ -1512,7 +1578,13 @@ var Game = function() {
     window.levelup_audio2;
 
 
+
+
     var done = false;
+
+    frame();
+    
+
     var intervalo_cancion = setInterval(function () {
         //Al final cuando toda la música está cargada se lanza esto
         if (done) {
@@ -1520,11 +1592,11 @@ var Game = function() {
             juego.controla_orientacion_();
 
             //Y básicamente se lanza el juego
-            frame();
-
+            /*
             juego.setup_(false);
             juego.empieza_();
             juego.empezado_ = true;
+            */
 
             //Ademas se limpia este intervalo que no de más el follón
             clearInterval(intervalo_cancion);
@@ -1533,7 +1605,7 @@ var Game = function() {
 
         if(!flag_song){
             var music_percent = music_player.generate();
-            juego.pinta_cargador_(music_percent, juego.ctx);
+            juego.music_percent = music_percent;
             if(music_percent >= 1){
                 flag_song = true;
             }
@@ -1606,7 +1678,7 @@ var Game = function() {
             window.punto_audio.src = URL.createObjectURL(new Blob([wave6], {type: "audio/wav"}));
         
         }
-    }, 10);
+    }, 120);
 
 
 })();
