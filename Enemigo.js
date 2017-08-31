@@ -39,12 +39,13 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
     this.tiempo_parado_         = juego.timestamp_();
     this.muriendo               = juego.timestamp_();
 
-
-
-
  
 
     this.update = function(dt) {
+
+        if(juego.player_.tiempo_portal_ > juego.timestamp_()){
+            return;
+        }
 
         if(juego.wait_start_ > juego.timestamp_()){
             return;
