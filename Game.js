@@ -185,6 +185,13 @@ var Game = function() {
    	this.tiempo_shacke_ = this.timestamp_();
 
 
+    this.cambia_pantalla_ = false;
+    this.cuantas_pantallas_ = 0;
+
+    this.salud_inicial_ = 250;
+    this.salud_actual_ = this.salud_inicial_;
+
+
 
 
     //-------------------------------------------------------------------------
@@ -340,6 +347,10 @@ var Game = function() {
 
     //SET-UP de las cosas del juego... ahora mismo un jugador
     this.setup_ = function(final) {
+
+
+
+
     	this.cuantos_enemigos_ = 0;
     	this.enemigos_ = [];
     	this.explosions_ = [];
@@ -350,12 +361,24 @@ var Game = function() {
 
         this.wait_start_ = this.timestamp_() + 1500;
 
-        this.player_ = new Player(this, 20, this.alto_total_ - 50, 800, 30000, 1);
+        this.player_ = new Player(this, 20, this.alto_total_ - 50, 800, 30000, this.salud_actual_);
 
         if(this.moustro_final_){
         	this.final_boss_ = new Boss(this, this.ancho_total_/1.5, 100, 800, 30000, 1);
         }
         else{
+
+
+            this.portal_ = {};
+            this.portal_.ancho_ = this.player_.alto_;
+            this.portal_.alto_ = this.player_.alto_;
+            this.situa_portal_(this.portal_);
+
+            while(this.portal_mal_situado_(this.portal_)){
+                this.situa_portal_(this.portal_);
+            }
+
+
         	this.cuantos_enemigos_ = this.randInt_ (5, 10);
         	for (var i = 0; i < this.cuantos_enemigos_; i++) {
 	            var x_enemigo = this.randInt_ (200, this.ancho_total_ - 200);
@@ -374,6 +397,25 @@ var Game = function() {
 
 
 
+    };
+
+
+
+    this.portal_mal_situado_ = function(portal) {
+        //Si está situado en una celda ocupado devuelvo true
+        for (var i = portal.x; i < portal.x + portal.ancho_; i++) {
+            for (var j = portal.y - 5; j < portal.y + portal.alto_; j++) {
+                if(this.cell_(i, j)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    this.situa_portal_ = function(portal) {
+        portal.x = this.randInt_ (this.player_.ancho_, this.ancho_total_ - this.player_.ancho_);
+        portal.y = this.randInt_ (0, this.alto_total_ / 1.5);
     };
 
 
@@ -426,6 +468,26 @@ var Game = function() {
 
     //Actualizo entidades del juego
     this.update_ = function(dt) {
+
+
+        this.salud_actual_ = this.player_.salud_;
+
+
+        if(this.cambia_pantalla_ && this.player_.tiempo_portal_ < this.timestamp_()){
+            this.cambia_pantalla_ = false;
+            this.ctx.globalAlpha = 1;
+            this.cuantas_pantallas_++;
+
+            var final = false;
+
+            if(this.cuantas_pantallas_ > 5 && Math.random()>0.7){
+                final = true;
+            }
+
+
+            this.setup_(final);
+        }
+
         this.player_.update_(dt);
 
         if(this.moustro_final_){
@@ -476,6 +538,11 @@ var Game = function() {
         this.render_explosion_(ctx);
         this.render_enemigos_(ctx, dt);
         this.render_boss_(ctx, dt);
+
+        if(!this.moustro_final_){
+            this.render_portal_(ctx);
+        }
+
         this.render_map_(ctx, dt, true);
         this.render_bullets_(ctx);
         this.render_zapatillas_(ctx);
@@ -569,6 +636,57 @@ var Game = function() {
 
 
     }
+
+
+    //Llama a la funcion del objeto de jugador para pintarlo... lo pongo así, porque igual hay que pintar el jugador diferente según algo del juego
+    this.render_portal_ = function(ctx) {
+
+
+        radius = this.portal_.ancho_;
+        var x_portal = this.portal_.x + this.portal_.ancho_ / 2;
+        var y_portal = this.portal_.y + this.portal_.alto_ / 2;
+
+        var distancia_centro = 0;
+        var a = 0;
+        var b = 0;
+        a = Math.abs(x_portal - this.player_.centro_x);
+        b = Math.abs(y_portal - this.player_.centro_y);
+        distancia_centro = Math.sqrt( a*a + b*b );
+
+        if(distancia_centro > this.radio_vision_){
+            return;
+        }
+
+      
+    
+
+        var gradient = ctx.createRadialGradient(x_portal, y_portal, 0, x_portal, y_portal, radius);
+        ctx.fillStyle = gradient;
+        
+        for (var i = -2; i < 2; i++) {
+            var new_x_portal = x_portal + (0.5 - Math.random())*i*15;
+            var new_y_portal = y_portal + (0.5 - Math.random())*i*15;
+            var rand_int = this.randInt_ (110, 255);
+            ctx.beginPath();
+            ctx.arc(new_x_portal, new_y_portal, radius, 0, Math.PI * 2, false);
+            gradient.addColorStop(0,"rgba("+Math.floor(rand_int/1.2)+", "+rand_int+", "+rand_int+", 0)");
+            gradient.addColorStop(0.6,"rgba("+Math.floor(rand_int/1.2)+", "+rand_int+", "+rand_int+", 0)");
+            gradient.addColorStop(0.8,"rgba("+Math.floor(rand_int/1.2)+", "+rand_int+", "+rand_int+", 0.2)");
+            gradient.addColorStop(1,"rgba("+Math.floor(rand_int/1.2)+", "+rand_int+", "+rand_int+", 0.3)");
+            ctx.fill();
+        }
+       
+        ctx.beginPath();
+        ctx.arc(x_portal, y_portal, radius*1.2, 0, Math.PI * 2, false);
+        var gradient = ctx.createRadialGradient(x_portal, y_portal, 0, x_portal, y_portal, radius*1.2);
+
+        gradient.addColorStop(0,"rgba(209,127,140, 0.2)");
+        gradient.addColorStop(0.8,"rgba(209,127,140, 0.1)");
+        gradient.addColorStop(1,"rgba(209,127,140, 0)");
+        ctx.fillStyle = gradient;
+        ctx.fill();
+
+    };
 
 
     //Llama a la funcion del objeto de jugador para pintarlo... lo pongo así, porque igual hay que pintar el jugador diferente según algo del juego
@@ -1404,7 +1522,7 @@ var Game = function() {
             //Y básicamente se lanza el juego
             frame();
 
-            juego.setup_(true);
+            juego.setup_(false);
             juego.empieza_();
             juego.empezado_ = true;
 
