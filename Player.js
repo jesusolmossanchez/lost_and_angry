@@ -3,7 +3,7 @@
 /**************************************************
 ** GAME PLAYER CLASS
 **************************************************/
-var Player = function(juego, x, y, gravedad, impulso) {
+var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
 
     this.que_pie                = 0;
     this.angulo                 = 0;
@@ -37,20 +37,28 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
     this.no_dispares_counter_   = 0;
 
-    this.salud_inicial_         = 250;
-    this.salud_                 = this.salud_inicial_;
+    this.salud_                 = salud_actual;
+    
 
-
+    this.tiempo_portal_ = juego.timestamp_();
 
  
 
     this.update_ = function(dt) {
 
-
-
         if(this.salud_ < 0){
             juego.ganador_ = "cpu";
             juego.game_over_();
+            return;
+        }
+
+        if(this.tiempo_portal_ > juego.timestamp_()){
+            return;
+        }
+
+        if(this.entra_portal_()){
+            juego.cambia_pantalla_ = true;
+            this.tiempo_portal_ = juego.timestamp_() + 3000;
         }
 
 
@@ -229,6 +237,8 @@ var Player = function(juego, x, y, gravedad, impulso) {
     };
 
     this.pinta_player_ = function(dt, ctx, counter) {
+
+
         if(juego.wait_start_ > juego.timestamp_()){
             this.pinta_home_();
         }
@@ -294,44 +304,56 @@ var Player = function(juego, x, y, gravedad, impulso) {
         pieses[2] = [[ 1,  ,  , 1,  ,  ,  ]];
         pieses[3] = [[  , 1,  , 1,  ,  ,  ]];
        
-        if(this.jumping){
-            this.que_pie = 1;
-            this.angulo = 0;
-        }
-        else if(this.left || this.right){
-            if(juego.tween_frames_(counter, 30) < 0.5 ){
-                if(this.left){
-                    this.que_pie = 2;
-                }
-                else{
-                    this.que_pie = 0;
-                }
-                this.angulo = -2;
-            }
-            else if(this.left){
-                this.que_pie = 3;
-                this.angulo = 2;
-            }
-            else{
-                this.que_pie = 1;
-                this.angulo = 2;
-            }
-
+        //var opacidad_jugador = 1;
+        if(this.tiempo_portal_ > juego.timestamp_()){
+            var negativo = -1;
+            this.angulo *= (negativo*1.1);
+            this.angulo += (negativo*1);
+            ctx.globalAlpha -= 0.005;
+            opacidad_jugador -= 0.01;
         }
         else{
-            this.angulo = 0;
+            opacidad_jugador = 1;
+            if(this.jumping){
+                this.que_pie = 1;
+                this.angulo = 0;
+            }
+            else if(this.left || this.right){
+                if(juego.tween_frames_(counter, 30) < 0.5 ){
+                    if(this.left){
+                        this.que_pie = 2;
+                    }
+                    else{
+                        this.que_pie = 0;
+                    }
+                    this.angulo = -2;
+                }
+                else if(this.left){
+                    this.que_pie = 3;
+                    this.angulo = 2;
+                }
+                else{
+                    this.que_pie = 1;
+                    this.angulo = 2;
+                }
+
+            }
+            else{
+                this.angulo = 0;
+            }
         }
-        
+
+
         ctx.save();
-        ctx.translate(x_player, y_player);
+        ctx.translate(x_player + this.ancho_ / 2, y_player + this.alto_/2);
 
         //Pinto el halo ese chungo
         
         radius = juego.ancho_total_/3;
         ctx.beginPath();
-        ctx.arc(this.ancho_ / 2, this.alto_/2, 300, 0, Math.PI * 2, false);
+        ctx.arc(0, 0, 300, 0, Math.PI * 2, false);
 
-        var gradient = ctx.createRadialGradient(this.ancho_ / 2, this.alto_/2, radius*0.9, this.ancho_ / 2, this.alto_/2, 0);
+        var gradient = ctx.createRadialGradient(0, 0, radius*0.9, this.ancho_ / 2, this.alto_/2, 0);
         if((this.tiempo_atacado_ - juego.timestamp_())>1700){
             var random_halo = Math.random()/2;
             gradient.addColorStop(0,"rgba(255, 11, 11, 0)");
@@ -358,17 +380,23 @@ var Player = function(juego, x, y, gravedad, impulso) {
             que_pistola = pistola_izq;
             x_pistola = -this.ancho_ + 5;
         }
-        juego.pinta_filas_columnas_(ctx, 0, 0, que_jugador, this.size_player_pixel, "#D2E4F1");
+
+        ctx.translate(- this.ancho_ / 2, - this.alto_/2);
+
+        var color_player = "rgba(210,228,241,"+opacidad_jugador+")";
+
+        juego.pinta_filas_columnas_(ctx, 0, 0, que_jugador, this.size_player_pixel, color_player);
         //Pinta pies
-        juego.pinta_filas_columnas_(ctx, 0, this.alto_ - this.size_player_pixel, pieses[this.que_pie], this.size_player_pixel, "#D2E4F1");
+        juego.pinta_filas_columnas_(ctx, 0, this.alto_ - this.size_player_pixel, pieses[this.que_pie], this.size_player_pixel, color_player);
   
 
         //Pinta pistola
         //cambio el angulo de la pistola?
-        this.angulo = 0;
+        this.angulo_pistola_ = 0;
+        var color_pistola = "rgba(143,172,192,"+opacidad_jugador+")";
         ctx.translate(this.ancho_/2.5,  this.alto_/2);
         ctx.rotate(this.angulo*Math.PI/180);
-        juego.pinta_filas_columnas_(ctx, x_pistola, 0, que_pistola, size_pistola_pixel, "#8FACC0");
+        juego.pinta_filas_columnas_(ctx, x_pistola, 0, que_pistola, size_pistola_pixel, color_pistola);
         ctx.restore();
 
 
@@ -380,7 +408,7 @@ var Player = function(juego, x, y, gravedad, impulso) {
 
             var ancho_cargador = this.ancho_*2;
             var alto_cargador = 5;
-            var percent = this.salud_/this.salud_inicial_;
+            var percent = this.salud_/juego.salud_inicial_;
             
             ctx.fillStyle="rgba(11, 204, 0, "+opacidad+")";
             if(percent < 0.8){
@@ -471,6 +499,18 @@ var Player = function(juego, x, y, gravedad, impulso) {
         var y_home = this.y - 60;
 
         juego.pinta_filas_columnas_(juego.ctx, x_home, y_home, home, size_home, "#ffffff");
+    }
+
+    this.entra_portal_ = function(){
+        var mini_portal_x = juego.portal_.x + juego.portal_.ancho_/3;
+        var mini_portal_y = juego.portal_.y + juego.portal_.ancho_/3;
+        var mini_portal_ancho = juego.portal_.ancho_/3;
+        var mini_portal_alto = juego.portal_.ancho_/3;
+
+        juego.ctx.fillStyle = "#0000ff";
+        juego.ctx.fillRect(mini_portal_x, mini_portal_y, mini_portal_ancho, mini_portal_alto);
+        var overlap = juego.overlap_(this.x, this.y, this.ancho_, this.alto_, mini_portal_x, mini_portal_y, mini_portal_ancho, mini_portal_alto);
+        return overlap;
     }
 
 
