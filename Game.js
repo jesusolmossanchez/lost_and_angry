@@ -246,6 +246,12 @@ var Game = function() {
                 ((y2 + h2 - 1) < y1));
     };
 
+    //comprueba si algo está dentro de algo
+    this.dentro_circulo_ = function(x, y, cx, cy, radius) {
+        var distance_squared = (x - cx) * (x - cx) + (y - cy) * (y - cy);
+        return distance_squared <= radius * radius;
+    };
+
 
     //Esto es para hacer animaciones y cosas así... función auxiliar
     this.tween_frames_ = function(frame, duration) {
@@ -367,6 +373,7 @@ var Game = function() {
         this.player_ = new Player(this, 20, this.alto_total_ - 50, 800, 30000, this.salud_actual_);
 
         if(this.moustro_final_){
+
         	this.final_boss_ = new Boss(this, this.ancho_total_/1.5, 100, 800, 30000, 1);
         }
         else{
@@ -430,10 +437,10 @@ var Game = function() {
     };
 
 
-    this.game_over_ = function() {
+    this.game_over_ = function(ganador) {
         //Preparado para el game over
         var game_over;
-        if(this.ganador_ === "1_cpu"){
+        if(ganador){
             game_over =  [
                             [ 1, 1,  , 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  ,  ,  , 1, 1,  , 1,  , 1,  , 1, 1,  , 1, 1,  ,  , 1,  ,  , 1,  , 1,  , 1,  ],
                             [  , 1, 1, 1,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,  ,  , 1, 1,  , 1,  , 1,  ,  ,  ,  , 1, 1,  ,  , 1,  ,  , 1,  , 1,  , 1,  ],
@@ -442,7 +449,7 @@ var Game = function() {
                             [  , 1, 1, 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  ,  ,  ,  , 1,  , 1,  ,  , 1, 1,  , 1, 1,  ,  , 1,  ,  , 1,  , 1,  , 1,  ]
                         ];
         }
-        else if(this.ganador_ === "cpu"){
+        else{
 
             game_over =  [
                             [ 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1, 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1],
@@ -833,56 +840,106 @@ var Game = function() {
 
             if(distancia_centro < this.radio_vision_ * 1.2){
 
-                for (var j = 0; j < this.cuantos_enemigos_; j++) {
-                    
-                    if(!this.enemigos_[j].muerto && this.timestamp_()>this.enemigos_[j].muriendo){
-                        if(this.overlap_(this.enemigos_[j].x, this.enemigos_[j].y, this.enemigos_[j].ancho_, this.enemigos_[j].alto_, disparo.x - size_bala/2, disparo.y - size_bala/2, size_bala, size_bala)){
-                            this.tiempo_muerte_ = this.timestamp_()+200;
+                if(!this.moustro_final_){
+                    for (var j = 0; j < this.cuantos_enemigos_; j++) {
+                        
+                        if(!this.enemigos_[j].muerto && this.timestamp_()>this.enemigos_[j].muriendo){
+                            if(this.overlap_(this.enemigos_[j].x, this.enemigos_[j].y, this.enemigos_[j].ancho_, this.enemigos_[j].alto_, disparo.x - size_bala/2, disparo.y - size_bala/2, size_bala, size_bala)){
+                                this.tiempo_muerte_ = this.timestamp_()+200;
 
-                            var rand_exp1 = (Math.random() - 0.5) * 10;
-                            var rand_exp2 = (Math.random() - 0.5) * 10;
-                            var rand_exp3 = (Math.random() - 0.5) * 10;
+                                var rand_exp1 = (Math.random() - 0.5) * 10;
+                                var rand_exp2 = (Math.random() - 0.5) * 10;
+                                var rand_exp3 = (Math.random() - 0.5) * 10;
 
-                            var rand_size1 = Math.random() * 45;
-                            var rand_size2 = Math.random() * 45;
-                            var rand_size3 = Math.random() * 45;
+                                var rand_size1 = Math.random() * 45;
+                                var rand_size2 = Math.random() * 45;
+                                var rand_size3 = Math.random() * 45;
 
-                     
-                            var blue = Math.floor(Math.random() * 155) + 100;
-                            
-                            ctx.beginPath();
-                            ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
-                            ctx.arc(disparo.x+rand_exp1, disparo.y+rand_exp2, rand_size1, Math.PI * 2, 0, false);
-                            ctx.closePath();
-                            ctx.fill();
+                         
+                                var blue = Math.floor(Math.random() * 155) + 100;
+                                
+                                ctx.beginPath();
+                                ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
+                                ctx.arc(disparo.x+rand_exp1, disparo.y+rand_exp2, rand_size1, Math.PI * 2, 0, false);
+                                ctx.closePath();
+                                ctx.fill();
 
-                            ctx.beginPath();
-                            ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
-                            ctx.arc(disparo.x+rand_exp2, disparo.y+rand_exp3, rand_size2, Math.PI * 2, 0, false);
-                            ctx.closePath();
-                            ctx.fill();
-                            ctx.beginPath();
+                                ctx.beginPath();
+                                ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
+                                ctx.arc(disparo.x+rand_exp2, disparo.y+rand_exp3, rand_size2, Math.PI * 2, 0, false);
+                                ctx.closePath();
+                                ctx.fill();
+                                ctx.beginPath();
 
-                            ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
-                            ctx.arc(disparo.x+rand_exp3, disparo.y+rand_exp1, rand_size3, Math.PI * 2, 0, false);
-                            ctx.closePath();
-                            ctx.fill();
-            				
-                            var x_explosion = this.enemigos_[j].x + this.enemigos_[j].ancho_/2;
-            				var y_explosion = this.enemigos_[j].y + this.enemigos_[j].alto_/2;
-                            this.explosions_.push(
-			                    new Explosion(x_explosion, y_explosion, false)
-			                );
+                                ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
+                                ctx.arc(disparo.x+rand_exp3, disparo.y+rand_exp1, rand_size3, Math.PI * 2, 0, false);
+                                ctx.closePath();
+                                ctx.fill();
+                				
+                                var x_explosion = this.enemigos_[j].x + this.enemigos_[j].ancho_/2;
+                				var y_explosion = this.enemigos_[j].y + this.enemigos_[j].alto_/2;
+                                this.explosions_.push(
+    			                    new Explosion(x_explosion, y_explosion, false)
+    			                );
 
-                            this.bullets_.splice(i, 1);
-                            this.enemigos_[j].muriendo = this.timestamp_() + 400;
-                            this.enemigos_[j].muerto = true;
-                            continue;
+                                this.bullets_.splice(i, 1);
+                                this.enemigos_[j].muriendo = this.timestamp_() + 400;
+                                this.enemigos_[j].muerto = true;
+                                continue;
 
 
+                            }
                         }
+                        
                     }
-                    
+                }
+                else{
+                    if(this.overlap_(this.final_boss_.x, this.final_boss_.y, this.final_boss_.ancho_, this.final_boss_.alto_, disparo.x - size_bala/2, disparo.y - size_bala/2, size_bala, size_bala)){
+                        
+
+                        var rand_exp1 = (Math.random() - 0.5) * 10;
+                        var rand_exp2 = (Math.random() - 0.5) * 10;
+                        var rand_exp3 = (Math.random() - 0.5) * 10;
+
+                        var rand_size1 = Math.random() * 45;
+                        var rand_size2 = Math.random() * 45;
+                        var rand_size3 = Math.random() * 45;
+
+                 
+                        var blue = Math.floor(Math.random() * 155) + 100;
+                        
+                        ctx.beginPath();
+                        ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
+                        ctx.arc(disparo.x+rand_exp1, disparo.y+rand_exp2, rand_size1, Math.PI * 2, 0, false);
+                        ctx.closePath();
+                        ctx.fill();
+
+                        ctx.beginPath();
+                        ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
+                        ctx.arc(disparo.x+rand_exp2, disparo.y+rand_exp3, rand_size2, Math.PI * 2, 0, false);
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.beginPath();
+
+                        ctx.fillStyle = 'rgba(255,255,'+blue+',1)';
+                        ctx.arc(disparo.x+rand_exp3, disparo.y+rand_exp1, rand_size3, Math.PI * 2, 0, false);
+                        ctx.closePath();
+                        ctx.fill();
+                        
+                        /*
+                        var x_explosion = disparo.x - 50;
+                        var y_explosion = disparo.y;
+                        this.explosions_.push(
+                            new Explosion(x_explosion, y_explosion, false)
+                        );
+                        */
+
+                        this.bullets_.splice(i, 1);
+                        this.final_boss_.tiempo_herido_ = this.timestamp_() + 400;
+                        continue;
+
+                    }
+                            
                 }
 
 
@@ -1053,8 +1110,10 @@ var Game = function() {
                     this.cell_(disparo_boss.x, disparo_boss.y + 20) ||
                     this.cell_(disparo_boss.x, disparo_boss.y + 30) || 
                     this.cell_(disparo_boss.x, disparo_boss.y + 40) || 
-                    this.cell_(disparo_boss.x, disparo_boss.y + 50)
+                    this.cell_(disparo_boss.x, disparo_boss.y + 50) ||
+                    this.overlap_(this.player_.x, this.player_.y, this.player_.ancho_, this.player_.alto_, disparo_boss.x - size_bala/2, disparo_boss.y - size_bala/2, size_bala, size_bala)
                     ){
+
 
 
 
@@ -1067,6 +1126,13 @@ var Game = function() {
                 var rand_size2 = Math.random() * 120;
                 var rand_size3 = Math.random() * 120;
 
+                var radio_explosion_muerte = 80;
+                if(this.dentro_circulo_(this.player_.centro_x, this.player_.centro_y, disparo_boss.x, disparo_boss.y, radio_explosion_muerte) &&
+                    !disparo_boss.muerto_){
+                    this.player_.salud_ -= 30;
+                    this.player_.tiempo_atacado_ = this.timestamp_() + 3000; 
+                }
+                
          
                 var blue = Math.floor(Math.random() * 255);
 
@@ -1208,7 +1274,7 @@ var Game = function() {
 
     this.pinta_intro_ = function(ctx, dt) {
 
-        console.log(this.timestamp_());
+
         
         if(this.fin_intro_ < this.timestamp_() && this.cambia_pantalla_intro_){
             this.setup_(false, 800);
