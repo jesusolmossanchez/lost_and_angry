@@ -1201,10 +1201,14 @@ var Game = function() {
 
     //Pinta el cargador con un porcentaje
     this.angulo_intro_ = 0;
+    this.tiempo_intro_ = this.timestamp_() + 5000;
     this.fin_intro_ = this.timestamp_();
     this.cambia_pantalla_intro_ = false;
+
+
     this.pinta_intro_ = function(ctx, dt) {
 
+        console.log(this.timestamp_());
         
         if(this.fin_intro_ < this.timestamp_() && this.cambia_pantalla_intro_){
             this.setup_(false, 800);
@@ -1213,9 +1217,8 @@ var Game = function() {
             return;
         }
 
-
         if(!this.cambia_pantalla_intro_){
-            this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + this.counter*2;
+            this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + (300 - (this.tiempo_intro_ - this.timestamp_())/15);
         }
 
         this.player_ = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 800, 30000, this.salud_actual_);
@@ -1678,7 +1681,7 @@ var Game = function() {
             window.punto_audio.src = URL.createObjectURL(new Blob([wave6], {type: "audio/wav"}));
         
         }
-    }, 120);
+    }, 1200);
 
 
 })();
