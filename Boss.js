@@ -43,12 +43,26 @@ var Boss = function(juego, x, y, gravedad, impulso) {
     this.muriendo               = juego.timestamp_();
 
 
+    this.tiempo_herido_         = juego.timestamp_();
+
+    this.salud_inicial_         = 2000;
+    this.salud_                 = this.salud_inicial_;
+
+
 
 
  
 
     this.update_ = function(dt) {
 
+        if(this.salud_ < 0){
+            juego.game_over_(true);
+            return;
+        }
+
+        if(this.tiempo_herido_ > juego.timestamp_()){
+            --this.salud_;
+        }
 
         this.centro_x = this.x + this.ancho_/2;
         this.centro_y = this.y + this.alto_/2;
@@ -152,8 +166,44 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
     this.pinta_boss_ = function(dt, ctx, counter) {
         //Posición
-        var x_player = this.x + (this.dx * dt);
-        var y_player = this.y + (this.dy * dt);
+        var x_boss = this.x + (this.dx * dt);
+        var y_boss = this.y + (this.dy * dt);
+
+        var color_boss = "#000000";
+
+        if(this.tiempo_herido_ > juego.timestamp_()){
+            color_boss = "#fff000";
+
+            var diff_atacado = this.tiempo_herido_ - juego.timestamp_();
+            
+            var opacidad = diff_atacado/2000;
+
+            var ancho_cargador = this.ancho_*1.2;
+            var alto_cargador = 20;
+            var percent = this.salud_/this.salud_inicial_;
+            
+            ctx.fillStyle="rgba(11, 204, 0, "+opacidad+")";
+            if(percent < 0.8){
+                ctx.fillStyle="rgba(224, 239, 20, "+opacidad+")";
+            }
+            if(percent < 0.6){
+                ctx.fillStyle="rgba(204, 199, 0, "+opacidad+")";
+            }
+            if(percent < 0.4){
+                ctx.fillStyle="rgba(239, 92, 20, "+opacidad+")";
+            }
+            if(percent < 0.2){
+                ctx.fillStyle="rgba(255, 0, 0, "+opacidad+")";
+            }
+
+            ctx.fillRect(x_boss - this.ancho_*0.2, y_boss - 40, percent * ancho_cargador, alto_cargador);
+
+            ctx.strokeStyle= "rgba(255,255,255,"+opacidad+")";
+            ctx.lineWidth=2;
+
+            ctx.strokeRect(x_boss - this.ancho_*0.2, y_boss - 40, ancho_cargador, alto_cargador);
+        }
+
 
 
         var player_izq =  [
@@ -186,9 +236,9 @@ var Boss = function(juego, x, y, gravedad, impulso) {
        
         que_jugador = player_izq;
         
-        juego.pinta_filas_columnas_(ctx, x_player, y_player, que_jugador, this.size_boss_pixel, "#000000", true);
+        juego.pinta_filas_columnas_(ctx, x_boss, y_boss, que_jugador, this.size_boss_pixel, color_boss, true);
         //Pinta pies
-        juego.pinta_filas_columnas_(ctx, x_player, y_player + this.alto_ - this.size_boss_pixel, pieses[this.que_pie], this.size_boss_pixel, "#000000", true);
+        juego.pinta_filas_columnas_(ctx, x_boss, y_boss + this.alto_ - this.size_boss_pixel, pieses[this.que_pie], this.size_boss_pixel, color_boss, true);
   
 
        
