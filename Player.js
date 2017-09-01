@@ -317,7 +317,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             else{
                 angulo = angulo * negativo * 1.1;
                 this.angulo = angulo + negativo * 1;
-                ctx.globalAlpha -= 0.005;
+                ctx.globalAlpha -= 0.009;
             }
 
             opacidad_jugador -= 0.01;
