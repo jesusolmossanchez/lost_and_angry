@@ -12,6 +12,9 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     this.y                      = y;
     this.alto_                  = this.size_player_pixel * 12;
     this.ancho_                 = this.size_player_pixel * 6 + 5;
+    this.centro_x               = this.x + this.ancho_/2;
+    this.centro_y                  = this.y + this.alto_/2;
+
     this.dx                     = 0;
     this.dy                     = 0;
 
@@ -38,6 +41,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     this.no_dispares_counter_   = 0;
 
     this.salud_                 = salud_actual;
+    //this.salud_                 = 10000000;
     
 
     this.tiempo_portal_ = juego.timestamp_();
@@ -47,8 +51,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     this.update_ = function(dt) {
         
         if(this.salud_ < 0){
-            juego.ganador_ = "cpu";
-            juego.game_over_();
+            juego.game_over_(false);
             return;
         }
 
@@ -56,9 +59,11 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             return;
         }
 
-        if(this.entra_portal_()){
-            juego.cambia_pantalla_ = true;
-            this.tiempo_portal_ = juego.timestamp_() + 3000;
+        if(!juego.moustro_final_){
+            if(this.entra_portal_()){
+                juego.cambia_pantalla_ = true;
+                this.tiempo_portal_ = juego.timestamp_() + 3000;
+            }
         }
 
 
