@@ -1284,8 +1284,9 @@ var Game = function() {
         }
 
         if(!this.cambia_pantalla_intro_){
-            this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + (300 - (this.tiempo_intro_ - this.timestamp_())/15);
-        }
+            //this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + (300 - (this.tiempo_intro_ - this.timestamp_())/15);
+            this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + this.counter*2;
+	}
 
         this.player_ = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 800, 30000, this.salud_actual_);
 
