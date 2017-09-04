@@ -388,6 +388,20 @@ var Game = function() {
                 this.situa_portal_(this.portal_);
             }
 
+            this.medical_kit_ = {};
+
+
+            if(Math.random() > 0.7){
+                this.medical_kit_.ancho_ = this.player_.alto_/2;
+                this.medical_kit_.alto_ = this.player_.alto_/2;
+                this.situa_medical_kit_(this.medical_kit_);
+
+                while(this.medical_kit_mal_situado_(this.medical_kit_)){
+                this.situa_medical_kit_(this.medical_kit_);
+                }  
+            }
+
+
 
         	this.cuantos_enemigos_ = this.randInt_ (5, 10);
         	for (var i = 0; i < this.cuantos_enemigos_; i++) {
@@ -426,6 +440,23 @@ var Game = function() {
     this.situa_portal_ = function(portal) {
         portal.x = this.randInt_ (this.player_.ancho_, this.ancho_total_ - this.player_.ancho_);
         portal.y = this.randInt_ (0, this.alto_total_ / 1.5);
+    };
+
+    this.medical_kit_mal_situado_ = function(medical_kit) {
+        //Si está situado en una celda ocupado devuelvo true
+        for (var i = medical_kit.x; i < medical_kit.x + medical_kit.ancho_; i++) {
+            for (var j = medical_kit.y - 5; j < medical_kit.y + medical_kit.alto_; j++) {
+                if(this.cell_(i, j)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    this.situa_medical_kit_ = function(medical_kit) {
+        medical_kit.x = this.randInt_ (this.player_.ancho_, this.ancho_total_ - this.player_.ancho_);
+        medical_kit.y = this.randInt_ (0, this.alto_total_ / 1.5);
     };
 
 
@@ -543,6 +574,7 @@ var Game = function() {
 
         if(!this.moustro_final_){
             this.render_portal_(ctx);
+            this.render_medical_kit_(ctx);
         }
 
         this.render_map_(ctx, dt, true);
@@ -640,7 +672,6 @@ var Game = function() {
     }
 
 
-    //Llama a la funcion del objeto de jugador para pintarlo... lo pongo así, porque igual hay que pintar el jugador diferente según algo del juego
     this.render_portal_ = function(ctx) {
 
         radius = this.portal_.ancho_;
@@ -686,6 +717,46 @@ var Game = function() {
         gradient.addColorStop(1,"rgba(209,127,140, 0)");
         ctx.fillStyle = gradient;
         ctx.fill();
+
+    };
+
+
+    this.render_medical_kit_ = function(ctx) {
+
+        var distancia_centro = 0;
+        var a = 0;
+        var b = 0;
+        var x_kit = this.medical_kit_.x + this.medical_kit_.ancho_ / 2;
+        var y_kit = this.medical_kit_.y + this.medical_kit_.alto_ / 2;
+        a = Math.abs(x_kit - this.player_.centro_x);
+        b = Math.abs(y_kit - this.player_.centro_y);
+        distancia_centro = Math.sqrt( a*a + b*b );
+
+        if(distancia_centro > this.radio_vision_ ){
+            return;
+        }
+
+
+
+        var tween = this.tween_frames_(this.counter, 80);
+        var lejos_borde = tween * 20;
+
+        ctx.fillStyle = 'rgba(255,110,110,'+(tween/5 + 0.1)+')';
+        var cruz_horizontal_x = this.medical_kit_.x;
+        var cruz_horizontal_y = this.medical_kit_.y + this.medical_kit_.alto_/3;
+        ctx.fillRect(cruz_horizontal_x, cruz_horizontal_y, this.medical_kit_.ancho_, this.medical_kit_.alto_/3);
+
+        var cruz_vertical_x = this.medical_kit_.x + this.medical_kit_.alto_/3;
+        var cruz_vertical_y = this.medical_kit_.y;
+        ctx.fillRect(cruz_vertical_x, cruz_vertical_y, this.medical_kit_.ancho_/3, this.medical_kit_.alto_);
+
+
+
+        ctx.strokeStyle = 'rgba(255,255,155,'+(tween/5 + 0.1)+')';
+        ctx.lineWidth=7;
+        ctx.strokeRect(this.medical_kit_.x - lejos_borde, this.medical_kit_.y - lejos_borde, this.medical_kit_.alto_ + lejos_borde*2, this.medical_kit_.alto_ + lejos_borde*2);
+
+
 
     };
 
