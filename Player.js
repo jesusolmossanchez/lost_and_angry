@@ -58,10 +58,14 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         if(juego.wait_start_ > juego.timestamp_()){
             juego.portal_.x = 30;
             juego.portal_.y = juego.alto_total_ - 100;
+            juego.empieza_de_verdad_ = false;
             return;
         }
         else if(!juego.empieza_de_verdad_){
             juego.situa_portal_(juego.portal_);
+            while(juego.portal_mal_situado_(juego.portal_)){
+                juego.situa_portal_(juego.portal_);
+            }
             juego.empieza_de_verdad_ = true;
         }
       
