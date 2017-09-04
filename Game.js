@@ -370,7 +370,7 @@ var Game = function() {
         }
         this.wait_start_ = this.timestamp_() + nuevo_wait;
 
-        this.player_ = new Player(this, 20, this.alto_total_ - 50, 800, 30000, this.salud_actual_);
+        this.player_ = new Player(this, 40, this.alto_total_ - 100, 800, 30000, this.salud_actual_);
 
         if(this.moustro_final_){
 
@@ -643,7 +643,6 @@ var Game = function() {
     //Llama a la funcion del objeto de jugador para pintarlo... lo pongo así, porque igual hay que pintar el jugador diferente según algo del juego
     this.render_portal_ = function(ctx) {
 
-
         radius = this.portal_.ancho_;
         var x_portal = this.portal_.x + this.portal_.ancho_ / 2;
         var y_portal = this.portal_.y + this.portal_.alto_ / 2;
@@ -655,7 +654,7 @@ var Game = function() {
         b = Math.abs(y_portal - this.player_.centro_y);
         distancia_centro = Math.sqrt( a*a + b*b );
 
-        if(distancia_centro > this.radio_vision_){
+        if(distancia_centro > this.radio_vision_ ){
             return;
         }
 
@@ -1277,7 +1276,7 @@ var Game = function() {
 
         
         if(this.fin_intro_ < this.timestamp_() && this.cambia_pantalla_intro_){
-            this.setup_(false, 800);
+            this.setup_(false, 1800);
             this.empieza_();
             this.empezado_ = true;
             return;
@@ -1748,7 +1747,7 @@ var Game = function() {
             window.punto_audio.src = URL.createObjectURL(new Blob([wave6], {type: "audio/wav"}));
         
         }
-    }, 1200);
+    }, 200);
 
 
 })();

@@ -55,10 +55,21 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             return;
         }
 
-        if(this.tiempo_portal_ > juego.timestamp_()){
+        if(juego.wait_start_ > juego.timestamp_()){
+            juego.portal_.x = 30;
+            juego.portal_.y = juego.alto_total_ - 100;
             return;
         }
-
+        else if(!juego.empieza_de_verdad_){
+            juego.situa_portal_(juego.portal_);
+            juego.empieza_de_verdad_ = true;
+        }
+      
+        
+        if(this.tiempo_portal_ > juego.timestamp_()){
+            return; 
+        }
+        
         if(!juego.moustro_final_){
             if(this.entra_portal_()){
                 juego.cambia_pantalla_ = true;
@@ -150,10 +161,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         this.dx = juego.bound_(this.dx + (dt * this.ddx), -this.maxdx_, this.maxdx_);
         this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);
 
-        if(juego.wait_start_ > juego.timestamp_() + 1000){
-            this.dx = 30;
-        }  
-      
+        
       
         if ((this.wasleft  && (this.dx > 0)) ||
             (this.wasright && (this.dx < 0))) {
@@ -311,8 +319,19 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
        
         //var opacidad_jugador = 1;
         //console.log(this.tiempo_portal_);
-        if(this.tiempo_portal_ > juego.timestamp_()){
-            var negativo = -1;
+        var negativo = -1;
+        if(juego.wait_start_ > juego.timestamp_()){
+            this.angulo *= (negativo*1.1);
+            this.angulo += (negativo*1);
+            
+            opacidad_jugador = 300/(juego.wait_start_-juego.timestamp_());
+            if(opacidad_jugador>1){
+                opacidad_jugador = 1;
+            }
+            this.angulo = 1000 * (opacidad_jugador - 1);
+            //console.log(this.angulo);
+        }
+        else if(this.tiempo_portal_ > juego.timestamp_()){
             if(!angulo){
 
                 this.angulo *= (negativo*1.1);
