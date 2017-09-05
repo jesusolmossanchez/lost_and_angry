@@ -18,33 +18,35 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     this.dx                     = 0;
     this.dy                     = 0;
 
-    this.friction_               = 650;
-    this.accel_                  = 700;
-    this.shoot_back_             = 2500;
+    this.friction_              = 850;
+    this.accel_                 = 850;
+    this.shoot_back_            = 2500;
 
-    this.maxdx_                 = 200;
-    this.maxdy_                 = 500;
+    this.maxdx_                 = 220;
+    this.maxdy_                 = 550;
 
-    this.last_left_              = false;
+    this.last_left_             = false;
     
 
-    this.gravity_               = gravedad;
+    this.gravity_               = 1000;
 
     this.tiempo_saltando_       = juego.timestamp_();
-    this.tiempo_atacado_       = juego.timestamp_();
+    this.tiempo_atacado_        = juego.timestamp_();
 
-    this.impulse_               = 30000;   
+    this.impulse_               = 40000;   
 
     this.limite_derecha_        = juego.ancho_total_ + this.ancho_;
     this.limite_izquierda_      = - this.ancho_;
 
     this.no_dispares_counter_   = 0;
 
+    this.salud_inicial_         = salud_actual;
     this.salud_                 = salud_actual;
     //this.salud_                 = 10000000;
     
 
     this.tiempo_portal_ = juego.timestamp_();
+    this.tiempo_medical_ = juego.timestamp_();
 
  
 
@@ -74,11 +76,25 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             return; 
         }
         
+        if(this.tiempo_medical_ > juego.timestamp_()){
+            this.salud_ = this.salud_ + 1; 
+            if(this.salud_ >= this.salud_inicial_){
+                this.salud_ = this.salud_inicial_;
+            }
+        }
+        
         if(!juego.moustro_final_){
             if(this.entra_portal_()){
                 juego.cambia_pantalla_ = true;
                 this.tiempo_portal_ = juego.timestamp_() + 3000;
             }
+        }
+
+        if(this.entra_medical_()){
+            this.tiempo_medical_ = juego.timestamp_() + 1500;
+            juego.tiempo_slow_motion_ = juego.timestamp_() + 1000;
+            juego.fps_            = 60/2;
+            juego.fps_interval    = 1000/juego.fps_;
         }
 
 
@@ -321,8 +337,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         pieses[2] = [[ 1,  ,  , 1,  ,  ,  ]];
         pieses[3] = [[  , 1,  , 1,  ,  ,  ]];
        
-        //var opacidad_jugador = 1;
-        //console.log(this.tiempo_portal_);
+
         var negativo = -1;
         if(juego.wait_start_ > juego.timestamp_()){
             this.angulo *= (negativo*1.1);
@@ -397,6 +412,10 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             gradient.addColorStop(0,"rgba(255, 11, 11, 0)");
             gradient.addColorStop(1,"rgba(255, 11, 11, "+random_halo+")");
         }
+        else if(this.tiempo_medical_ > juego.timestamp_()){
+            gradient.addColorStop(0,"rgba(122, 255, 122, 0)");
+            gradient.addColorStop(1,"rgba(122, 255, 122, 0.2)");
+        }
         else{
             gradient.addColorStop(0,"rgba(251, 255, 243, 0)");
             gradient.addColorStop(1,"rgba(251, 255, 243, 0.6)");
@@ -438,11 +457,16 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         ctx.restore();
 
 
-        if(this.tiempo_atacado_ > juego.timestamp_()){
+        if(this.tiempo_atacado_ > juego.timestamp_() || this.tiempo_medical_ > juego.timestamp_()){
 
-            var diff_atacado = this.tiempo_atacado_ - juego.timestamp_();
+            var mayor_tiempo = this.tiempo_atacado_;
+            if(this.tiempo_medical_  > this.tiempo_atacado_){
+                mayor_tiempo = this.tiempo_medical_;
+            }
+
+            var diff_tiempo = mayor_tiempo - juego.timestamp_();
             
-            var opacidad = diff_atacado/2000;
+            var opacidad = diff_tiempo/2000;
 
             var ancho_cargador = this.ancho_*2;
             var alto_cargador = 5;
@@ -548,6 +572,14 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         var mini_portal_alto = juego.portal_.ancho_/3;
 
         var overlap = juego.overlap_(this.x, this.y, this.ancho_, this.alto_, mini_portal_x, mini_portal_y, mini_portal_ancho, mini_portal_alto);
+        return overlap;
+    }
+
+    this.entra_medical_ = function(){
+        if(typeof juego.medical_kit_.x === "undefined"){
+            return false;
+        }
+        var overlap = juego.overlap_(this.x, this.y, this.ancho_, this.alto_, juego.medical_kit_.x, juego.medical_kit_.y, juego.medical_kit_.ancho_, juego.medical_kit_.alto_);
         return overlap;
     }
 
