@@ -77,7 +77,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         }
         
         if(this.tiempo_medical_ > juego.timestamp_()){
-            this.salud_ = this.salud_ + 1; 
+            this.salud_ = this.salud_ + 1.2; 
             if(this.salud_ >= this.salud_inicial_){
                 this.salud_ = this.salud_inicial_;
             }
