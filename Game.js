@@ -394,7 +394,7 @@ var Game = function() {
             this.medical_kit_ = {};
 
 
-            if(Math.random() > 0.007){
+            if(Math.random() > 0.4){
                 this.medical_kit_.ancho_ = this.player_.alto_/2;
                 this.medical_kit_.alto_ = this.player_.alto_/2;
                 this.situa_medical_kit_(this.medical_kit_);
@@ -768,7 +768,7 @@ var Game = function() {
         var lejos_borde = tween * 5 + 2;
         var lejos_borde2 = tween2 * 10;
 
-        ctx.fillStyle = 'rgba(255,110,110,'+(((1 - tween)/2) + 0.5 * opacity_medical)+')';
+        ctx.fillStyle = 'rgba(255,110,110,'+(((1 - tween)/2) + 0.5 * opacity_medical/2)+')';
         var cruz_horizontal_x = this.medical_kit_.x;
         var cruz_horizontal_y = this.medical_kit_.y + this.medical_kit_.alto_/3;
         ctx.fillRect(cruz_horizontal_x, cruz_horizontal_y, this.medical_kit_.ancho_, this.medical_kit_.alto_/3);
@@ -779,11 +779,11 @@ var Game = function() {
 
 
 
-        ctx.strokeStyle = 'rgba(255,255,155,'+(tween/7 + 0.1 * opacity_medical)+')';
+        ctx.strokeStyle = 'rgba(255,255,155,'+(tween/7 + 0.1 * opacity_medical/2)+')';
         ctx.lineWidth=8;
         ctx.strokeRect(this.medical_kit_.x - lejos_borde, this.medical_kit_.y - lejos_borde, this.medical_kit_.alto_ + lejos_borde*2, this.medical_kit_.alto_ + lejos_borde*2);
 
-        ctx.strokeStyle = 'rgba(133,200,133,'+(tween/7 + 0.1 * opacity_medical)+')';
+        ctx.strokeStyle = 'rgba(133,200,133,'+(tween/7 + 0.1 * opacity_medical/2)+')';
         ctx.lineWidth=15;
         ctx.strokeRect(this.medical_kit_.x - lejos_borde2, this.medical_kit_.y - lejos_borde2, this.medical_kit_.alto_ + lejos_borde2*2, this.medical_kit_.alto_ + lejos_borde2*2);
 
