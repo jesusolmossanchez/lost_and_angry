@@ -24,7 +24,7 @@ var Game = function() {
         //Cosas horizontales
         var cuantas_plataformas = Math.floor(Math.random()*10) + 60;
         if(final){
-        	cuantas_plataformas =  cuantas_plataformas * 3;
+            cuantas_plataformas =  cuantas_plataformas * 3;
         }
         var new_array = [];
         var espera_linea = 4;
@@ -41,15 +41,15 @@ var Game = function() {
 
         var hasta_donde_x = bloques_x;
         if(final){
-        	hasta_donde_x = 25;
-        	multiplaicador_ancho_plat = 1;
+            hasta_donde_x = 25;
+            multiplaicador_ancho_plat = 1;
         }
 
         for (var i = 0; i < bloques_y; i++) {
             for (var j = 0; j < bloques_x; j++) {
                 var rand = Math.random();
                 if( j > hasta_donde_x){
-                	
+                    
                 }
                 else if(cuantas_plataformas > 0 && (i >= espera_linea && j >= espera_x && rand > 0.3) || pintando){
                     if(pintado <= largo_plataforma){
@@ -82,7 +82,7 @@ var Game = function() {
 
         var cuantas_plataformas_vert = Math.floor(Math.random()*10) + 1;
         if(final){
-        	cuantas_plataformas_vert =  cuantas_plataformas_vert * 3;
+            cuantas_plataformas_vert =  cuantas_plataformas_vert * 3;
         }
 
         var alto_plataforma = 3;
@@ -170,7 +170,8 @@ var Game = function() {
       
     //Cosas del bucle del juego
     this.fps_            = 60;
-    this.step_           = 1/this.fps_;
+    this.fps_interval    = 1000/this.fps_;
+    this.step_           = 1/60;
     this.canvas_         = document.getElementById('canvas');
     this.ctx            = this.canvas_.getContext('2d');
     this.canvas_.width  = this.ancho_total_;
@@ -181,8 +182,8 @@ var Game = function() {
     this.bullets_     = [];
     this.zapatillas_     = [];
 
-   	this.tiempo_muerte_ = this.timestamp_();
-   	this.tiempo_shacke_ = this.timestamp_();
+    this.tiempo_muerte_ = this.timestamp_();
+    this.tiempo_shacke_ = this.timestamp_();
 
 
     this.cambia_pantalla_ = false;
@@ -190,6 +191,8 @@ var Game = function() {
 
     this.salud_inicial_ = 250;
     this.salud_actual_ = this.salud_inicial_;
+
+    this.tiempo_slow_motion_ = this.timestamp_();
 
 
 
@@ -354,13 +357,13 @@ var Game = function() {
     //SET-UP de las cosas del juego... ahora mismo un jugador
     this.setup_ = function(final, wait) {
 
-    	this.cuantos_enemigos_ = 0;
-    	this.enemigos_ = [];
-    	this.explosions_ = [];
-    	this.moustro_final_ = final;
-    	//this.moustro_final_ = true;
+        this.cuantos_enemigos_ = 0;
+        this.enemigos_ = [];
+        this.explosions_ = [];
+        this.moustro_final_ = final;
+        //this.moustro_final_ = true;
 
-    	this.MAP_.datos = this.crea_plataformas_(this.moustro_final_);
+        this.MAP_.datos = this.crea_plataformas_(this.moustro_final_);
 
 
         this.ctx.globalAlpha = 1;
@@ -370,11 +373,11 @@ var Game = function() {
         }
         this.wait_start_ = this.timestamp_() + nuevo_wait;
 
-        this.player_ = new Player(this, 40, this.alto_total_ - 100, 800, 30000, this.salud_actual_);
+        this.player_ = new Player(this, 40, this.alto_total_ - 100, 1000, 30000, this.salud_actual_);
 
         if(this.moustro_final_){
 
-        	this.final_boss_ = new Boss(this, this.ancho_total_/1.5, 100, 800, 30000, 1);
+            this.final_boss_ = new Boss(this, this.ancho_total_/1.5, 100, 800, 30000, 1);
         }
         else{
 
@@ -392,8 +395,8 @@ var Game = function() {
 
 
             if(Math.random() > 0.007){
-                this.medical_kit_.ancho_ = this.player_.alto_;
-                this.medical_kit_.alto_ = this.player_.alto_;
+                this.medical_kit_.ancho_ = this.player_.alto_/2;
+                this.medical_kit_.alto_ = this.player_.alto_/2;
                 this.situa_medical_kit_(this.medical_kit_);
 
                 while(this.medical_kit_mal_situado_(this.medical_kit_)){
@@ -403,20 +406,20 @@ var Game = function() {
 
 
 
-        	this.cuantos_enemigos_ = this.randInt_ (5, 10);
-        	for (var i = 0; i < this.cuantos_enemigos_; i++) {
-	            var x_enemigo = this.randInt_ (200, this.ancho_total_ - 200);
-	            var y_enemigo = this.randInt_ (0, this.alto_total_ / 2);
+            this.cuantos_enemigos_ = this.randInt_ (5, 10);
+            for (var i = 0; i < this.cuantos_enemigos_; i++) {
+                var x_enemigo = this.randInt_ (200, this.ancho_total_ - 200);
+                var y_enemigo = this.randInt_ (0, this.alto_total_ / 2);
 
-	            var enemigo = new Enemigo(this, x_enemigo, y_enemigo, 800, 30000, 1);
+                var enemigo = new Enemigo(this, x_enemigo, y_enemigo, 800, 30000, 1);
 
-	            while(enemigo.mal_situado_()){
-	                enemigo.resitua_();
-	            }
+                while(enemigo.mal_situado_()){
+                    enemigo.resitua_();
+                }
 
 
-	            this.enemigos_.push(enemigo);
-	        }
+                this.enemigos_.push(enemigo);
+            }
         }
 
 
@@ -513,6 +516,8 @@ var Game = function() {
 
         this.salud_actual_ = this.player_.salud_;
 
+        this.update_fps_interval_();
+
 
         if(this.cambia_pantalla_ && this.player_.tiempo_portal_ < this.timestamp_()){
             this.cambia_pantalla_ = false;
@@ -531,6 +536,8 @@ var Game = function() {
 
         this.player_.update_(dt);
 
+
+
         if(this.moustro_final_){
             this.final_boss_.update_(dt);
         }
@@ -544,6 +551,14 @@ var Game = function() {
 
     };
 
+    this.update_fps_interval_ = function() {
+        if(this.tiempo_slow_motion_ < this.timestamp_()){
+
+            this.fps_            = 60;
+            this.fps_interval    = 1000/this.fps_;
+
+        }
+    }
     //-------------------------------------------------------------------------
     // FIN UPDATE
     //-------------------------------------------------------------------------
@@ -558,7 +573,7 @@ var Game = function() {
     // RENDERING
     //-------------------------------------------------------------------------
   
-    this.render = function(ctx, frame, dt) {
+    this.render_ = function(ctx, frame, dt) {
 
         if(this.is_game_over_){
             this.render_explosion_(ctx);
@@ -592,10 +607,10 @@ var Game = function() {
 
     this.pre_shake_ = function() {
         if(this.tiempo_shacke_ > this.timestamp_()){
-        	var cuanto_shake = 4;
-        	if(this.tiempo_muerte_ > this.timestamp_()){
-        		cuanto_shake = cuanto_shake*10;
-        	}
+            var cuanto_shake = 4;
+            if(this.tiempo_muerte_ > this.timestamp_()){
+                cuanto_shake = cuanto_shake*10;
+            }
             this.ctx.save();
             if(!this.dx_shacke && !this.dy_shacke){
                 this.dx_shacke = (Math.random() - 0.5) * cuanto_shake;
@@ -603,14 +618,14 @@ var Game = function() {
 
             }
             else{
-            	if(this.tiempo_muerte_ > this.timestamp_()){
-	        		this.dx_shacke = (Math.random() - 0.5) * cuanto_shake;
-                	this.dy_shacke = (Math.random() - 0.5) * cuanto_shake;
-	        	}
-	        	else{
-                	this.dy_shacke = this.dy_shacke * (-0.9);
-                	this.dx_shacke = this.dx_shacke * (-0.9);
-            	}
+                if(this.tiempo_muerte_ > this.timestamp_()){
+                    this.dx_shacke = (Math.random() - 0.5) * cuanto_shake;
+                    this.dy_shacke = (Math.random() - 0.5) * cuanto_shake;
+                }
+                else{
+                    this.dy_shacke = this.dy_shacke * (-0.9);
+                    this.dx_shacke = this.dx_shacke * (-0.9);
+                }
             }
             
             this.ctx.translate(this.dx_shacke, this.dy_shacke); 
@@ -660,7 +675,7 @@ var Game = function() {
                     distancia_centro = Math.sqrt( a*a + b*b );
                     opacidad = 1/distancia_centro*2.5;
                     if(!pre){
-                    	opacidad = opacidad/2;
+                        opacidad = opacidad/2;
                     }
                     ctx.fillStyle = "rgba(250,250,250,"+opacidad+")";
                     ctx.fillRect(x * this.MAP_.size_bloques_, y * this.MAP_.size_bloques_, this.MAP_.size_bloques_, this.MAP_.size_bloques_);
@@ -737,13 +752,23 @@ var Game = function() {
         }
 
 
+        var opacity_medical = this.player_.tiempo_medical_ - this.timestamp_();
+        if(opacity_medical < 0){
+            opacity_medical = 1;
+        }
+        else{
+            opacity_medical = opacity_medical / 1000;
+            if (opacity_medical < 0.5){
+                this.medical_kit_ = {};
+            }
+        }
 
         var tween = this.tween_frames_(this.counter, 80);
         var tween2 = this.tween_frames_(this.counter, 60);
-        var lejos_borde = tween * 10 + 10;
-        var lejos_borde2 = tween2 * 20 + 7;
+        var lejos_borde = tween * 5 + 2;
+        var lejos_borde2 = tween2 * 10;
 
-        ctx.fillStyle = 'rgba(255,110,110,'+(tween/5 + 0.1)+')';
+        ctx.fillStyle = 'rgba(255,110,110,'+(((1 - tween)/2) + 0.5 * opacity_medical)+')';
         var cruz_horizontal_x = this.medical_kit_.x;
         var cruz_horizontal_y = this.medical_kit_.y + this.medical_kit_.alto_/3;
         ctx.fillRect(cruz_horizontal_x, cruz_horizontal_y, this.medical_kit_.ancho_, this.medical_kit_.alto_/3);
@@ -754,12 +779,12 @@ var Game = function() {
 
 
 
-        ctx.strokeStyle = 'rgba(255,255,155,'+(tween/5 + 0.1)+')';
-        ctx.lineWidth=12;
+        ctx.strokeStyle = 'rgba(255,255,155,'+(tween/7 + 0.1 * opacity_medical)+')';
+        ctx.lineWidth=8;
         ctx.strokeRect(this.medical_kit_.x - lejos_borde, this.medical_kit_.y - lejos_borde, this.medical_kit_.alto_ + lejos_borde*2, this.medical_kit_.alto_ + lejos_borde*2);
 
-        ctx.strokeStyle = 'rgba(133,200,133,'+(tween/5 + 0.1)+')';
-        ctx.lineWidth=20;
+        ctx.strokeStyle = 'rgba(133,200,133,'+(tween/7 + 0.1 * opacity_medical)+')';
+        ctx.lineWidth=15;
         ctx.strokeRect(this.medical_kit_.x - lejos_borde2, this.medical_kit_.y - lejos_borde2, this.medical_kit_.alto_ + lejos_borde2*2, this.medical_kit_.alto_ + lejos_borde2*2);
 
 
@@ -793,7 +818,7 @@ var Game = function() {
     //Llama a la funcion del objeto de jugador para pintarlo... lo pongo así, porque igual hay que pintar el jugador diferente según algo del juego
     this.render_boss_ = function(ctx, dt) {
          if(this.moustro_final_){
-        	this.final_boss_.pinta_boss_(dt, ctx, this.counter);
+            this.final_boss_.pinta_boss_(dt, ctx, this.counter);
         }
 
     };
@@ -822,17 +847,17 @@ var Game = function() {
                 var particle = particles[ii];
 
                 var distancia_centro = 0;
-            	var a = 0;
-            	var b = 0;
-				a = Math.abs(particle.x - this.player_.centro_x);
-            	b = Math.abs(particle.y - this.player_.centro_y);
-            	distancia_centro = Math.sqrt( a*a + b*b );
+                var a = 0;
+                var b = 0;
+                a = Math.abs(particle.x - this.player_.centro_x);
+                b = Math.abs(particle.y - this.player_.centro_y);
+                distancia_centro = Math.sqrt( a*a + b*b );
 
 
-            	if(distancia_centro > 300){
-            		continue;
-            	}
-				var opacidad = (1 - distancia_centro/150)*particle.opacidad;
+                if(distancia_centro > 300){
+                    continue;
+                }
+                var opacidad = (1 - distancia_centro/150)*particle.opacidad;
 
                 // Check particle size
                 // If 0, remove
@@ -844,25 +869,25 @@ var Game = function() {
 
                 var continuar = false;
                 if(particle.xv > 0){
-				    if((particle.max_x - particle.x) < 0){
-				    	continuar = true;
-				    }
-			    }
-			    else{
-				    if((particle.x - particle.max_x) < 0){
-				    	continuar = true;
-				    }
-			    }
+                    if((particle.max_x - particle.x) < 0){
+                        continuar = true;
+                    }
+                }
+                else{
+                    if((particle.x - particle.max_x) < 0){
+                        continuar = true;
+                    }
+                }
                 if(particle.yv > 0){
-				    if((particle.max_y - particle.y) < 0){
-				    	continuar = true;
-				    }
-			    }
-			    else{
-				    if((particle.y - particle.max_y) < 0){
-				    	continuar = true;
-				    }
-			    }
+                    if((particle.max_y - particle.y) < 0){
+                        continuar = true;
+                    }
+                }
+                else{
+                    if((particle.y - particle.max_y) < 0){
+                        continuar = true;
+                    }
+                }
 
                 if(!continuar){
                     opacidad = opacidad*20;
@@ -951,12 +976,12 @@ var Game = function() {
                                 ctx.arc(disparo.x+rand_exp3, disparo.y+rand_exp1, rand_size3, Math.PI * 2, 0, false);
                                 ctx.closePath();
                                 ctx.fill();
-                				
+                                
                                 var x_explosion = this.enemigos_[j].x + this.enemigos_[j].ancho_/2;
-                				var y_explosion = this.enemigos_[j].y + this.enemigos_[j].alto_/2;
+                                var y_explosion = this.enemigos_[j].y + this.enemigos_[j].alto_/2;
                                 this.explosions_.push(
-    			                    new Explosion(x_explosion, y_explosion, false)
-    			                );
+                                    new Explosion(x_explosion, y_explosion, false)
+                                );
 
                                 this.bullets_.splice(i, 1);
                                 this.enemigos_[j].muriendo = this.timestamp_() + 400;
@@ -1362,9 +1387,9 @@ var Game = function() {
         if(!this.cambia_pantalla_intro_){
             //this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + (300 - (this.tiempo_intro_ - this.timestamp_())/15);
             this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + this.counter*2;
-	}
+    }
 
-        this.player_ = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 800, 30000, this.salud_actual_);
+        this.player_ = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 1000, 30000, this.salud_actual_);
 
         this.portal_ = {};
         this.portal_.ancho_ = this.player_.alto_;
@@ -1621,58 +1646,49 @@ var Game = function() {
         now,
         last = juego.timestamp_();
   
-    
-    var fps_muerte = 1000 / 30;
+    var divisor_fps = 3;
+    var fps_curacion = 1000 / (juego.fps_ / divisor_fps);
 
     var then = juego.timestamp_();
+
     function frame() {
+
+
+        requestAnimationFrame(frame);
+
         if(juego.pausa_){
-            requestAnimationFrame(frame, canvas);
             return;
         }
-        now = juego.timestamp_();
-        dt = dt + Math.min(1, (now - last) / 1000);
 
 
         if(!juego.empezado_){
 
+            juego.counter++;
             juego.ctx.clearRect(0, 0, juego.ancho_total_, juego.alto_total_);
             juego.muestra_logo_(juego.ctx);
             //juego.pinta_cargador_(juego.music_percent, juego.ctx);
             juego.pinta_intro_(juego.ctx, dt);
-
-            last = now;
-            juego.counter++;
-            requestAnimationFrame(frame, canvas);
+ 
             return;
         }
 
 
-        while(dt > juego.step_) {
-            dt = dt - juego.step_;
+
+        now = juego.timestamp_();
+        elapsed = now - then;
+
+
+        if (elapsed > juego.fps_interval) {
+
+            then = now - (elapsed % juego.fps_interval);
             juego.update_(juego.step_);
-        }
-        //if(juego.tiempo_muerte_ > juego.timestamp_()){
-        if(false){
-            var elapsed = now - then;
-
-            if (elapsed > fps_muerte) {
-                juego.pre_shake_();
-                juego.render(juego.ctx, juego.counter, dt);
-                juego.post_shake_();
-                juego.update_(juego.step_);
-                then = now - (elapsed % fps_muerte);
-            }
-        }
-        else{
             juego.pre_shake_();
-            juego.render(juego.ctx, juego.counter, dt);
+            juego.render_(juego.ctx, juego.counter, juego.step_);
             juego.post_shake_();
+            juego.counter++;
+
         }
 
-        last = now;
-        juego.counter++;
-        requestAnimationFrame(frame, canvas);
     }
 
     //Listeners de teclas
