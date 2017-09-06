@@ -80,7 +80,6 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
         var colisiona = false;
         if(this.colisiona_player_() && !this.muerto){
-            //colisiona = true;
             //juego.player_.salud_--;
         }
 
@@ -205,8 +204,7 @@ var Boss = function(juego, x, y, gravedad, impulso) {
         }
 
 
-
-        var player_izq =  [
+        var boss_pinta =  [
                         [  ,  ,  ,  , 1,  ],
                         [ 1, 1, 1, 1, 1,  ],
                         [ 1, 1, 1, 1, 1,  ],
@@ -220,6 +218,32 @@ var Boss = function(juego, x, y, gravedad, impulso) {
                         [ 1, 1, 1, 1, 1, 1],
                         [  ,  ,  ,  ,  ,  ],
                 ];
+        var bata =  [
+                        [  ,  ,  ,  ,  ,  ],
+                        [  ,  ,  ,  ,  ,  ],
+                        [  ,  ,  ,  ,  ,  ],
+                        [  ,  ,  ,  ,  ,  ],
+                        [  ,  ,  ,  , 1,  ],
+                        [  ,  ,  , 1, 1,  ],
+                        [ 1, 1, 1, 1, 1,  ],
+                        [ 1, 1, 1, 1, 1,  ],
+                        [ 1, 1, 1, 1, 1,  ],
+                        [  , 1, 1, 1, 1,  ],
+                        [  ,  ,  ,  ,  ,  ],
+                        [  ,  ,  ,  ,  ,  ],
+                ];
+
+
+        var zapatilla = [
+            [  ,  ,  ,  ,  ,  ,  ,  ],
+            [  ,  ,  ,  ,  ,  ,  ,  ],
+            [  ,  ,  , 1, 1,  ,  ,  ],
+            [  , 1, 1, 1, 1,  ,  ,  ],
+            [ 1, 1, 1, 1, 1,  ,  ,  ],
+            [ 1, 1, 1, 1, 1, 1, 1, 1],
+            [  ,  ,  ,  ,  ,  ,  ,  ],
+            [  ,  ,  ,  ,  ,  ,  ,  ],
+        ];
 
 
 
@@ -234,14 +258,33 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
 
        
-        que_jugador = player_izq;
+        que_jugador = boss_pinta;
+
+        //var color_rosa = "#fb6e8f";
+        var color_rosa = "#ffcad6";
         
+        //Pinta cuerpo
         juego.pinta_filas_columnas_(ctx, x_boss, y_boss, que_jugador, this.size_boss_pixel, color_boss, true);
+
+        //Pinta bata
+        juego.pinta_filas_columnas_(ctx, x_boss - 10, y_boss - 10, bata, this.size_boss_pixel*1.1, color_rosa, true);
+
         //Pinta pies
         juego.pinta_filas_columnas_(ctx, x_boss, y_boss + this.alto_ - this.size_boss_pixel, pieses[this.que_pie], this.size_boss_pixel, color_boss, true);
-  
 
-       
+        var zapa_size = 8;
+        //Pinta zapatillas
+        juego.pinta_filas_columnas_(ctx, x_boss, y_boss + this.alto_ - this.size_boss_pixel - 15, zapatilla, zapa_size, color_rosa, true);
+        juego.pinta_filas_columnas_(ctx, x_boss + (this.size_boss_pixel*2), y_boss + this.alto_ - this.size_boss_pixel - 15, zapatilla, zapa_size, color_rosa, true);
+
+        //Pinta rulos
+        /*
+        ctx.beginPath();
+        ctx.fillStyle = color_rosa;
+        ctx.arc(x_boss + (this.size_boss_pixel*2), y_boss + (this.size_boss_pixel*1.5), this.size_boss_pixel, 0, Math.PI * 2, false);
+        ctx.closePath();
+        ctx.fill();
+        */
 
     };
 
