@@ -48,7 +48,6 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     this.tiempo_portal_ = juego.timestamp_();
     this.tiempo_medical_ = juego.timestamp_();
 
-    this.tipo_enemigo_          = juego.randInt_(0,4);
 
  
 
@@ -79,7 +78,6 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         }
         
         if(this.tiempo_medical_ > juego.timestamp_()){
-            console.log(this.salud_);
             this.salud_ = this.salud_ + 2; 
             if(this.salud_ >= this.salud_inicial_){
                 this.salud_ = this.salud_inicial_;
