@@ -48,6 +48,8 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     this.tiempo_portal_ = juego.timestamp_();
     this.tiempo_medical_ = juego.timestamp_();
 
+    this.tipo_enemigo_          = juego.randInt_(0,4);
+
  
 
     this.update_ = function(dt) {
@@ -77,7 +79,8 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         }
         
         if(this.tiempo_medical_ > juego.timestamp_()){
-            this.salud_ = this.salud_ + 1.2; 
+            console.log(this.salud_);
+            this.salud_ = this.salud_ + 2; 
             if(this.salud_ >= this.salud_inicial_){
                 this.salud_ = this.salud_inicial_;
             }
@@ -90,11 +93,13 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             }
         }
 
-        if(this.entra_medical_()){
+        if(this.entra_medical_() && this.tiempo_medical_ < juego.timestamp_()){
             this.tiempo_medical_ = juego.timestamp_() + 1500;
+            /*
             juego.tiempo_slow_motion_ = juego.timestamp_() + 1000;
             juego.fps_            = 60/2;
             juego.fps_interval    = 1000/juego.fps_;
+            */
         }
 
 
