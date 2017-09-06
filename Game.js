@@ -408,12 +408,12 @@ var Game = function() {
             }
 
 
-            var min_enemigos = 3 + this.nivel_*2;
-            var max_enemigos = 7 + this.nivel_*2;
+            var min_enemigos = 1 + this.nivel_*2;
+            var max_enemigos = 5 + this.nivel_*2;
 
             this.cuantos_enemigos_ = this.randInt_ (min_enemigos, max_enemigos);
 
-            var tipo_enemigo = juego.randInt_(0,4);            
+            var tipo_enemigo = this.randInt_(0,4);            
 
             for (var i = 0; i < this.cuantos_enemigos_; i++) {
                 var x_enemigo = this.randInt_ (200, this.ancho_total_ - 200);
@@ -428,6 +428,8 @@ var Game = function() {
 
                 this.enemigos_.push(enemigo);
             }
+
+
         }
 
 
