@@ -384,7 +384,7 @@ var Game = function() {
         else{
 
             this.nivel_++;
-            
+
             this.portal_ = {};
             this.portal_.ancho_ = this.player_.alto_;
             this.portal_.alto_ = this.player_.alto_;
@@ -408,13 +408,18 @@ var Game = function() {
             }
 
 
+            var min_enemigos = 3 + this.nivel_*2;
+            var max_enemigos = 7 + this.nivel_*2;
 
-            this.cuantos_enemigos_ = this.randInt_ (5, 10);
+            this.cuantos_enemigos_ = this.randInt_ (min_enemigos, max_enemigos);
+
+            var tipo_enemigo = juego.randInt_(0,4);            
+
             for (var i = 0; i < this.cuantos_enemigos_; i++) {
                 var x_enemigo = this.randInt_ (200, this.ancho_total_ - 200);
                 var y_enemigo = this.randInt_ (0, this.alto_total_ / 2);
 
-                var enemigo = new Enemigo(this, x_enemigo, y_enemigo, 800, 30000, 1);
+                var enemigo = new Enemigo(this, x_enemigo, y_enemigo, tipo_enemigo);
 
                 while(enemigo.mal_situado_()){
                     enemigo.resitua_();
