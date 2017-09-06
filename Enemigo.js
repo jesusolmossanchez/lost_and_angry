@@ -3,7 +3,7 @@
 /**************************************************
 ** GAME Enemigo CLASS
 **************************************************/
-var Enemigo = function(juego, x, y, gravedad, impulso) {
+var Enemigo = function(juego, x, y, tipo) {
 
     this.que_pie                = 0;
     this.angulo                 = 0;
@@ -23,7 +23,7 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
 
     this.last_left              = false;
     
-    this.gravity_               = gravedad;
+    this.gravity_               = 800;
 
     this.tiempo_saltando_       = juego.timestamp_();
 
@@ -39,8 +39,185 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
     this.tiempo_parado_         = juego.timestamp_();
     this.muriendo               = juego.timestamp_();
 
+    this.tipo_enemigo_          =  tipo;
 
- 
+    this.enemigo_ = [];
+    this.enemigo_left_ = [];
+
+    this.enemigo_[0] =  [
+                    [  ,  ,  , 1, 1, 1,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  , 1, 1, 1, 1, 1,],
+                    [ 1, 1, 1, 1,  ,  ,],
+                    [  , 1, 1, 1, 1, 1,],
+                    [  , 1, 1, 1, 1, 1,],
+                    [  , 1, 1, 1,  ,  ,],
+                    [  ,  , 1, 1,  ,  ,],
+                    [ 1,  , 1, 1, 1,  ,],
+                    [ 1, 1, 1, 1, 1,  ,],
+                    [ 1, 1, 1, 1, 1,  ,],
+                    [  ,  ,  ,  ,  ,  ,],
+            ];
+
+    this.enemigo_left_[0] =  [
+                    [  ,  ,  , 1, 1, 1,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  , 1, 1, 1, 1, 1,],
+                    [ 1, 1, 1, 1,  ,  ,],
+                    [  , 1, 1, 1, 1, 1,],
+                    [  , 1, 1, 1, 1, 1,],
+                    [  , 1, 1, 1,  ,  ,],
+                    [  ,  , 1, 1,  ,  ,],
+                    [ 1,  , 1, 1, 1,  ,],
+                    [ 1, 1, 1, 1, 1,  ,],
+                    [ 1, 1, 1, 1, 1,  ,],
+                    [  ,  ,  ,  ,  ,  ,],
+            ];
+
+    for (var i = 0; i < this.enemigo_left_[0].length; i++) {
+        this.enemigo_left_[0][i].reverse();
+    }       
+
+    this.enemigo_[1] =  [
+                    [ 1,  ,  , 1,  , 1,],
+                    [ 1, 1, 1, 1,  , 1,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [  , 1, 1, 1,  ,  ,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  ,  , 1, 1,  ,  ,],
+                    [  ,  , 1, 1,  ,  ,],
+                    [ 1,  , 1, 1,  , 1,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [  ,  ,  ,  ,  ,  ,],
+            ];
+
+    this.enemigo_left_[1] =  [
+                    [ 1,  ,  , 1,  , 1,],
+                    [ 1, 1, 1, 1,  , 1,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [  , 1, 1, 1,  ,  ,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  ,  , 1, 1,  ,  ,],
+                    [  ,  , 1, 1,  ,  ,],
+                    [ 1,  , 1, 1,  , 1,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [  ,  ,  ,  ,  ,  ,],
+            ];
+
+    for (var i = 0; i < this.enemigo_left_[1].length; i++) {
+        this.enemigo_left_[1][i].reverse();
+    }  
+
+    this.enemigo_[2] =  [
+                    [ 1,  ,  ,  , 1, 1,],
+                    [ 1, 1,  ,  , 1, 1,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [  , 1, 1, 1,  ,  ,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [ 1,  , 1, 1,  , 1,],
+                    [ 1, 1, 1, 1,  , 1,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [  , 1, 1, 1, 1,  ,],
+                    [  ,  ,  ,  ,  ,  ,],
+            ];
+
+    this.enemigo_left_[2] =  [
+                    [ 1,  ,  ,  , 1, 1,],
+                    [ 1, 1,  ,  , 1, 1,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [  , 1, 1, 1,  ,  ,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [ 1,  , 1, 1,  , 1,],
+                    [ 1, 1, 1, 1,  , 1,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [  , 1, 1, 1, 1,  ,],
+                    [  ,  ,  ,  ,  ,  ,],
+            ];
+
+    for (var i = 0; i < this.enemigo_left_[2].length; i++) {
+        this.enemigo_left_[2][i].reverse();
+    }  
+
+    this.enemigo_[3] =  [
+                    [ 1, 1, 1,  ,  ,  ,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [  , 1, 1, 1,  ,  ,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  ,  ,  , 1, 1,  ,],
+                    [  , 1, 1, 1, 1,  ,],
+                    [ 1, 1, 1, 1, 1,  ,],
+                    [ 1, 1, 1, 1, 1,  ,],
+                    [  , 1, 1, 1, 1,  ,],
+                    [  ,  ,  ,  ,  ,  ,],
+            ];
+
+    this.enemigo_left_[3] =  [
+                    [ 1, 1, 1,  ,  ,  ,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [  , 1, 1, 1,  ,  ,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  ,  ,  , 1, 1,  ,],
+                    [  , 1, 1, 1, 1,  ,],
+                    [ 1, 1, 1, 1, 1,  ,],
+                    [ 1, 1, 1, 1, 1,  ,],
+                    [  , 1, 1, 1, 1,  ,],
+                    [  ,  ,  ,  ,  ,  ,],
+            ];
+
+    for (var i = 0; i < this.enemigo_left_[3].length; i++) {
+        this.enemigo_left_[3][i].reverse();
+    }  
+
+    this.enemigo_[4] =  [
+                    [  , 1,  , 1,  , 1,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [ 1, 1, 1, 1, 1, 1,],
+                    [ 1, 1, 1, 1,  ,  ,],
+                    [ 1, 1,  , 1, 1, 1,],
+                    [ 1,  ,  , 1, 1, 1,],
+                    [  ,  ,  , 1, 1, 1,],
+                    [  ,  , 1, 1, 1,  ,],
+                    [  , 1, 1, 1, 1,  ,],
+                    [  , 1, 1, 1, 1,  ,],
+                    [  , 1, 1, 1, 1,  ,],
+                    [  ,  ,  ,  ,  ,  ,],
+            ];
+
+    this.enemigo_left_[4] =  [
+                    [  ,  ,  , 1, 1, 1,],
+                    [  ,  , 1, 1, 1, 1,],
+                    [  , 1, 1, 1, 1, 1,],
+                    [ 1, 1, 1, 1,  ,  ,],
+                    [  , 1, 1, 1, 1, 1,],
+                    [  , 1, 1, 1, 1, 1,],
+                    [  , 1, 1, 1,  ,  ,],
+                    [  ,  , 1, 1,  ,  ,],
+                    [ 1,  , 1, 1, 1,  ,],
+                    [ 1, 1, 1, 1, 1,  ,],
+                    [ 1, 1, 1, 1, 1,  ,],
+                    [  ,  ,  ,  ,  ,  ,],
+            ];
+
+    for (var i = 0; i < this.enemigo_left_[4].length; i++) {
+        this.enemigo_left_[4][i].reverse();
+    }
+
+
+    this.que_jugador_ = this.enemigo_[this.tipo_enemigo_ ];
+    this.que_jugador_left_ = this.enemigo_left_[this.tipo_enemigo_ ];
+    
 
     this.update = function(dt) {
 
@@ -453,7 +630,7 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
 
 
         //Pinta jugador
-        var que_jugador = enemigo[juego.player_.tipo_enemigo_];
+        var que_jugador = this.que_jugador_;
         var que_pistola = pistola;
         var x_pistola = -10;
 
@@ -463,9 +640,7 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
 
         if(this.last_left){
 
-            for (var i = 0; i < que_jugador.length; i++) {
-                que_jugador[i].reverse();
-            }
+            que_jugador = this.que_jugador_left_
             que_pistola = pistola_izq;
             x_pistola = -this.ancho_ + 10;
         }
