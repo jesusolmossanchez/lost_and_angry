@@ -39,6 +39,7 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
     this.tiempo_parado_         = juego.timestamp_();
     this.muriendo               = juego.timestamp_();
 
+
  
 
     this.update = function(dt) {
@@ -303,37 +304,83 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
             );
         }
 
-        var enemigo =  [
-                        [  ,  ,  , 1, 1, 1],
-                        [  ,  , 1, 1, 1, 1],
-                        [  , 1, 1, 1, 1, 1],
-                        [ 1, 1, 1, 1,  ,  ],
-                        [  , 1, 1, 1, 1, 1],
-                        [  , 1, 1, 1, 1, 1],
-                        [  , 1, 1, 1,  ,  ],
-                        [  ,  , 1, 1,  ,  ],
-                        [ 1,  , 1, 1, 1,  ],
-                        [ 1, 1, 1, 1, 1,  ],
-                        [ 1, 1, 1, 1, 1,  ],
-                        [  ,  ,  ,  ,  ,  ],
+
+        var enemigo = []
+
+        enemigo[0] =  [
+                        [  ,  ,  , 1, 1, 1,],
+                        [  ,  , 1, 1, 1, 1,],
+                        [  , 1, 1, 1, 1, 1,],
+                        [ 1, 1, 1, 1,  ,  ,],
+                        [  , 1, 1, 1, 1, 1,],
+                        [  , 1, 1, 1, 1, 1,],
+                        [  , 1, 1, 1,  ,  ,],
+                        [  ,  , 1, 1,  ,  ,],
+                        [ 1,  , 1, 1, 1,  ,],
+                        [ 1, 1, 1, 1, 1,  ,],
+                        [ 1, 1, 1, 1, 1,  ,],
+                        [  ,  ,  ,  ,  ,  ,],
+                ];
+ 
+        enemigo[1] =  [
+                        [ 1,  ,  , 1,  , 1,],
+                        [ 1, 1, 1, 1,  , 1,],
+                        [ 1, 1, 1, 1, 1, 1,],
+                        [  , 1, 1, 1,  ,  ,],
+                        [  ,  , 1, 1, 1, 1,],
+                        [  ,  , 1, 1, 1, 1,],
+                        [  ,  , 1, 1,  ,  ,],
+                        [  ,  , 1, 1,  ,  ,],
+                        [ 1,  , 1, 1,  , 1,],
+                        [ 1, 1, 1, 1, 1, 1,],
+                        [ 1, 1, 1, 1, 1, 1,],
+                        [  ,  ,  ,  ,  ,  ,],
                 ];
 
-
-        var enemigo_izq =  [
-                        [ 1, 1, 1,  ,  ,  ],
-                        [ 1, 1, 1, 1,  ,  ],
-                        [ 1, 1, 1, 1, 1,  ],
-                        [  ,  , 1, 1, 1, 1],
-                        [ 1, 1, 1, 1, 1,  ],
-                        [ 1, 1, 1, 1, 1,  ],
-                        [  ,  , 1, 1, 1,  ],
-                        [  ,  , 1, 1,  ,  ],
-                        [  , 1, 1, 1,  , 1],
-                        [  , 1, 1, 1, 1, 1],
-                        [  , 1, 1, 1, 1, 1],
-                        [  ,  ,  ,  ,  ,  ],
+        enemigo[2] =  [
+                        [ 1,  ,  ,  , 1, 1,],
+                        [ 1, 1,  ,  , 1, 1,],
+                        [ 1, 1, 1, 1, 1, 1,],
+                        [  , 1, 1, 1,  ,  ,],
+                        [  ,  , 1, 1, 1, 1,],
+                        [  ,  , 1, 1, 1, 1,],
+                        [  ,  , 1, 1, 1, 1,],
+                        [ 1,  , 1, 1,  , 1,],
+                        [ 1, 1, 1, 1,  , 1,],
+                        [ 1, 1, 1, 1, 1, 1,],
+                        [  , 1, 1, 1, 1,  ,],
+                        [  ,  ,  ,  ,  ,  ,],
+                ];
+ 
+        enemigo[3] =  [
+                        [ 1, 1, 1,  ,  ,  ,],
+                        [ 1, 1, 1, 1, 1, 1,],
+                        [ 1, 1, 1, 1, 1, 1,],
+                        [  , 1, 1, 1,  ,  ,],
+                        [  ,  , 1, 1, 1, 1,],
+                        [  ,  , 1, 1, 1, 1,],
+                        [  ,  ,  , 1, 1,  ,],
+                        [  , 1, 1, 1, 1,  ,],
+                        [ 1, 1, 1, 1, 1,  ,],
+                        [ 1, 1, 1, 1, 1,  ,],
+                        [  , 1, 1, 1, 1,  ,],
+                        [  ,  ,  ,  ,  ,  ,],
                 ];
 
+        enemigo[4] =  [
+                        [  , 1,  , 1,  , 1,],
+                        [ 1, 1, 1, 1, 1, 1,],
+                        [ 1, 1, 1, 1, 1, 1,],
+                        [ 1, 1, 1, 1,  ,  ,],
+                        [ 1, 1,  , 1, 1, 1,],
+                        [ 1,  ,  , 1, 1, 1,],
+                        [  ,  ,  , 1, 1, 1,],
+                        [  ,  , 1, 1, 1,  ,],
+                        [  , 1, 1, 1, 1,  ,],
+                        [  , 1, 1, 1, 1,  ,],
+                        [  , 1, 1, 1, 1,  ,],
+                        [  ,  ,  ,  ,  ,  ,],
+                ];
 
         var pistola =  [
                         [  ,  , 1,  ,  ,  , 1, 1,  ,  ,  ],
@@ -402,16 +449,23 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
 
 
         ctx.rotate(this.angulo*Math.PI/180);
+
+
+
         //Pinta jugador
-        var que_jugador = enemigo;
+        var que_jugador = enemigo[juego.player_.tipo_enemigo_];
         var que_pistola = pistola;
         var x_pistola = -10;
 
         var new_y = 0;
         var new_x = 0;
 
+
         if(this.last_left){
-            que_jugador = enemigo_izq;
+
+            for (var i = 0; i < que_jugador.length; i++) {
+                que_jugador[i].reverse();
+            }
             que_pistola = pistola_izq;
             x_pistola = -this.ancho_ + 10;
         }
@@ -471,14 +525,14 @@ var Enemigo = function(juego, x, y, gravedad, impulso) {
             }
 
             else if(this.last_left){
-                que_jugador = enemigo_izq;
+                
                 que_pistola = pistola_izq;
                 new_y = -50;
                 new_x = 20;
                 color_enemigo = "rgba(200, 193, 255, "+opacidad/4+")";
             }
             else{
-                que_jugador = enemigo;
+
                 que_pistola = pistola;
                 new_y = -30;
                 new_x = -50;
