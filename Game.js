@@ -194,6 +194,8 @@ var Game = function() {
 
     this.tiempo_slow_motion_ = this.timestamp_();
 
+    this.nivel_ = 0;
+
 
 
 
@@ -381,7 +383,8 @@ var Game = function() {
         }
         else{
 
-
+            this.nivel_++;
+            
             this.portal_ = {};
             this.portal_.ancho_ = this.player_.alto_;
             this.portal_.alto_ = this.player_.alto_;
@@ -761,6 +764,13 @@ var Game = function() {
             if (opacity_medical < 0.5){
                 this.medical_kit_ = {};
             }
+            else{
+                ctx.strokeStyle = "#ffffff";
+                ctx.lineWidth= opacity_medical * 20 + 10;
+                lejos_quitar = (1 - opacity_medical) * 50;
+                ctx.strokeRect(this.medical_kit_.x - lejos_quitar, this.medical_kit_.y - lejos_quitar, this.medical_kit_.alto_ + lejos_quitar*2, this.medical_kit_.alto_ + lejos_quitar*2);
+            }
+            return;
         }
 
         var tween = this.tween_frames_(this.counter, 80);
