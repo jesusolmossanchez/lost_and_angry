@@ -362,6 +362,8 @@ var Game = function() {
         this.cuantos_enemigos_ = 0;
         this.enemigos_ = [];
         this.explosions_ = [];
+        
+
         this.moustro_final_ = final;
         //this.moustro_final_ = true;
 
@@ -1366,7 +1368,11 @@ var Game = function() {
         var x_loading = this.ancho_total_/2 - (size_loading_px * loading[0].length)/2;
 
         this.pinta_filas_columnas_(ctx, x_logo, 180, logo, size_logo_px);
-        this.pinta_filas_columnas_(ctx, x_loading, 260, loading, size_loading_px);
+
+        var opacidad = this.tween_frames_(this.counter, 60);
+        var color_loading = "rgba(255,255,255,"+opacidad+")";
+
+        this.pinta_filas_columnas_(ctx, x_loading, 260, loading, size_loading_px, color_loading);
         
     };
 
@@ -1392,8 +1398,6 @@ var Game = function() {
 
     this.pinta_intro_ = function(ctx, dt) {
 
-
-        
         if(this.fin_intro_ < this.timestamp_() && this.cambia_pantalla_intro_){
             this.setup_(false, 1800);
             this.empieza_();
@@ -1405,6 +1409,8 @@ var Game = function() {
             //this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + (300 - (this.tiempo_intro_ - this.timestamp_())/15);
             this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + this.counter*2;
     }
+
+
 
         this.player_ = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 1000, 30000, this.salud_actual_);
 
