@@ -579,6 +579,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     }
 
     this.entra_medical_ = function(){
+        return;
         if(typeof juego.medical_kit_.x === "undefined"){
             return false;
         }
