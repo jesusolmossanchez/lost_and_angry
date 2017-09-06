@@ -92,7 +92,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         }
 
         if(this.entra_medical_() && this.tiempo_medical_ < juego.timestamp_()){
-            this.tiempo_medical_ = juego.timestamp_() + 1500;
+            this.tiempo_medical_ = juego.timestamp_() + 2000;
             /*
             juego.tiempo_slow_motion_ = juego.timestamp_() + 1000;
             juego.fps_            = 60/2;
