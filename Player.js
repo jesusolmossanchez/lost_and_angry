@@ -78,8 +78,8 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         }
         
         if(this.tiempo_medical_ > juego.timestamp_()){
-            this.salud_ = this.salud_ + 2; 
-            if(this.salud_ >= this.salud_inicial_){
+            this.salud_ = this.salud_ + 1; 
+            if(this.salud_ >= juego.salud_inicial_){
                 this.salud_ = this.salud_inicial_;
             }
         }
@@ -175,6 +175,15 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             juego.bullets_.push(
                 new Bullet(this.x, this.y, 0, 0, derecha, juego, this)
             );
+        }
+
+        var retroceso_herido_x = this.shoot_back_ * 10;
+        var retroceso_herido_y = this.shoot_back_;
+        if((this.tiempo_atacado_ - juego.timestamp_())>1900){
+            
+            this.ddx = this.ddx + retroceso_herido_x * (0.5 - Math.random());
+            this.ddy = this.ddy + retroceso_herido_y * (0.5 - Math.random());
+            
         }
   
         this.x  = this.x  + (dt * this.dx);
@@ -410,6 +419,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         ctx.arc(0, 0, 300, 0, Math.PI * 2, false);
 
         var gradient = ctx.createRadialGradient(0, 0, radius*0.9, this.ancho_ / 2, this.alto_/2, 0);
+
         if((this.tiempo_atacado_ - juego.timestamp_())>1700){
             var random_halo = Math.random()/2;
             gradient.addColorStop(0,"rgba(255, 11, 11, 0)");
@@ -579,7 +589,9 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     }
 
     this.entra_medical_ = function(){
-        return;
+        if(juego.moustro_final_){
+            return;
+        }
         if(typeof juego.medical_kit_.x === "undefined"){
             return false;
         }
