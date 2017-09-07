@@ -80,7 +80,8 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
         var colisiona = false;
         if(this.colisiona_player_() && !this.muerto){
-            //juego.player_.salud_--;
+            juego.player_.salud_--;
+            juego.player_.tiempo_atacado_ = juego.timestamp_() + 2000;
         }
 
         if(juego.timestamp_() > this.tiempo_movimiento_){
