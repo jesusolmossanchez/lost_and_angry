@@ -74,9 +74,9 @@ var Enemigo = function(juego, x, y, tipo) {
                     [  ,  ,  ,  ,  ,  ,],
             ];
 
-    for (var i = 0; i < this.enemigo_left_[0].length; i++) {
-        this.enemigo_left_[0][i].reverse();
-    }       
+    //for (var i = 0; i < this.enemigo_left_[0].length; i++) {
+    //    this.enemigo_left_[0][i].reverse();
+    //}       
 
     this.enemigo_[1] =  [
                     [ 1,  ,  , 1,  , 1,],
@@ -108,9 +108,9 @@ var Enemigo = function(juego, x, y, tipo) {
                     [  ,  ,  ,  ,  ,  ,],
             ];
 
-    for (var i = 0; i < this.enemigo_left_[1].length; i++) {
-        this.enemigo_left_[1][i].reverse();
-    }  
+    //for (var i = 0; i < this.enemigo_left_[1].length; i++) {
+    //    this.enemigo_left_[1][i].reverse();
+    //}  
 
     this.enemigo_[2] =  [
                     [ 1,  ,  ,  , 1, 1,],
@@ -142,9 +142,9 @@ var Enemigo = function(juego, x, y, tipo) {
                     [  ,  ,  ,  ,  ,  ,],
             ];
 
-    for (var i = 0; i < this.enemigo_left_[2].length; i++) {
-        this.enemigo_left_[2][i].reverse();
-    }  
+   // for (var i = 0; i < this.enemigo_left_[2].length; i++) {
+   //     this.enemigo_left_[2][i].reverse();
+   // }  
 
     this.enemigo_[3] =  [
                     [ 1, 1, 1,  ,  ,  ,],
@@ -176,9 +176,9 @@ var Enemigo = function(juego, x, y, tipo) {
                     [  ,  ,  ,  ,  ,  ,],
             ];
 
-    for (var i = 0; i < this.enemigo_left_[3].length; i++) {
-        this.enemigo_left_[3][i].reverse();
-    }  
+  //  for (var i = 0; i < this.enemigo_left_[3].length; i++) {
+  //      this.enemigo_left_[3][i].reverse();
+ //   }  
 
     this.enemigo_[4] =  [
                     [  , 1,  , 1,  , 1,],
@@ -210,9 +210,9 @@ var Enemigo = function(juego, x, y, tipo) {
                     [  ,  ,  ,  ,  ,  ,],
             ];
 
-    for (var i = 0; i < this.enemigo_left_[4].length; i++) {
-        this.enemigo_left_[4][i].reverse();
-    }
+   // for (var i = 0; i < this.enemigo_left_[4].length; i++) {
+   //     this.enemigo_left_[4][i].reverse();
+   // }
 
 
     this.que_jugador_ = this.enemigo_[this.tipo_enemigo_ ];
