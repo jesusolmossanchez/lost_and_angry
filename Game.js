@@ -400,7 +400,7 @@ var Game = function() {
             this.medical_kit_ = {};
 
 
-            if(Math.random() > 0.004){
+            if(Math.random() > 0.7){
                 this.medical_kit_.ancho_ = this.player_.alto_/2;
                 this.medical_kit_.alto_ = this.player_.alto_/2;
                 this.situa_medical_kit_(this.medical_kit_);
