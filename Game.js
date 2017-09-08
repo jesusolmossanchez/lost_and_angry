@@ -759,9 +759,7 @@ var Game = function() {
         b = Math.abs(y_kit - this.player_.centro_y);
         distancia_centro = Math.sqrt( a*a + b*b );
 
-        if(distancia_centro > this.radio_vision_ ){
-            return;
-        }
+        
 
 
         var opacity_medical = this.player_.tiempo_medical_ - this.timestamp_();
@@ -779,6 +777,10 @@ var Game = function() {
                 lejos_quitar = (1 - opacity_medical) * 50;
                 ctx.strokeRect(this.medical_kit_.x - lejos_quitar, this.medical_kit_.y - lejos_quitar, this.medical_kit_.alto_ + lejos_quitar*2, this.medical_kit_.alto_ + lejos_quitar*2);
             }
+            return;
+        }
+
+        if(distancia_centro > this.radio_vision_ ){
             return;
         }
 
@@ -1554,6 +1556,42 @@ var Game = function() {
             this.className = "tecla_mobile pulsada";
             e.preventDefault();
         });
+
+        document.getElementById('lost').addEventListener('touchmove', function(e){ 
+            var target = document.elementFromPoint(e.touches[0].pageX, e.touches[0].pageY);
+
+            console.log(target)
+            e.preventDefault();
+            if(target.id === "der_mobile"){
+                document.getElementById('der_mobile').className = "tecla_mobile pulsada";
+            }
+            else{
+                document.getElementById('der_mobile').className = "tecla_mobile";
+
+            }
+            if(target.id === "izq_mobile"){
+                document.getElementById('izq_mobile').className = "tecla_mobile pulsada";
+            }
+            else{
+                document.getElementById('izq_mobile').className = "tecla_mobile";
+                
+            }
+            if(target.id === "arr_mobile"){
+                document.getElementById('arr_mobile').className = "tecla_mobile pulsada";
+            }
+            else{
+                document.getElementById('arr_mobile').className = "tecla_mobile";
+                
+            }
+            if(target.id === "accion_mobile"){
+                document.getElementById('accion_mobile').className = "tecla_mobile pulsada";
+            }
+            else{
+                document.getElementById('accion_mobile').className = "tecla_mobile";
+                
+            }
+        });
+
 
 
 
