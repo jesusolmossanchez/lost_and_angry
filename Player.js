@@ -514,7 +514,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     };
 
     this.suena_dispara_ = function(){
-        window.disparo_audio.play();
+        //window.disparo_audio.play();
         /*
         setTimeout(function () { 
                 
