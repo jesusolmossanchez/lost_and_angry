@@ -515,11 +515,12 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
 
     this.suena_dispara_ = function(){
         window.disparo_audio.play();
+        /*
         setTimeout(function () { 
                 
             window.disparo_audio2.play();
         },150 * Math.random());
-
+        */
     }
 
     this.pinta_home_ = function(){
