@@ -195,6 +195,7 @@ var Game = function() {
     this.tiempo_slow_motion_ = this.timestamp_();
 
     this.nivel_ = 0;
+    this.tiempo_terremoto_fix_ = 3000;
 
 
 
@@ -603,6 +604,9 @@ var Game = function() {
             this.render_portal_(ctx);
             this.render_medical_kit_(ctx);
         }
+        else{
+            this.render_terremoto_(ctx);
+        }
 
         this.render_map_(ctx, dt, true);
         this.render_bullets_(ctx);
@@ -809,6 +813,98 @@ var Game = function() {
         ctx.strokeRect(this.medical_kit_.x - lejos_borde2, this.medical_kit_.y - lejos_borde2, this.medical_kit_.alto_ + lejos_borde2*2, this.medical_kit_.alto_ + lejos_borde2*2);
 
 
+
+    };
+
+
+    this.alto_ola_diff_ = 0;
+    this.render_terremoto_ = function(ctx) {
+        if(this.final_boss_.tiempo_terremoto_ > this.timestamp_()){
+
+            var divisiones_pantalla = 80;
+
+            var diff_time = this.final_boss_.tiempo_terremoto_ - this.timestamp_();
+            var new_diff = Math.floor((diff_time / this.tiempo_terremoto_fix_)*divisiones_pantalla);
+
+            new_diff = divisiones_pantalla - new_diff;
+
+
+
+
+
+            var divisiones_alto_ola = 20;
+            this.alto_ola_diff_ = new_diff%divisiones_alto_ola;
+
+            if(this.alto_ola_diff_ > divisiones_alto_ola/2){
+                this.alto_ola_diff_ = divisiones_alto_ola - this.alto_ola_diff_;
+            }
+
+            console.log(this.alto_ola_diff_);
+
+
+            var alto_ola = (200/divisiones_alto_ola) * this.alto_ola_diff_;
+            var ancho_ola = this.ancho_total_/divisiones_pantalla * 2;
+            var distancia = this.ancho_total_/divisiones_pantalla * new_diff;
+
+         
+            ctx.fillStyle = "rgba(250,0,0,0.2)";
+            ctx.fillRect(this.final_boss_.x - distancia, this.alto_total_ - alto_ola, ancho_ola, alto_ola);
+
+            
+
+            distancia = this.ancho_total_/divisiones_pantalla * (new_diff - 1);
+            alto_ola = alto_ola * 0.9
+            ctx.fillRect(this.final_boss_.x - distancia, this.alto_total_ - alto_ola, ancho_ola, alto_ola);
+
+            distancia = this.ancho_total_/divisiones_pantalla * (new_diff - 2);
+            alto_ola = alto_ola * 0.8
+            ctx.fillRect(this.final_boss_.x - distancia, this.alto_total_ - alto_ola, ancho_ola, alto_ola);
+
+            distancia = this.ancho_total_/divisiones_pantalla * (new_diff - 3);
+            alto_ola = alto_ola * 0.7
+            ctx.fillRect(this.final_boss_.x - distancia, this.alto_total_ - alto_ola, ancho_ola, alto_ola);
+
+            /*
+            distancia = this.ancho_total_/divisiones_pantalla * (new_diff + 1);
+            alto_ola = alto_ola * 0.9
+            ctx.fillRect(this.final_boss_.x - distancia, this.alto_total_ - alto_ola, ancho_ola, alto_ola);
+
+            distancia = this.ancho_total_/divisiones_pantalla * (new_diff + 2);
+            alto_ola = alto_ola * 0.8
+            ctx.fillRect(this.final_boss_.x - distancia, this.alto_total_ - alto_ola, ancho_ola, alto_ola);
+
+            distancia = this.ancho_total_/divisiones_pantalla * (new_diff + 3);
+            alto_ola = alto_ola * 0.7
+            ctx.fillRect(this.final_boss_.x - distancia, this.alto_total_ - alto_ola, ancho_ola, alto_ola);
+
+            var distancia_antes = this.ancho_total_/divisiones_pantalla * (new_diff-1);
+            var distancia_despues = this.ancho_total_/divisiones_pantalla * (new_diff+1);
+            ctx.fillRect(this.final_boss_.x - distancia_antes, this.alto_total_ - alto_ola/1.5, ancho_ola, alto_ola/1.5);
+            ctx.fillRect(this.final_boss_.x - distancia_despues, this.alto_total_ - alto_ola/1.5, ancho_ola, alto_ola/1.5);
+
+            distancia_antes = this.ancho_total_/divisiones_pantalla * (new_diff-2);
+            distancia_despues = this.ancho_total_/divisiones_pantalla * (new_diff+2);
+            ctx.fillRect(this.final_boss_.x - distancia_antes, this.alto_total_ - alto_ola/2, ancho_ola, alto_ola/2);
+            ctx.fillRect(this.final_boss_.x - distancia_despues, this.alto_total_ - alto_ola/2, ancho_ola, alto_ola/2);
+
+
+            distancia_antes = this.ancho_total_/divisiones_pantalla * (new_diff-3);
+            distancia_despues = this.ancho_total_/divisiones_pantalla * (new_diff+3);
+            ctx.fillRect(this.final_boss_.x - distancia_antes, this.alto_total_ - alto_ola/2.5, ancho_ola, alto_ola/2.5);
+            ctx.fillRect(this.final_boss_.x - distancia_despues, this.alto_total_ - alto_ola/2.5, ancho_ola, alto_ola/2.5);
+
+
+            distancia_antes = this.ancho_total_/divisiones_pantalla * (new_diff-4);
+            distancia_despues = this.ancho_total_/divisiones_pantalla * (new_diff+4);
+            ctx.fillRect(this.final_boss_.x - distancia_antes, this.alto_total_ - alto_ola/3, ancho_ola, alto_ola/3);
+            ctx.fillRect(this.final_boss_.x - distancia_despues, this.alto_total_ - alto_ola/3, ancho_ola, alto_ola/3);
+            */
+
+            
+
+
+        }
+        
 
     };
 
@@ -1560,33 +1656,40 @@ var Game = function() {
         document.getElementById('lost').addEventListener('touchmove', function(e){ 
             var target = document.elementFromPoint(e.touches[0].pageX, e.touches[0].pageY);
 
-            console.log(target)
             e.preventDefault();
             if(target.id === "der_mobile"){
+                self.player_.right = true;
                 document.getElementById('der_mobile').className = "tecla_mobile pulsada";
             }
             else{
+                self.player_.right = false;
                 document.getElementById('der_mobile').className = "tecla_mobile";
 
             }
             if(target.id === "izq_mobile"){
+                self.player_.left = true;
                 document.getElementById('izq_mobile').className = "tecla_mobile pulsada";
             }
             else{
+                self.player_.left = false;
                 document.getElementById('izq_mobile').className = "tecla_mobile";
                 
             }
             if(target.id === "arr_mobile"){
+                self.player_.jump = true;
                 document.getElementById('arr_mobile').className = "tecla_mobile pulsada";
             }
             else{
+                self.player_.jump = false;
                 document.getElementById('arr_mobile').className = "tecla_mobile";
                 
             }
             if(target.id === "accion_mobile"){
+                self.player_.accion = true;
                 document.getElementById('accion_mobile').className = "tecla_mobile pulsada";
             }
             else{
+                self.player_.accion = false;
                 document.getElementById('accion_mobile').className = "tecla_mobile";
                 
             }
