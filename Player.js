@@ -13,7 +13,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     this.alto_                  = this.size_player_pixel * 12;
     this.ancho_                 = this.size_player_pixel * 6 + 5;
     this.centro_x               = this.x + this.ancho_/2;
-    this.centro_y                  = this.y + this.alto_/2;
+    this.centro_y               = this.y + this.alto_/2;
 
     this.dx                     = 0;
     this.dy                     = 0;
@@ -515,6 +515,19 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     //var A;
     //var cuantos_a = 0;
     this.suena_dispara_ = function(){
+        window.croqueta_audio.play();
+        setTimeout(function () { 
+                
+            window.croqueta_audio2.play();
+        },150);
+        setTimeout(function () { 
+                
+            window.croqueta_audio3.play();
+        },300);
+        setTimeout(function () { 
+                
+            window.croqueta_audio4.play();
+        },450);
         /*
         cuantos_a++;
         if(cuantos_a>3){

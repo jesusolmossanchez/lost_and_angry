@@ -144,6 +144,7 @@ var Boss = function(juego, x, y, gravedad, impulso) {
                 this.dy = 0;
                 if(this.jumping ){
                     this.tiempo_terremoto_ = juego.timestamp_() + juego.tiempo_terremoto_fix_;
+                    juego.tiempo_shacke_ = juego.timestamp_() + juego.tiempo_terremoto_fix_;
                 }
                 this.jumping = false;
                 this.falling = false;
@@ -301,13 +302,13 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
 
     this.controla_salta_ = function() {
-        var salta = (Math.random()>0.995)?true:false;
+        var salta = (Math.random()>0.998)?true:false;
         return salta;
     };
 
 
     this.controla_dispara_ = function() {
-        var dispara = (Math.random()>0.97)?true:false;
+        var dispara = (Math.random()>0.975)?true:false;
         return dispara;
     };
 

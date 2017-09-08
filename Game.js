@@ -195,7 +195,7 @@ var Game = function() {
     this.tiempo_slow_motion_ = this.timestamp_();
 
     this.nivel_ = 0;
-    this.tiempo_terremoto_fix_ = 3000;
+    this.tiempo_terremoto_fix_ = 2500;
 
 
 
@@ -604,14 +604,14 @@ var Game = function() {
             this.render_portal_(ctx);
             this.render_medical_kit_(ctx);
         }
-        else{
-            this.render_terremoto_(ctx);
-        }
 
         this.render_map_(ctx, dt, true);
         this.render_bullets_(ctx);
         this.render_zapatillas_(ctx);
 
+        if(this.moustro_final_){
+            this.render_terremoto_(ctx);
+        }
         this.render_player_(ctx, dt);
 
 
@@ -637,6 +637,10 @@ var Game = function() {
                 if(this.tiempo_muerte_ > this.timestamp_()){
                     this.dx_shacke = (Math.random() - 0.5) * cuanto_shake;
                     this.dy_shacke = (Math.random() - 0.5) * cuanto_shake;
+                }
+                if(this.final_boss_.tiempo_terremoto_ > this.timestamp_()){
+                    this.dx_shacke = (Math.random() - 0.5) * cuanto_shake * 2;
+                    this.dy_shacke = (Math.random() - 0.5) * cuanto_shake * 2;
                 }
                 else{
                     this.dy_shacke = this.dy_shacke * (-0.9);
@@ -821,7 +825,7 @@ var Game = function() {
     this.render_terremoto_ = function(ctx) {
         if(this.final_boss_.tiempo_terremoto_ > this.timestamp_()){
 
-            var divisiones_pantalla = 80;
+            var divisiones_pantalla = 40;
 
             var diff_time = this.final_boss_.tiempo_terremoto_ - this.timestamp_();
             var new_diff = Math.floor((diff_time / this.tiempo_terremoto_fix_)*divisiones_pantalla);
@@ -839,69 +843,60 @@ var Game = function() {
                 this.alto_ola_diff_ = divisiones_alto_ola - this.alto_ola_diff_;
             }
 
-            console.log(this.alto_ola_diff_);
 
-
-            var alto_ola = (200/divisiones_alto_ola) * this.alto_ola_diff_;
+            var alto_ola = (180/divisiones_alto_ola) * this.alto_ola_diff_;
             var ancho_ola = this.ancho_total_/divisiones_pantalla * 2;
             var distancia = this.ancho_total_/divisiones_pantalla * new_diff;
 
          
-            ctx.fillStyle = "rgba(250,0,0,0.2)";
-            ctx.fillRect(this.final_boss_.x - distancia, this.alto_total_ - alto_ola, ancho_ola, alto_ola);
+            //ctx.fillStyle = "rgba(150,120,120,1)";
+
+            var grd=ctx.createLinearGradient(0,this.alto_total_ - 100 ,0,this.alto_total_);
+            //grd.addColorStop(0,"rgba(250,40,40,0.1)");
+
+            grd.addColorStop(0,"rgba(186,186,186,0.3)");
+            grd.addColorStop(1,"rgba(0,0,0,1)");
+            //grd.addColorStop(1,"rgba(0,0,0,1)");
+
+            ctx.fillStyle=grd;
+
+            var rand1 = (Math.random() - 0.5) * 10;
+            var rand2 = (Math.random() - 0.5) * 10;
+            var rand3 = (Math.random() - 0.5) * 10;
+            var primera_distancia = distancia;
+            ctx.fillRect(this.final_boss_.x - distancia + rand2, this.alto_total_ - alto_ola + 15 + rand1, ancho_ola, alto_ola + rand1);
 
             
-
-            distancia = this.ancho_total_/divisiones_pantalla * (new_diff - 1);
-            alto_ola = alto_ola * 0.9
-            ctx.fillRect(this.final_boss_.x - distancia, this.alto_total_ - alto_ola, ancho_ola, alto_ola);
 
             distancia = this.ancho_total_/divisiones_pantalla * (new_diff - 2);
-            alto_ola = alto_ola * 0.8
-            ctx.fillRect(this.final_boss_.x - distancia, this.alto_total_ - alto_ola, ancho_ola, alto_ola);
+            alto_ola_n = alto_ola * 0.7 + rand1
+            ctx.fillRect(this.final_boss_.x - distancia + rand1, this.alto_total_ - alto_ola_n + 15 + rand2, ancho_ola, alto_ola_n + rand2);
 
-            distancia = this.ancho_total_/divisiones_pantalla * (new_diff - 3);
-            alto_ola = alto_ola * 0.7
-            ctx.fillRect(this.final_boss_.x - distancia, this.alto_total_ - alto_ola, ancho_ola, alto_ola);
+            distancia = this.ancho_total_/divisiones_pantalla * (new_diff - 4);
+            alto_ola_n = alto_ola * 0.4 + rand2
+            ctx.fillRect(this.final_boss_.x - distancia + (Math.random() - 0.5) * 10, this.alto_total_ - alto_ola_n + 5, ancho_ola, alto_ola_n);
 
-            /*
-            distancia = this.ancho_total_/divisiones_pantalla * (new_diff + 1);
-            alto_ola = alto_ola * 0.9
-            ctx.fillRect(this.final_boss_.x - distancia, this.alto_total_ - alto_ola, ancho_ola, alto_ola);
-
-            distancia = this.ancho_total_/divisiones_pantalla * (new_diff + 2);
-            alto_ola = alto_ola * 0.8
-            ctx.fillRect(this.final_boss_.x - distancia, this.alto_total_ - alto_ola, ancho_ola, alto_ola);
-
-            distancia = this.ancho_total_/divisiones_pantalla * (new_diff + 3);
-            alto_ola = alto_ola * 0.7
-            ctx.fillRect(this.final_boss_.x - distancia, this.alto_total_ - alto_ola, ancho_ola, alto_ola);
-
-            var distancia_antes = this.ancho_total_/divisiones_pantalla * (new_diff-1);
-            var distancia_despues = this.ancho_total_/divisiones_pantalla * (new_diff+1);
-            ctx.fillRect(this.final_boss_.x - distancia_antes, this.alto_total_ - alto_ola/1.5, ancho_ola, alto_ola/1.5);
-            ctx.fillRect(this.final_boss_.x - distancia_despues, this.alto_total_ - alto_ola/1.5, ancho_ola, alto_ola/1.5);
-
-            distancia_antes = this.ancho_total_/divisiones_pantalla * (new_diff-2);
-            distancia_despues = this.ancho_total_/divisiones_pantalla * (new_diff+2);
-            ctx.fillRect(this.final_boss_.x - distancia_antes, this.alto_total_ - alto_ola/2, ancho_ola, alto_ola/2);
-            ctx.fillRect(this.final_boss_.x - distancia_despues, this.alto_total_ - alto_ola/2, ancho_ola, alto_ola/2);
-
-
-            distancia_antes = this.ancho_total_/divisiones_pantalla * (new_diff-3);
-            distancia_despues = this.ancho_total_/divisiones_pantalla * (new_diff+3);
-            ctx.fillRect(this.final_boss_.x - distancia_antes, this.alto_total_ - alto_ola/2.5, ancho_ola, alto_ola/2.5);
-            ctx.fillRect(this.final_boss_.x - distancia_despues, this.alto_total_ - alto_ola/2.5, ancho_ola, alto_ola/2.5);
-
-
-            distancia_antes = this.ancho_total_/divisiones_pantalla * (new_diff-4);
-            distancia_despues = this.ancho_total_/divisiones_pantalla * (new_diff+4);
-            ctx.fillRect(this.final_boss_.x - distancia_antes, this.alto_total_ - alto_ola/3, ancho_ola, alto_ola/3);
-            ctx.fillRect(this.final_boss_.x - distancia_despues, this.alto_total_ - alto_ola/3, ancho_ola, alto_ola/3);
-            */
-
+        
             
 
+            distancia = this.ancho_total_/divisiones_pantalla * (new_diff + 2);
+            alto_ola_n = alto_ola * 0.7 + rand3
+            ctx.fillRect(this.final_boss_.x - distancia + rand1, this.alto_total_ - alto_ola_n + 15, ancho_ola, alto_ola_n);
+
+            distancia = this.ancho_total_/divisiones_pantalla * (new_diff + 4);
+            alto_ola_n = alto_ola * 0.4 + rand2
+            ctx.fillRect(this.final_boss_.x - distancia + rand3, this.alto_total_ - alto_ola_n + 15, ancho_ola, alto_ola_n);
+
+          
+            x_empieza_terremoto = this.final_boss_.x - primera_distancia + rand2;
+            x_final_terremoto = this.final_boss_.x - distancia + rand3;
+
+            if(this.player_.centro_x < x_empieza_terremoto && this.player_.centro_x > x_final_terremoto){
+                if(this.player_.centro_y > (this.alto_total_ - 200)){
+                    this.player_.salud_ = this.player_.salud_ - 5;
+                    this.player_.tiempo_atacado_ = this.timestamp_() + 2200;
+                }
+            }
 
         }
         
@@ -1266,7 +1261,6 @@ var Game = function() {
 
 
     this.render_zapatillas_ = function (ctx) {
-
         for (var i = 0; i < this.zapatillas_.length; i++) {
             var disparo_boss = this.zapatillas_[i];
             var size_bala = disparo_boss.size * 100;
@@ -1302,19 +1296,6 @@ var Game = function() {
                 ctx.arc(disparo_boss.x+rand_exp1 + size_bala/2, disparo_boss.y+rand_exp2+size_bala/2, radio_explosion_muerte, Math.PI * 2, 0, false);
                 ctx.closePath();
                 ctx.fill();
-                /*
-                ctx.beginPath();
-                ctx.fillStyle = 'rgba(0,0,'+blue+',0.1)';
-                ctx.arc(disparo_boss.x+rand_exp2, disparo_boss.y+rand_exp3, radio_explosion_muerte, Math.PI * 2, 0, false);
-                ctx.closePath();
-                ctx.fill();
-                ctx.beginPath();
-
-                ctx.fillStyle = 'rgba(0,0,'+blue+',0.1)';
-                ctx.arc(disparo_boss.x+rand_exp3, disparo_boss.y+rand_exp1, radio_explosion_muerte, Math.PI * 2, 0, false);
-                ctx.closePath();
-                ctx.fill();
-                */
                 continua = false;
             }
             else if(disparo_boss.pre_muerto_){
@@ -1481,6 +1462,7 @@ var Game = function() {
         if(this.fin_intro_ < this.timestamp_() && this.cambia_pantalla_intro_){
             this.setup_(false, 1800);
             this.empieza_();
+            window.audio.play();
             this.empezado_ = true;
             return;
         }
@@ -1488,7 +1470,7 @@ var Game = function() {
         if(!this.cambia_pantalla_intro_){
             //this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + (300 - (this.tiempo_intro_ - this.timestamp_())/15);
             this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + this.counter*2;
-    }
+        }
 
 
 
@@ -1873,6 +1855,9 @@ var Game = function() {
     croqueta_player.init(croqueta);
     var flag_croqueta = false;
     window.croqueta_audio;
+    window.croqueta_audio2;
+    window.croqueta_audio3;
+    window.croqueta_audio4;
 
     var golpe_player = new CPlayer();
     golpe_player.init(golpe);
@@ -1964,19 +1949,28 @@ var Game = function() {
         if (done) {
           
             var wave = music_player.createWave();
-            var audio = document.createElement("audio");
-            audio.src = URL.createObjectURL(new Blob([wave], {type: "audio/wav"}));
-            audio.loop=true;
+            window.audio = document.createElement("audio");
+            window.audio.src = URL.createObjectURL(new Blob([wave], {type: "audio/wav"}));
+            window.audio.loop=true;
 
             //Comento el play que no suene de momento
-            //audio.play();
-            audio.volume = 0.3;
+            
+            window.audio.volume = 0.3;
 
 
             var wave2 = croqueta_player.createWave();
             window.croqueta_audio = document.createElement("audio");
+            window.croqueta_audio2 = document.createElement("audio");
+            window.croqueta_audio3 = document.createElement("audio");
+            window.croqueta_audio4 = document.createElement("audio");
             window.croqueta_audio.src = URL.createObjectURL(new Blob([wave2], {type: "audio/wav"}));
+            window.croqueta_audio2.src = URL.createObjectURL(new Blob([wave2], {type: "audio/wav"}));
+            window.croqueta_audio3.src = URL.createObjectURL(new Blob([wave2], {type: "audio/wav"}));
+            window.croqueta_audio4.src = URL.createObjectURL(new Blob([wave2], {type: "audio/wav"}));
             window.croqueta_audio.volume = 0.7;
+            window.croqueta_audio2.volume = 0.7;
+            window.croqueta_audio3.volume = 0.7;
+            window.croqueta_audio4.volume = 0.7;
 
             var wave3 = golpe_player.createWave();
             window.golpe_audio = document.createElement("audio");
