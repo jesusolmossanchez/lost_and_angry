@@ -892,7 +892,7 @@ var Game = function() {
             x_final_terremoto = this.final_boss_.x - distancia + rand3;
 
             if(this.player_.centro_x < x_empieza_terremoto && this.player_.centro_x > x_final_terremoto){
-                if(this.player_.centro_y > (this.alto_total_ - 200)){
+                if(this.player_.centro_y > (this.alto_total_ - 100)){
                     this.player_.salud_ = this.player_.salud_ - 5;
                     this.player_.tiempo_atacado_ = this.timestamp_() + 2200;
                 }
