@@ -5,7 +5,7 @@ var uglify = require('gulp-uglify');
 var cleanCSS = require('gulp-clean-css');
 var htmlmin = require('gulp-htmlmin');
 var replace = require('gulp-replace');
-var zip = require('gulp-zip');
+//var zip = require('gulp-zip');
 var fs = require("fs");
 
 
@@ -59,7 +59,7 @@ gulp.task('html-inject', ['styles-deploy', 'deploy-js'], function() {
 
 gulp.task('comprime', ['html-inject'], function(){
     gulp.src('prod/index_prod.html')
-        .pipe(zip('index_prod.zip'))
+        //.pipe(zip('index_prod.zip'))
         .pipe(gulp.dest('prod'));
 });
 

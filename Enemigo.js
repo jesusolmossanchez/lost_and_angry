@@ -272,6 +272,7 @@ var Enemigo = function(juego, x, y, tipo) {
         if(this.colisiona_player_() && !this.muerto){
             colisiona = true;
             juego.player_.salud_--;
+            window.golpe_audio.play();
         }
 
         if(!this.muerto && !colisiona){

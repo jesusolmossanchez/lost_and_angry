@@ -88,6 +88,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             if(this.entra_portal_()){
                 juego.cambia_pantalla_ = true;
                 this.tiempo_portal_ = juego.timestamp_() + 3000;
+                window.levelup_audio2.play();
             }
         }
 
@@ -512,29 +513,13 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
 
     };
 
-    //var A;
-    //var cuantos_a = 0;
     this.suena_dispara_ = function(){
-        window.croqueta_audio.play();
+        window.disparo_audio.play();
         setTimeout(function () { 
                 
-            window.croqueta_audio2.play();
-        },150);
-        setTimeout(function () { 
-                
-            window.croqueta_audio3.play();
-        },300);
-        setTimeout(function () { 
-                
-            window.croqueta_audio4.play();
-        },450);
-        /*
-        cuantos_a++;
-        if(cuantos_a>3){
-            A.close();
-        }
-        with(A = new AudioContext)for(i in D=[1,24,1,24,1,24,1,18,6,18,6,18,6,18,6,18,6,24,1,24,1,24,1,24,1,24,1,24,1,24])with(createOscillator())if(D[i])connect(destination),frequency.value=70*1.06**(13-D[i]),start(i*.03),stop(i*.03+.03);
-        */
+            window.disparo_audio2.play();
+        },150 * Math.random());
+
     }
 
     this.pinta_home_ = function(){
