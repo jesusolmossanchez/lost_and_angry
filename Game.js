@@ -1650,18 +1650,16 @@ var Game = function() {
     var dt = 0, 
         now,
         last = juego.timestamp_();
-  
-    var divisor_fps = 3;
-    var fps_curacion = 1000 / (juego.fps_ / divisor_fps);
+
+
+    var fpsInterval = 1000 / 30;
 
     var then = juego.timestamp_();
 
     function frame() {
-
-
-        requestAnimationFrame(frame);
-
+        
         if(juego.pausa_){
+            requestAnimationFrame(frame, canvas);
             return;
         }
 
@@ -1671,30 +1669,41 @@ var Game = function() {
             juego.counter++;
             juego.ctx.clearRect(0, 0, juego.ancho_total_, juego.alto_total_);
             juego.muestra_logo_(juego.ctx);
-            //juego.pinta_cargador_(juego.music_percent, juego.ctx);
             juego.pinta_intro_(juego.ctx, dt);
- 
+            
+            requestAnimationFrame(frame, canvas);
             return;
         }
-
-
-
         now = juego.timestamp_();
-        elapsed = now - then;
+        dt = dt + Math.min(1, (now - last) / 1000);
+        while(dt > juego.step_) {
+            dt = dt - juego.step_;
+            if(!juego.hay_punto_){
+                juego.update_(juego.step_);
+            }
+        }
+        if(false){
+            var elapsed = now - then;
 
-
-        if (elapsed > juego.fps_interval) {
-
-            then = now - (elapsed % juego.fps_interval);
-            juego.update_(juego.step_);
+            if (elapsed > fpsInterval) {
+                juego.pre_shake_();
+                juego.render_(juego.ctx, juego.counter, dt);
+                juego.post_shake_();
+                juego.update_(juego.step_);
+                then = now - (elapsed % fpsInterval);
+            }
+        }
+        else{
             juego.pre_shake_();
-            juego.render_(juego.ctx, juego.counter, juego.step_);
+            juego.render_(juego.ctx, juego.counter, dt);
             juego.post_shake_();
-            juego.counter++;
-
         }
 
+        last = now;
+        juego.counter++;
+        requestAnimationFrame(frame, canvas);
     }
+
 
     //Listeners de teclas
     document.addEventListener('keydown', function(ev) { return juego.onkey_(ev, ev.keyCode, true);  }, false);
