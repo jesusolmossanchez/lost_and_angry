@@ -143,7 +143,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
 
         //Si se pulsa acción
         if(this.accion && juego.counter > this.no_dispares_counter_){
-            this.suena_dispara_();
+            //this.suena_dispara_();
             this.no_dispares_counter_ = juego.counter + 3;
             juego.tiempo_shacke_ = juego.timestamp_() + 20;
             var derecha = true;
