@@ -92,7 +92,11 @@
   }
 
 })(window, document);
-        
+        window.onerror = function (err, file, line) {
+    alert('The following error occurred: ' + 
+    err + '\nIn file: ' + file + '\nOn line: ' + line);
+    return true;
+}
         </script>
     </body>
 </html>
