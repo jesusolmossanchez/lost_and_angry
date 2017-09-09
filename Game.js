@@ -382,7 +382,7 @@ var Game = function() {
 
         if(this.moustro_final_){
 
-            this.final_boss_ = new Boss(this, this.ancho_total_/1.5, 100, 800, 30000, 1);
+            this.final_boss_ = new Boss(this, this.ancho_total_/1.5, 240, 800, 30000, 1);
         }
         else{
 
@@ -1448,7 +1448,7 @@ var Game = function() {
                             [ 1, 1, 1, 1,  , 1, 1,  , 1,  ,  , 1, 1,  , 1,  ,  , 1, 1,  , 1,  ,  , 1, 1, 1, 1,  ,  ,  ,  ,  , 1,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1,  , 1,  ,  , 1,  , 1,  ,1 , 1,  ,  ,  ,  ,  ,  ,  ,  ,  , 1,  , 1,  ,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  ,  ,  ,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,  , 1, 1,  ],
                             [ 1, 1,  , 1,  , 1, 1,  ,  , 1,  , 1, 1,  ,  , 1,  , 1, 1, 1, 1,  ,  ,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  ,  ,  , 1, 1,  ,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1, 1, 1,  ,  ,  , 1,  ,  ,1 , 1, 1, 1,  ,  ,  ,  ,  ,  , 1,  ,  ,  , 1,  ,  ,  , 1, 1,  ,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  , 1, 1,  ]
                     ];
-            var size_intruc_px = 3;
+            var size_intruc_px = 2.5;
             var x_instruciones = this.ancho_total_/2 - (size_intruc_px * instrucciones[0].length)/2;
             this.pinta_filas_columnas_(ctx, x_instruciones, 550, instrucciones, size_intruc_px);
         }

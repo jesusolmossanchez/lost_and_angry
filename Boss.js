@@ -57,6 +57,10 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
     this.update_ = function(dt) {
 
+        if(juego.wait_start_ + 3000 > juego.timestamp_()){
+            return;
+        }
+
         if(this.salud_ < 0){
             juego.game_over_(true);
             return;
@@ -174,7 +178,7 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
 
         if(juego.wait_start_ + 3000 > juego.timestamp_()){
-            juego.radio_vision_ = 3000;
+            juego.radio_vision_ = 400;
             this.pinta_where_();
         }
         else{
@@ -368,7 +372,7 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
         var size_where = 3;
         var x_where = this.x - 200;
-        var y_where = this.y - 100;
+        var y_where = this.y - 50;
 
         juego.pinta_filas_columnas_(juego.ctx, x_where, y_where, where, size_where, "#ffffff");
     }
