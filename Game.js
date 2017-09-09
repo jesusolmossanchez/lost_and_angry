@@ -1004,7 +1004,10 @@ var Game = function() {
                 b = Math.abs(particle.y - this.player_.centro_y_);
                 distancia_centro = Math.sqrt( a*a + b*b );
 
-
+                if(this.is_game_over_ && particle.final){
+                    particlesAfterRemoval.splice(ii, 1);
+                    continue
+                }
                 if(distancia_centro > 300){
                     continue;
                 }
@@ -1013,11 +1016,6 @@ var Game = function() {
                 // Check particle size
                 // If 0, remove
                 
-
-                
-
-
-
                 var continuar = false;
                 if(particle.xv > 0){
                     if((particle.max_x - particle.x) < 0){

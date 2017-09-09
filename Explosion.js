@@ -8,7 +8,7 @@ var Explosion = function(x, y, propia, final, ganador) {
         this.particulas_por_explosion_ = this.particulas_por_explosion_ /100;
     }
     if(final){
-        this.particulas_por_explosion_ = this.particulas_por_explosion_ * 5;
+        this.particulas_por_explosion_ = this.particulas_por_explosion_ / 2;
     }
 
     for (var i = 0; i < this.particulas_por_explosion_; i++) {
@@ -36,8 +36,8 @@ var Particle = function(x, y, propia, final, ganador) {
     if(final){
         this.particlesMinSpeed_      = 3;
         this.particlesMaxSpeed_      = 30;
-        this.particlesMinSize_       = 2;
-        this.max_particulas_size_    = 1500;
+        this.particlesMinSize_       = 200;
+        this.max_particulas_size_    = 1000;
 
     }
 
@@ -52,8 +52,14 @@ var Particle = function(x, y, propia, final, ganador) {
     }
     if(final){
         this.r    = this.randInt_(0, 255);
-        this.g    = this.randInt_(0, 255);
-        this.b    = this.randInt_(0, 255);
+        this.g    = this.randInt_(0, 55);
+        this.b    = this.randInt_(0, 55);
+        if(ganador){
+            this.r    = this.randInt_(0, 255);
+            this.g    = this.randInt_(0, 255);
+            this.b    = this.randInt_(0, 255);
+
+        }
     }
 
   
@@ -76,7 +82,7 @@ var Particle = function(x, y, propia, final, ganador) {
 
     this.opacidad = Math.random();
 
-
+    this.final = final;
     this.size = this.randInt_(this.particlesMinSize_, this.max_particulas_size_);
     
 };
