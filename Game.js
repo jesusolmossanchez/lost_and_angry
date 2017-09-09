@@ -166,7 +166,7 @@ var Game = function() {
     this.GRAVITY_  = 800;   
 
     //Mapeo de teclas
-    this.KEY      = { ENTER: 13, SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, Z: 90};
+    this.KEY      = { ENTER: 13, SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, X: 88};
       
     //Cosas del bucle del juego
     this.fps_            = 60;
@@ -232,7 +232,7 @@ var Game = function() {
                 ev.preventDefault(); 
                 this.player_.accion  = down; 
                 return false;
-            case this.KEY.Z: 
+            case this.KEY.X: 
                 ev.preventDefault(); 
                 this.player_.accion  = down; 
                 return false;
@@ -1427,8 +1427,20 @@ var Game = function() {
                         [ 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1, 1,  ,  , 1, 1,  , 1, 1,  ,  , 1,  , 1, 1, 1, 1, 1,  , 1,  , 1,  , 1,  ,  ]
                 ];
 
+
+        var instrucciones =  [
+                        [ 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  ,1 , 1, 1, 1,  ,  ,  ,  ,  ,  , 1,  ,  ,  , 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1],
+                        [ 1, 1,  , 1,  , 1, 1,  , 1,  ,  , 1, 1,  , 1,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1,  , 1, 1,  ,  ,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  , 1, 1, 1,  , 1, 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,1 , 1,  ,  ,  ,  ,  ,  ,  ,  , 1,  , 1,  ,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,  , 1, 1,  ],
+                        [ 1, 1,  , 1,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1,  , 1, 1, 1, 1,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  , 1, 1,  , 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,1 , 1, 1,  ,  ,  , 1, 1,  ,  ,  ,  , 1,  ,  ,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,  , 1, 1,  ],
+                        [ 1, 1, 1, 1,  , 1, 1,  , 1,  ,  , 1, 1,  , 1,  ,  , 1, 1,  , 1,  ,  , 1, 1, 1, 1,  ,  ,  ,  ,  , 1,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1,  , 1,  ,  , 1,  , 1,  ,1 , 1,  ,  ,  ,  ,  ,  ,  ,  ,  , 1,  , 1,  ,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  ,  ,  ,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,  , 1, 1,  ],
+                        [ 1, 1,  , 1,  , 1, 1,  ,  , 1,  , 1, 1,  ,  , 1,  , 1, 1, 1, 1,  ,  ,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  ,  ,  , 1, 1,  ,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1, 1, 1,  ,  ,  , 1,  ,  ,1 , 1, 1, 1,  ,  ,  ,  ,  ,  , 1,  ,  ,  , 1,  ,  ,  , 1, 1,  ,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  , 1, 1,  ]
+                ];
+
         var size_loading_px = 4;
         var x_loading = this.ancho_total_/2 - (size_loading_px * loading[0].length)/2;
+        
+        var size_intruc_px = 3;
+        var x_instruciones = this.ancho_total_/2 - (size_intruc_px * instrucciones[0].length)/2;
 
         this.pinta_filas_columnas_(ctx, x_logo, 180, logo, size_logo_px);
 
@@ -1436,6 +1448,9 @@ var Game = function() {
         var color_loading = "rgba(255,255,255,"+opacidad+")";
 
         this.pinta_filas_columnas_(ctx, x_loading, 260, loading, size_loading_px, color_loading);
+
+
+        this.pinta_filas_columnas_(ctx, x_instruciones, 550, instrucciones, size_intruc_px);
         
     };
 
