@@ -1,23 +1,26 @@
 /**************************************************
 *** EXPLOSION CLASSes
 **************************************************/
-var Explosion = function(x, y, propia) {
+var Explosion = function(x, y, propia, final, ganador) {
     this.particles_ = [];
     this.particulas_por_explosion_ = 25;
     if(propia){
         this.particulas_por_explosion_ = this.particulas_por_explosion_ /100;
     }
+    if(final){
+        this.particulas_por_explosion_ = this.particulas_por_explosion_ * 5;
+    }
 
     for (var i = 0; i < this.particulas_por_explosion_; i++) {
         this.particles_.push(
-            new Particle(x, y, propia)
+            new Particle(x, y, propia, final, ganador)
         );
     }
 };
 
 
 
-var Particle = function(x, y, propia) {
+var Particle = function(x, y, propia, final, ganador) {
     
     this.randInt_ = function(min, max) {
         var num = Math.floor(Math.random()*(max-min+1)+min);
@@ -30,6 +33,13 @@ var Particle = function(x, y, propia) {
     this.particlesMaxSpeed_      = 15;
     this.particlesMinSize_       = 2;
     this.max_particulas_size_    = 15;
+    if(final){
+        this.particlesMinSpeed_      = 3;
+        this.particlesMaxSpeed_      = 30;
+        this.particlesMinSize_       = 2;
+        this.max_particulas_size_    = 1500;
+
+    }
 
 
     this.r    = this.randInt_(0, 155);
@@ -39,6 +49,11 @@ var Particle = function(x, y, propia) {
         this.r    = this.randInt_(0, 255);
         this.g    = '0';
         this.b    = '0';
+    }
+    if(final){
+        this.r    = this.randInt_(0, 255);
+        this.g    = this.randInt_(0, 255);
+        this.b    = this.randInt_(0, 255);
     }
 
   

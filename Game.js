@@ -526,8 +526,17 @@ var Game = function() {
 
     };
     this.game_over_ = function(ganador) {
-        this.is_game_over_ = true;
-        this.you_win_ = ganador;
+
+        var juego = this;
+        this.explosions_.push(
+            new Explosion(this.ancho_total_/2, this.alto_total_/2, true, true, ganador)
+        );
+        window.setTimeout(function function_name(argument) {
+            
+            juego.is_game_over_ = true;
+            juego.you_win_ = ganador;
+        }, 2000)
+
 
     };
 
@@ -609,10 +618,11 @@ var Game = function() {
 
         ctx.clearRect(0, 0, this.ancho_total_, this.alto_total_);
         if(this.is_game_over_){
+            this.radio_vision_ = this.ancho_total_;
             this.render_boss_(ctx, dt);
             this.render_player_(ctx, dt);
             this.render_game_over_(ctx);
-            this.radio_vision_ = this.ancho_total_;
+            this.render_explosion_(ctx);
             return;
         }
         //borro lo que hay y vuelvo a renderizar cosas
