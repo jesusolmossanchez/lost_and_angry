@@ -365,8 +365,8 @@ var Game = function() {
         this.explosions_ = [];
         
 
-        this.moustro_final_ = final;
-        //this.moustro_final_ = true;
+        //this.moustro_final_ = final;
+        this.moustro_final_ = true;
 
         this.MAP_.datos = this.crea_plataformas_(this.moustro_final_);
 
