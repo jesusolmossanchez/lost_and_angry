@@ -638,9 +638,11 @@ var Game = function() {
                     this.dx_shacke = (Math.random() - 0.5) * cuanto_shake;
                     this.dy_shacke = (Math.random() - 0.5) * cuanto_shake;
                 }
-                if(this.final_boss_.tiempo_terremoto_ > this.timestamp_()){
-                    this.dx_shacke = (Math.random() - 0.5) * cuanto_shake * 2;
-                    this.dy_shacke = (Math.random() - 0.5) * cuanto_shake * 2;
+                if(this.final_boss_){
+                    if(this.final_boss_.tiempo_terremoto_ > this.timestamp_()){
+                        this.dx_shacke = (Math.random() - 0.5) * cuanto_shake * 2;
+                        this.dy_shacke = (Math.random() - 0.5) * cuanto_shake * 2;
+                    }
                 }
                 else{
                     this.dy_shacke = this.dy_shacke * (-0.9);
