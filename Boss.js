@@ -57,7 +57,7 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
     this.update_ = function(dt) {
 
-        if(juego.wait_start_ + 3000 > juego.timestamp_()){
+        if(juego.wait_start_ + 1500 > juego.timestamp_()){
             return;
         }
 
@@ -70,8 +70,8 @@ var Boss = function(juego, x, y, gravedad, impulso) {
             --this.salud_;
         }
 
-        this.centro_x = this.x + this.ancho_/2;
-        this.centro_y = this.y + this.alto_/2;
+        this.centro_x_ = this.x + this.ancho_/2;
+        this.centro_y_ = this.y + this.alto_/2;
 
         this.wasleft    = this.dx  < 0;
         this.wasright   = this.dx  > 0;
@@ -85,8 +85,12 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
 
         var colisiona = false;
-        if(this.colisiona_player_() && !this.muerto){
+        if(this.colisiona_player_() && !this.muerto && !juego.is_game_over_){
             juego.player_.salud_--;
+
+            juego.explosions_.push(
+                new Explosion(juego.player_.centro_x_, juego.player_.centro_y_, true)
+            );
             juego.player_.tiempo_atacado_ = juego.timestamp_() + 2000;
         }
 
@@ -121,7 +125,7 @@ var Boss = function(juego, x, y, gravedad, impulso) {
         }
 
 
-        if(this.controla_dispara_()){
+        if(this.controla_dispara_() && !juego.is_game_over_){
 
             juego.zapatillas_.push(
                 new Zapatilla(this.x, this.y, 0, 0, juego, this)
@@ -183,6 +187,10 @@ var Boss = function(juego, x, y, gravedad, impulso) {
         }
         else{
             juego.radio_vision_ = 300;
+        }
+
+        if(juego.is_game_over_ && !juego.you_win_){
+            this.pinta_go_bed_();
         }
 
 
@@ -278,7 +286,14 @@ var Boss = function(juego, x, y, gravedad, impulso) {
         this.que_pie = 3;
         
 
+        if(juego.you_win_){
+            ctx.save();
 
+            ctx.translate(x_boss + this.ancho_/2, y_boss + this.alto_/2);
+            x_boss = 50;
+            y_boss = -200;
+            ctx.rotate(90*Math.PI/180);
+        }
        
         que_jugador = boss_pinta;
 
@@ -299,14 +314,10 @@ var Boss = function(juego, x, y, gravedad, impulso) {
         juego.pinta_filas_columnas_(ctx, x_boss, y_boss + this.alto_ - this.size_boss_pixel - 15, zapatilla, zapa_size, color_rosa, true);
         juego.pinta_filas_columnas_(ctx, x_boss + (this.size_boss_pixel*2), y_boss + this.alto_ - this.size_boss_pixel - 15, zapatilla, zapa_size, color_rosa, true);
 
-        //Pinta rulos
-        /*
-        ctx.beginPath();
-        ctx.fillStyle = color_rosa;
-        ctx.arc(x_boss + (this.size_boss_pixel*2), y_boss + (this.size_boss_pixel*1.5), this.size_boss_pixel, 0, Math.PI * 2, false);
-        ctx.closePath();
-        ctx.fill();
-        */
+        
+        if(juego.you_win_){
+            ctx.restore();
+        }
 
     };
 
@@ -373,6 +384,34 @@ var Boss = function(juego, x, y, gravedad, impulso) {
         var size_where = 3;
         var x_where = this.x - 200;
         var y_where = this.y - 50;
+
+        juego.pinta_filas_columnas_(juego.ctx, x_where, y_where, where, size_where, "#ffffff");
+    }
+
+
+
+    this.pinta_go_bed_ = function(){
+        
+        var where =  [
+                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  , 1, 1, 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1,  ,  , 1, 1,  , 1, 1,  , 1, 1,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  ,  , 1, 1,  , 1,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  , 1, 1,  , 1],
+                        [ 1,  ,  , 1, 1,  , 1, 1,  , 1, 1,  , 1,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1,  ,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  , 1, 1,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  , 1,  , 1, 1,  , 1,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1, 1,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  ,  , 1, 1,  ,  , 1, 1, 1, 1,  ,  , 1, 1, 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1,  ,  , 1, 1,  , 1, 1,  , 1, 1,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],                       
+                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  ,  , 1],
+                        [  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1,  , 1],
+                        [  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1, 1],
+                        [  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                ];
+
+        var size_where = 7;
+        var x_where = this.x - 350;
+        var y_where = this.y - 80;
 
         juego.pinta_filas_columnas_(juego.ctx, x_where, y_where, where, size_where, "#ffffff");
     }

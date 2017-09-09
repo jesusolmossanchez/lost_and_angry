@@ -231,8 +231,8 @@ var Enemigo = function(juego, x, y, tipo) {
         var distancia_al_jugador = 0;
         var a = 0;
         var b = 0;
-        a = Math.abs(this.x - juego.player_.centro_x);
-        b = Math.abs(this.y - juego.player_.centro_y);
+        a = Math.abs(this.x - juego.player_.centro_x_);
+        b = Math.abs(this.y - juego.player_.centro_y_);
         distancia_al_jugador = Math.sqrt( a*a + b*b );
 
         if(distancia_al_jugador > juego.alto_total_/2){
@@ -254,8 +254,8 @@ var Enemigo = function(juego, x, y, tipo) {
         
 
 
-        this.centro_x = this.x + this.ancho_/2;
-        this.centro_y = this.y + this.alto_/2;
+        this.centro_x_ = this.x + this.ancho_/2;
+        this.centro_y_ = this.y + this.alto_/2;
 
         this.wasleft    = this.dx  < 0;
         this.wasright   = this.dx  > 0;
@@ -573,8 +573,8 @@ var Enemigo = function(juego, x, y, tipo) {
         var distancia_al_jugador = 0;
         var a = 0;
         var b = 0;
-        a = Math.abs(this.x - juego.player_.centro_x);
-        b = Math.abs(this.y - juego.player_.centro_y);
+        a = Math.abs(this.x - juego.player_.centro_x_);
+        b = Math.abs(this.y - juego.player_.centro_y_);
         distancia_al_jugador = Math.sqrt( a*a + b*b );
 
         var opacidad = (1 - distancia_al_jugador/250);

@@ -318,8 +318,8 @@ var Game = function() {
                         var distancia_centro = 0;
                         var a = 0;
                         var b = 0;
-                        a = Math.abs(currX + i_x * size - this.player_.centro_x);
-                        b = Math.abs(currY - this.player_.centro_y);
+                        a = Math.abs(currX + i_x * size - this.player_.centro_x_);
+                        b = Math.abs(currY - this.player_.centro_y_);
                         distancia_centro = Math.sqrt( a*a + b*b );
 
 
@@ -365,8 +365,8 @@ var Game = function() {
         this.explosions_ = [];
         
 
-        //this.moustro_final_ = final;
-        this.moustro_final_ = true;
+        this.moustro_final_ = final;
+        //this.moustro_final_ = true;
 
         this.MAP_.datos = this.crea_plataformas_(this.moustro_final_);
 
@@ -484,10 +484,10 @@ var Game = function() {
     };
 
 
-    this.game_over_ = function(ganador) {
+    this.render_game_over_ = function() {
         //Preparado para el game over
-        var game_over;
-        if(ganador){
+       
+        if(this.you_win_){
             game_over =  [
                             [ 1, 1,  , 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  ,  ,  , 1, 1,  , 1,  , 1,  , 1, 1,  , 1, 1,  ,  , 1,  ,  , 1,  , 1,  , 1,  ],
                             [  , 1, 1, 1,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,  ,  , 1, 1,  , 1,  , 1,  ,  ,  ,  , 1, 1,  ,  , 1,  ,  , 1,  , 1,  , 1,  ],
@@ -507,8 +507,27 @@ var Game = function() {
                         ];
         }
 
-        this.pinta_filas_columnas_(this.ctx, this.ancho_total_/2 - 330, 250, game_over, 16);
+        play_again =  [
+                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1,  ,  , 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1, 1,  ,  , 1,  , 1],
+                        [ 1,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  ,  , 1,  , 1],
+                        [ 1,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1, 1, 1,  , 1,  , 1],
+                        [ 1,  , 1, 1,  ,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  , 1, 1,  , 1],
+                        [ 1,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  ,  , 1,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                    ];
+
+        this.pinta_filas_columnas_(this.ctx, this.ancho_total_/2 - 330, 290, game_over, 16, "rgba(255,255,255,1)");
+        this.pinta_filas_columnas_(this.ctx, this.ancho_total_/2 - 130, 400, play_again,  6, "rgba(255,255,255,1)");
+
+        document.getElementById("play_again").style.display = "block";
+
+    };
+    this.game_over_ = function(ganador) {
         this.is_game_over_ = true;
+        this.you_win_ = ganador;
 
     };
 
@@ -588,12 +607,15 @@ var Game = function() {
   
     this.render_ = function(ctx, frame, dt) {
 
+        ctx.clearRect(0, 0, this.ancho_total_, this.alto_total_);
         if(this.is_game_over_){
-            this.render_explosion_(ctx);
+            this.render_boss_(ctx, dt);
+            this.render_player_(ctx, dt);
+            this.render_game_over_(ctx);
+            this.radio_vision_ = this.ancho_total_;
             return;
         }
         //borro lo que hay y vuelvo a renderizar cosas
-        ctx.clearRect(0, 0, this.ancho_total_, this.alto_total_);
 
         //this.render_map_(ctx, dt, true);
         this.render_explosion_(ctx);
@@ -668,21 +690,21 @@ var Game = function() {
         var x, y, cell;
 
         var empieza_y = 0;
-        if((this.player_.centro_y - this.radio_vision_) > 0){
-            empieza_y = Math.floor((this.player_.centro_y - this.radio_vision_) / this.MAP_.size_bloques_);
+        if((this.player_.centro_y_ - this.radio_vision_) > 0){
+            empieza_y = Math.floor((this.player_.centro_y_ - this.radio_vision_) / this.MAP_.size_bloques_);
         }
         var fin_y = Math.floor((this.alto_total_) / this.MAP_.size_bloques_);
-        if((this.player_.centro_y + this.radio_vision_) < this.alto_total_){
-            fin_y = Math.floor((this.player_.centro_y + this.radio_vision_) / this.MAP_.size_bloques_);
+        if((this.player_.centro_y_ + this.radio_vision_) < this.alto_total_){
+            fin_y = Math.floor((this.player_.centro_y_ + this.radio_vision_) / this.MAP_.size_bloques_);
         }
 
         var empieza_x = 0;
-        if((this.player_.centro_x - this.radio_vision_) > 0){
-            empieza_x = Math.floor((this.player_.centro_x - this.radio_vision_) / this.MAP_.size_bloques_);
+        if((this.player_.centro_x_ - this.radio_vision_) > 0){
+            empieza_x = Math.floor((this.player_.centro_x_ - this.radio_vision_) / this.MAP_.size_bloques_);
         }
         var fin_x = Math.floor((this.ancho_total_) / this.MAP_.size_bloques_);
-        if((this.player_.centro_x + this.radio_vision_) < this.ancho_total_){
-            fin_x = Math.floor((this.player_.centro_x + this.radio_vision_) / this.MAP_.size_bloques_);
+        if((this.player_.centro_x_ + this.radio_vision_) < this.ancho_total_){
+            fin_x = Math.floor((this.player_.centro_x_ + this.radio_vision_) / this.MAP_.size_bloques_);
         }
 
         var distancia_centro = 0;
@@ -692,8 +714,8 @@ var Game = function() {
             for(x = empieza_x ; x <= fin_x ; x++) {
                 cell = this.tcell_(x, y);
                 if (cell) {
-                    a = Math.abs(x - Math.floor(this.player_.centro_x/this.MAP_.size_bloques_));
-                    b = Math.abs(y - Math.floor(this.player_.centro_y/this.MAP_.size_bloques_));
+                    a = Math.abs(x - Math.floor(this.player_.centro_x_/this.MAP_.size_bloques_));
+                    b = Math.abs(y - Math.floor(this.player_.centro_y_/this.MAP_.size_bloques_));
                     distancia_centro = Math.sqrt( a*a + b*b );
                     opacidad = 1/distancia_centro*2.5;
                     if(!pre){
@@ -718,8 +740,8 @@ var Game = function() {
         var distancia_centro = 0;
         var a = 0;
         var b = 0;
-        a = Math.abs(x_portal - this.player_.centro_x);
-        b = Math.abs(y_portal - this.player_.centro_y);
+        a = Math.abs(x_portal - this.player_.centro_x_);
+        b = Math.abs(y_portal - this.player_.centro_y_);
         distancia_centro = Math.sqrt( a*a + b*b );
 
         if(distancia_centro > this.radio_vision_ ){
@@ -765,8 +787,8 @@ var Game = function() {
         var b = 0;
         var x_kit = this.medical_kit_.x + this.medical_kit_.ancho_ / 2;
         var y_kit = this.medical_kit_.y + this.medical_kit_.alto_ / 2;
-        a = Math.abs(x_kit - this.player_.centro_x);
-        b = Math.abs(y_kit - this.player_.centro_y);
+        a = Math.abs(x_kit - this.player_.centro_x_);
+        b = Math.abs(y_kit - this.player_.centro_y_);
         distancia_centro = Math.sqrt( a*a + b*b );
 
         
@@ -893,9 +915,14 @@ var Game = function() {
             x_empieza_terremoto = this.final_boss_.x - primera_distancia + rand2;
             x_final_terremoto = this.final_boss_.x - distancia + rand3;
 
-            if(this.player_.centro_x < x_empieza_terremoto && this.player_.centro_x > x_final_terremoto){
-                if(this.player_.centro_y > (this.alto_total_ - 100)){
+            if(this.player_.centro_x_ < x_empieza_terremoto && this.player_.centro_x_ > x_final_terremoto){
+                if(this.player_.centro_y_ > (this.alto_total_ - 100)){
                     this.player_.salud_ = this.player_.salud_ - 5;
+                    for (var i = 0; i < 10; i++) {
+                        this.explosions_.push(
+                            new Explosion(this.player_.centro_x_, this.player_.centro_y_, true)
+                        );
+                    }
                     this.player_.tiempo_atacado_ = this.timestamp_() + 2200;
                 }
             }
@@ -918,8 +945,8 @@ var Game = function() {
         var b = 0;
         for (var i = 0; i < this.enemigos_.length; i++) {
 
-            a = Math.abs(this.enemigos_[i].x - this.player_.centro_x);
-            b = Math.abs(this.enemigos_[i].y - this.player_.centro_y);
+            a = Math.abs(this.enemigos_[i].x - this.player_.centro_x_);
+            b = Math.abs(this.enemigos_[i].y - this.player_.centro_y_);
             distancia_jugador = Math.sqrt( a*a + b*b );
             if(distancia_jugador<this.radio_vision_){
                 this.enemigos_[i].pinta_enemigo_(dt, ctx, this.counter);
@@ -963,8 +990,8 @@ var Game = function() {
                 var distancia_centro = 0;
                 var a = 0;
                 var b = 0;
-                a = Math.abs(particle.x - this.player_.centro_x);
-                b = Math.abs(particle.y - this.player_.centro_y);
+                a = Math.abs(particle.x - this.player_.centro_x_);
+                b = Math.abs(particle.y - this.player_.centro_y_);
                 distancia_centro = Math.sqrt( a*a + b*b );
 
 
@@ -1048,8 +1075,8 @@ var Game = function() {
             var distancia_centro = 0;
             var a = 0;
             var b = 0;
-            a = Math.abs(disparo.x - this.player_.centro_x);
-            b = Math.abs(disparo.y - this.player_.centro_y);
+            a = Math.abs(disparo.x - this.player_.centro_x_);
+            b = Math.abs(disparo.y - this.player_.centro_y_);
             distancia_centro = Math.sqrt( a*a + b*b );
 
 
@@ -1140,14 +1167,7 @@ var Game = function() {
                         ctx.arc(disparo.x+rand_exp3, disparo.y+rand_exp1, rand_size3, Math.PI * 2, 0, false);
                         ctx.closePath();
                         ctx.fill();
-                        
-                        /*
-                        var x_explosion = disparo.x - 50;
-                        var y_explosion = disparo.y;
-                        this.explosions_.push(
-                            new Explosion(x_explosion, y_explosion, false)
-                        );
-                        */
+                
 
                         this.bullets_.splice(i, 1);
                         this.final_boss_.tiempo_herido_ = this.timestamp_() + 400;
@@ -1284,9 +1304,15 @@ var Game = function() {
                 
 
                 var radio_explosion_muerte = Math.random() * 80;
-                if(this.dentro_circulo_(this.player_.centro_x, this.player_.centro_y, disparo_boss.x, disparo_boss.y, radio_explosion_muerte) &&
+                if(this.dentro_circulo_(this.player_.centro_x_, this.player_.centro_y_, disparo_boss.x, disparo_boss.y, radio_explosion_muerte) &&
                     !disparo_boss.muerto_){
                     this.player_.salud_ -= 5;
+
+                    for (var i = 0; i < 10; i++) {
+                        this.explosions_.push(
+                            new Explosion(this.player_.centro_x_, this.player_.centro_y_, true)
+                        );
+                    }
                     this.player_.tiempo_atacado_ = this.timestamp_() + 2000; 
                 }
 
@@ -1316,7 +1342,6 @@ var Game = function() {
             if((this.cell_(disparo_boss.x,disparo_boss.y) || 
                     this.cell_(disparo_boss.x - 5 ,disparo_boss.y) || 
                     this.cell_(disparo_boss.x - 10 ,disparo_boss.y) || 
-                    this.cell_(disparo_boss.x - 15 ,disparo_boss.y) || 
                     this.cell_(disparo_boss.x, disparo_boss.y - 5) || 
                     this.cell_(disparo_boss.x, disparo_boss.y - 10) ||  
                     this.cell_(disparo_boss.x, disparo_boss.y + 5) || 
@@ -1356,8 +1381,8 @@ var Game = function() {
             ctx.fill();
             
             var zapa_size = 8;
-            var zapa_centro_x = disparo_boss.x + (zapa_size * zapatilla[0].length / 2);
-            var zapa_centro_y = disparo_boss.y + (zapa_size * zapatilla[0].length / 2);
+            var zapa_centro_x_ = disparo_boss.x + (zapa_size * zapatilla[0].length / 2);
+            var zapa_centro_y_ = disparo_boss.y + (zapa_size * zapatilla[0].length / 2);
             var zapa_izq_x = disparo_boss.x + (zapa_size * zapatilla[0].length / 2);
             var zapa_izq_y = disparo_boss.y + (zapa_size * zapatilla[0].length / 2);
 
@@ -1365,7 +1390,7 @@ var Game = function() {
 
 
             ctx.save();
-            ctx.translate(zapa_centro_x, zapa_centro_y);
+            ctx.translate(zapa_centro_x_, zapa_centro_y_);
             ctx.rotate(disparo_boss.angulo*Math.PI/180);
             var zapa_relative = (-1) * zapa_size * zapatilla[0].length / 2;
 

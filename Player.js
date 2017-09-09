@@ -12,8 +12,8 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     this.y                      = y;
     this.alto_                  = this.size_player_pixel * 12;
     this.ancho_                 = this.size_player_pixel * 6 + 5;
-    this.centro_x               = this.x + this.ancho_/2;
-    this.centro_y               = this.y + this.alto_/2;
+    this.centro_x_               = this.x + this.ancho_/2;
+    this.centro_y_               = this.y + this.alto_/2;
 
     this.dx                     = 0;
     this.dy                     = 0;
@@ -52,10 +52,13 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
  
 
     this.update_ = function(dt) {
+
+
         
         if(this.salud_ < 0){
+            this.jump = true;
             juego.game_over_(false);
-            return;
+            //return;
         }
 
         if(juego.wait_start_ > juego.timestamp_()){
@@ -102,8 +105,8 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         }
 
 
-        this.centro_x = this.x + this.ancho_/2;
-        this.centro_y = this.y + this.alto_/2;
+        this.centro_x_ = this.x + this.ancho_/2;
+        this.centro_y_ = this.y + this.alto_/2;
 
         this.wasleft    = this.dx  < 0;
         this.wasright   = this.dx  > 0;
@@ -133,7 +136,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         }
 
         //Salto
-        if (this.jump && !this.jumping && this.tiempo_saltando_ < juego.timestamp_()){
+        if (this.jump && !this.jumping && this.tiempo_saltando_ < juego.timestamp_() && (!juego.is_game_over_ || juego.you_win_)){
             this.ddy = this.ddy - this.impulse_; 
             this.jumping = true;
             this.falling = true;
@@ -142,7 +145,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
 
 
         //Si se pulsa acción
-        if(this.accion && juego.counter > this.no_dispares_counter_){
+        if(this.accion && juego.counter > this.no_dispares_counter_ && !juego.is_game_over_){
             this.suena_dispara_();
             this.no_dispares_counter_ = juego.counter + 3;
             juego.tiempo_shacke_ = juego.timestamp_() + 20;
@@ -186,7 +189,14 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             this.ddy = this.ddy + retroceso_herido_y * (0.5 - Math.random());
             
         }
-  
+        if(juego.is_game_over_){
+            this.dx  = 50;
+            this.last_left_ = false;
+            if(juego.you_win_){
+                this.jump = true;
+                this.dx  = 80;
+            }
+        }
         this.x  = this.x  + (dt * this.dx);
         this.y  = this.y  + (dt * this.dy);
 
@@ -264,7 +274,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
                 this.x = 10;
             }
 
-            if(tiene_right){
+            if(tiene_right && !juego.is_game_over_){
                 this.dx = 0;
             }
         }
@@ -291,6 +301,14 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             }
             else{
                 this.pinta_mum_();
+            }
+        }
+        if(juego.is_game_over_){
+            if(juego.you_win_){
+                this.pinta_mum_in_calm_();
+            }
+            else{
+                this.pinta_ok_();
             }
         }
 
@@ -389,7 +407,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
                 this.que_pie = 1;
                 this.angulo = 0;
             }
-            else if(this.left || this.right){
+            else if(this.left || this.right || juego.is_game_over_){
                 if(juego.tween_frames_(counter, 30) < 0.5 ){
                     if(this.left){
                         this.que_pie = 2;
@@ -415,6 +433,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         }
 
 
+
         ctx.save();
         ctx.translate(x_player + this.ancho_ / 2, y_player + this.alto_/2);
 
@@ -435,7 +454,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             gradient.addColorStop(0,"rgba(122, 255, 122, 0)");
             gradient.addColorStop(1,"rgba(122, 255, 122, 0.2)");
         }
-        else{
+        else if(!juego.is_game_over_){
             gradient.addColorStop(0,"rgba(251, 255, 243, 0)");
             gradient.addColorStop(1,"rgba(251, 255, 243, 0.6)");
         }
@@ -472,7 +491,9 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         var color_pistola = "rgba(143,172,192,"+opacidad_jugador+")";
         ctx.translate(this.ancho_/2.5,  this.alto_/2);
         ctx.rotate(this.angulo*Math.PI/180);
-        juego.pinta_filas_columnas_(ctx, x_pistola, 0, que_pistola, size_pistola_pixel, color_pistola);
+        if(!juego.is_game_over_){
+            juego.pinta_filas_columnas_(ctx, x_pistola, 0, que_pistola, size_pistola_pixel, color_pistola);
+        }
         ctx.restore();
 
 
@@ -561,7 +582,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
                         [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                         [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
                         [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
-                        [ 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1,  , 1, 1,  , 1, 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1,  , 1, 1,  , 1, 1,  ,  , 1],
                         [ 1,  ,  , 1, 1, 1,  , 1, 1,  , 1, 1,  , 1,  , 1, 1, 1,  , 1, 1,  , 1, 1,  , 1, 1,  ,  , 1],
                         [ 1,  ,  , 1, 1,  , 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1,  , 1, 1,  , 1, 1,  ,  , 1],
                         [ 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1,  , 1, 1,  , 1, 1,  ,  , 1],
@@ -573,6 +594,68 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
                         [ 1,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
                         [ 1, 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
                         [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
+                ];
+
+        var size_home = 3;
+        var x_home = this.x + this.ancho_ + 20;
+        var y_home = this.y - 60;
+
+        juego.pinta_filas_columnas_(juego.ctx, x_home, y_home, home, size_home, "#ffffff");
+    }
+
+    this.pinta_mum_in_calm_ = function(){
+        
+        var home =  [
+                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1,  ,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1,  ,  , 1, 1, 1, 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1,  , 1, 1,  , 1, 1,  , 1,  , 1, 1, 1,  , 1, 1,  ,  , 1, 1,  ,  ,  , 1, 1,  ,  ,  , 1, 1,  ,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  , 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1,  ,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1, 1, 1,  ,  , 1, 1, 1,  ,  , 1, 1,  , 1,  , 1, 1, 1, 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1,  ,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1, 1, 1,  ,  , 1, 1, 1,  ,  , 1, 1, 1,  ,  , 1, 1, 1, 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1,  ,  ,  ,  ,  , 1,  , 1, 1,  ,  ,  , 1, 1,  ,  ,  , 1, 1,  ,  ,  , 1, 1,  ,  ,  ,  ,  ,  , 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1,  , 1, 1, 1, 1,  ,  ,  ,  , 1, 1, 1,  ,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1,  ,  , 1,  , 1, 1,  , 1, 1,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  , 1, 1,  ,  ,  ,  , 1, 1,  ,  ,  ,  , 1, 1,  ,  ,  ,  ,  ,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  , 1, 1,  , 1, 1,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  , 1, 1, 1,  ,  ,  , 1, 1,  ,  ,  ,  , 1, 1, 1, 1,  ,  ,  ,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  , 1, 1,  , 1, 1,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  , 1, 1, 1,  ,  ,  , 1, 1,  ,  ,  ,  , 1, 1, 1, 1,  ,  ,  ,  , 1, 1, 1,  ,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  , 1, 1,  , 1, 1,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  , 1, 1,  ,  ,  ,  , 1, 1,  ,  ,  ,  ,  ,  ,  , 1,  ,  ,  ,  , 1, 1,  ,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  ,  ,  , 1, 1, 1, 1,  ,  ,  ,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1,  ,  , 1, 1,  ,  , 1, 1,  , 1, 1,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                        [ 1,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
+                        [ 1, 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
+                ];
+
+        var size_home = 3;
+        var x_home = this.x + this.ancho_ + 20;
+        var y_home = this.y - 90;
+
+        juego.pinta_filas_columnas_(juego.ctx, x_home, y_home, home, size_home, "#ffffff");
+    }
+
+    this.pinta_ok_ = function(){
+        
+        var home =  [
+                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1,  , 1, 1,  ,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  , 1,  , 1, 1, 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  , 1,  , 1, 1, 1, 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1, 1,  , 1, 1,  , 1, 1,  , 1, 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1,  , 1, 1,  ,  , 1,  , 1, 1,  , 1, 1,  , 1, 1,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                        [ 1,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
+                        [ 1, 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
                 ];
 
         var size_home = 3;
