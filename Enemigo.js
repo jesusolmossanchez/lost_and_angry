@@ -269,10 +269,10 @@ var Enemigo = function(juego, x, y, tipo) {
 
 
         var colisiona = false;
-        if(this.colisiona_player_() && !this.muerto){
+        if(this.colisiona_player_() && !this.muerto && !juego.is_game_over){
             colisiona = true;
             juego.player_.salud_--;
-            window.golpe_audio.play();
+            juego.player_.suena_herida_();
         }
 
         if(!this.muerto && !colisiona){

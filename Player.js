@@ -91,17 +91,13 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             if(this.entra_portal_()){
                 juego.cambia_pantalla_ = true;
                 this.tiempo_portal_ = juego.timestamp_() + 3000;
-                window.levelup_audio2.play();
+                this.suena_portal_();
             }
         }
 
         if(this.entra_medical_() && this.tiempo_medical_ < juego.timestamp_()){
             this.tiempo_medical_ = juego.timestamp_() + 2000;
-            /*
-            juego.tiempo_slow_motion_ = juego.timestamp_() + 1000;
-            juego.fps_            = 60/2;
-            juego.fps_interval    = 1000/juego.fps_;
-            */
+            this.suena_kit_();
         }
 
 
@@ -540,13 +536,34 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     };
 
     this.suena_dispara_ = function(){
+        window.disparo_audio.pause();
+        window.disparo_audio.currentTime = 0;
         window.disparo_audio.play();
         
-        setTimeout(function () { 
-                
+        //setTimeout(function () {    
+            window.disparo_audio2.playbackRate = 0.5;
+            window.disparo_audio2.pause();
+            window.disparo_audio2.currentTime = 0;
             window.disparo_audio2.play();
-        },150 * Math.random());
+        //},150 * Math.random());
         
+    }
+
+    this.suena_herida_ = function(){
+        window.golpe_audio.pause();
+        window.golpe_audio.currentTime = 0;
+        window.golpe_audio.play();
+    }
+
+    this.suena_portal_ = function(){
+        window.levelup_audio2.playbackRate = 1;
+        window.levelup_audio2.pause();
+        window.levelup_audio2.currentTime = 0;
+        window.levelup_audio2.play();
+    }
+
+    this.suena_kit_ = function(){
+       
     }
 
     this.pinta_home_ = function(){

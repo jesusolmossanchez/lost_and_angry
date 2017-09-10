@@ -400,7 +400,7 @@ var Game = function() {
             this.medical_kit_ = {};
 
 
-            if(Math.random() > 0.7){
+            if(Math.random() > 0.6){
                 this.medical_kit_.ancho_ = this.player_.alto_/2;
                 this.medical_kit_.alto_ = this.player_.alto_/2;
                 this.situa_medical_kit_(this.medical_kit_);
@@ -928,6 +928,7 @@ var Game = function() {
             if(this.player_.centro_x_ < x_empieza_terremoto && this.player_.centro_x_ > x_final_terremoto){
                 if(this.player_.centro_y_ > (this.alto_total_ - 100)){
                     this.player_.salud_ = this.player_.salud_ - 5;
+                    this.player_.suena_herida_();
                     for (var i = 0; i < 10; i++) {
                         this.explosions_.push(
                             new Explosion(this.player_.centro_x_, this.player_.centro_y_, true)
@@ -1315,6 +1316,7 @@ var Game = function() {
                 if(this.dentro_circulo_(this.player_.centro_x_, this.player_.centro_y_, disparo_boss.x, disparo_boss.y, radio_explosion_muerte) &&
                     !disparo_boss.muerto_){
                     this.player_.salud_ -= 5;
+                    this.player_.suena_herida_();
 
                     for (var i = 0; i < 10; i++) {
                         this.explosions_.push(
@@ -1973,7 +1975,7 @@ var Game = function() {
             var wave5 = levelup_player.createWave();
             window.levelup_audio2 = document.createElement("audio");
             window.levelup_audio2.src = URL.createObjectURL(new Blob([wave5], {type: "audio/wav"}));
-            window.levelup_audio2.volume = 0.2;
+            window.levelup_audio2.volume = 1;
 
             var wave6 = disparo_player.createWave();
             window.disparo_audio2 = document.createElement("audio");
@@ -1982,8 +1984,7 @@ var Game = function() {
             window.disparo_audio.volume = 0.6;
 
             window.disparo_audio2.src = URL.createObjectURL(new Blob([wave6], {type: "audio/wav"}));
-    
-            window.disparo_audio2.volume = 0.5;
+            window.disparo_audio2.volume = 0.3;
         
         }
     }, 50);

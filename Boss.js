@@ -87,6 +87,7 @@ var Boss = function(juego, x, y, gravedad, impulso) {
         var colisiona = false;
         if(this.colisiona_player_() && !this.muerto && !juego.is_game_over_){
             juego.player_.salud_--;
+            juego.player_.suena_herida_();
 
             juego.explosions_.push(
                 new Explosion(juego.player_.centro_x_, juego.player_.centro_y_, true)
