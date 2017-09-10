@@ -5,19 +5,19 @@
 **************************************************/
 var Enemigo = function(juego, x, y, tipo) {
 
-    this.que_pie                = 0;
-    this.angulo                 = 0;
-    this.size_enemigo_pixel     = 4;
+    this.que_pie_                = 0;
+    this.angulo_                 = 0;
+    this.size_enemigo_pixel_     = 4;
     this.x                      = x;
     this.y                      = y;
-    this.alto_                  = this.size_enemigo_pixel * 12;
-    this.ancho_                 = this.size_enemigo_pixel * 6 + 5;
+    this.alto_                  = this.size_enemigo_pixel_ * 12;
+    this.ancho_                 = this.size_enemigo_pixel_ * 6 + 5;
     this.dx                     = 0;
     this.dy                     = 0;
 
     //TODO: Cambiar esto
-    this.friction               = 7000000000000;
-    this.accel                  = 500;
+    this.friction_               = 7000000000000;
+    this.accel_                  = 500;
     this.shoot_back             = 1500;
     this.impulse_               = 30000;   
 
@@ -37,7 +37,7 @@ var Enemigo = function(juego, x, y, tipo) {
 
     this.izquierdo_             = (Math.random()>0.5)?true:false;
     this.tiempo_parado_         = juego.timestamp_();
-    this.muriendo               = juego.timestamp_();
+    this.muriendo_               = juego.timestamp_();
 
     this.tipo_enemigo_          =  tipo;
 
@@ -257,11 +257,11 @@ var Enemigo = function(juego, x, y, tipo) {
         this.centro_x_ = this.x + this.ancho_/2;
         this.centro_y_ = this.y + this.alto_/2;
 
-        this.wasleft    = this.dx  < 0;
-        this.wasright   = this.dx  > 0;
+        this.wasleft_    = this.dx  < 0;
+        this.wasright_   = this.dx  > 0;
 
-        var friction   = this.friction * (this.falling ? 0.2 : 1);
-        var accel      = this.accel;
+        var friction_   = this.friction_ * (this.falling ? 0.2 : 1);
+        var accel_      = this.accel_;
 
         //reseteo las velocidades
         this.ddx = 0;
@@ -319,19 +319,19 @@ var Enemigo = function(juego, x, y, tipo) {
             
            
             if (this.izquierdo_ && juego.timestamp_() > this.tiempo_parado_){
-              this.ddx = this.ddx - accel;
+              this.ddx = this.ddx - accel_;
               this.last_left = true;
             }
-            else if (this.wasleft){
-              this.ddx = this.ddx + friction;
+            else if (this.wasleft_){
+              this.ddx = this.ddx + friction_;
             }
           
             if (!this.izquierdo_ && juego.timestamp_() > this.tiempo_parado_){
-              this.ddx = this.ddx + accel;
+              this.ddx = this.ddx + accel_;
               this.last_left = false;
             }
-            else if (this.wasright){
-              this.ddx = this.ddx - friction;
+            else if (this.wasright_){
+              this.ddx = this.ddx - friction_;
             }
 
             
@@ -376,8 +376,8 @@ var Enemigo = function(juego, x, y, tipo) {
         }
         
       
-        if ((this.wasleft  && (this.dx > 0)) ||
-            (this.wasright && (this.dx < 0))) {
+        if ((this.wasleft_  && (this.dx > 0)) ||
+            (this.wasright_ && (this.dx < 0))) {
           this.dx = 0;
         }
         
@@ -509,47 +509,47 @@ var Enemigo = function(juego, x, y, tipo) {
        
 
         if(this.muerto){
-            if(this.muriendo > juego.timestamp_()){
+            if(this.muriendo_ > juego.timestamp_()){
                 
                 if(this.last_left){
-                    this.angulo = this.angulo+1;
+                    this.angulo_ = this.angulo_+1;
                 }
                 else{
-                    this.angulo = this.angulo-1;
+                    this.angulo_ = this.angulo_-1;
                 }
             }
 
             else if(this.last_left){
-                this.angulo = 90;
+                this.angulo_ = 90;
             }
             else{
-                this.angulo = -90;
+                this.angulo_ = -90;
             }
         }
         else if(this.jumping){
-            this.que_pie = 1;
-            this.angulo = 0;
+            this.que_pie_ = 1;
+            this.angulo_ = 0;
         }
         else if(Math.abs(this.dx) > 0){
             if(juego.tween_frames_(counter, 40) < 0.5 ){
-                this.que_pie = 0;
-                this.angulo = -2;
+                this.que_pie_ = 0;
+                this.angulo_ = -2;
             }
             else{
-                this.que_pie = 1;
-                this.angulo = 2;
+                this.que_pie_ = 1;
+                this.angulo_ = 2;
             }
 
         }
         else{
-            this.angulo = 0;
+            this.angulo_ = 0;
         }
         
         ctx.save();
         ctx.translate(x_enemigo, y_enemigo);
 
 
-        ctx.rotate(this.angulo*Math.PI/180);
+        ctx.rotate(this.angulo_*Math.PI/180);
 
 
 
@@ -582,10 +582,10 @@ var Enemigo = function(juego, x, y, tipo) {
 
         var color_enemigo = "rgba(255, 153, 153, "+opacidad+")";
         if(this.muerto){
-            if(this.muriendo > juego.timestamp_()){
+            if(this.muriendo_ > juego.timestamp_()){
 
 
-                var ancho_explo = this.muriendo - juego.timestamp_();
+                var ancho_explo = this.muriendo_ - juego.timestamp_();
                 ancho_explo = (410 - ancho_explo)/3;
 
                 color_enemigo = "rgba(255, 255, 255, 1)";
@@ -640,18 +640,18 @@ var Enemigo = function(juego, x, y, tipo) {
         }
 
 
-        juego.pinta_filas_columnas_(ctx, new_x, new_y, que_jugador, this.size_enemigo_pixel, color_enemigo);
+        juego.pinta_filas_columnas_(ctx, new_x, new_y, que_jugador, this.size_enemigo_pixel_, color_enemigo);
         //Pinta pies
         if(!this.muerto){
-            juego.pinta_filas_columnas_(ctx, 0, this.alto_ - this.size_enemigo_pixel, pieses[this.que_pie], this.size_enemigo_pixel, color_enemigo);
+            juego.pinta_filas_columnas_(ctx, 0, this.alto_ - this.size_enemigo_pixel_, pieses[this.que_pie_], this.size_enemigo_pixel_, color_enemigo);
         }
 
         //Pinta pistola
-        //cambio el angulo de la pistola?
+        //cambio el angulo_ de la pistola?
         /*
-        this.angulo = 0;
+        this.angulo_ = 0;
         ctx.translate(this.ancho_/2.5,  this.alto_/2);
-        ctx.rotate(this.angulo*Math.PI/180);
+        ctx.rotate(this.angulo_*Math.PI/180);
         juego.pinta_filas_columnas_(ctx, x_pistola, 0, que_pistola, size_pistola_pixel, "#8FACC0");
         */
         ctx.restore();

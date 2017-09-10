@@ -9,7 +9,7 @@ var Zapatilla = function(x, y, dx, dy, juego, boss) {
 
     this.size = 1;
     var negativo = -1;
-    this.angulo   = 90;
+    this.angulo_   = 90;
     this.xv   = (0.5 + Math.random()) * negativo * 5 + dx;
     this.yv   = (Math.random() - 0.5) * 7 + dy;
 

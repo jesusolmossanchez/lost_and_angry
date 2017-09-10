@@ -5,20 +5,20 @@
 **************************************************/
 var Boss = function(juego, x, y, gravedad, impulso) {
 
-    this.que_pie                = 0;
-    this.angulo                 = 0;
-    this.size_boss_pixel        = 30;
+    this.que_pie_                = 0;
+    this.angulo_                 = 0;
+    this.size_boss_pixel_        = 30;
     this.x                      = x;
     this.y                      = y;
-    this.alto_                  = this.size_boss_pixel * 12;
-    this.ancho_                 = this.size_boss_pixel * 6 + 5;
+    this.alto_                  = this.size_boss_pixel_ * 12;
+    this.ancho_                 = this.size_boss_pixel_ * 6 + 5;
     this.dx                     = 0;
     this.dy                     = 0;
 
 
     //TODO: Cambiar esto
-    this.friction               = 7000000000000;
-    this.accel                  = 500;
+    this.friction_               = 7000000000000;
+    this.accel_                  = 500;
     this.shoot_back             = 1500;
     this.impulse_               = 30000;   
 
@@ -40,7 +40,7 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
 
     this.muerto                 = false;
-    this.muriendo               = juego.timestamp_();
+    this.muriendo_               = juego.timestamp_();
 
 
     this.tiempo_herido_         = juego.timestamp_();
@@ -73,11 +73,11 @@ var Boss = function(juego, x, y, gravedad, impulso) {
         this.centro_x_ = this.x + this.ancho_/2;
         this.centro_y_ = this.y + this.alto_/2;
 
-        this.wasleft    = this.dx  < 0;
-        this.wasright   = this.dx  > 0;
+        this.wasleft_    = this.dx  < 0;
+        this.wasright_   = this.dx  > 0;
 
-        var friction   = this.friction * (this.falling ? 0.2 : 1);
-        var accel      = this.accel;
+        var friction_   = this.friction_ * (this.falling ? 0.2 : 1);
+        var accel_      = this.accel_;
 
         //reseteo las velocidades
         this.ddx = 0;
@@ -101,19 +101,19 @@ var Boss = function(juego, x, y, gravedad, impulso) {
         }
            
         if (this.left_){
-          this.ddx = this.ddx - accel;
+          this.ddx = this.ddx - accel_;
           this.last_left_ = true;
         }
-        else if (this.wasleft){
-          this.ddx = this.ddx + friction;
+        else if (this.wasleft_){
+          this.ddx = this.ddx + friction_;
         }
       
         else if (this.right_){
-          this.ddx = this.ddx + accel;
+          this.ddx = this.ddx + accel_;
           this.last_left_ = false;
         }
-        else if (this.wasright){
-          this.ddx = this.ddx - friction;
+        else if (this.wasright_){
+          this.ddx = this.ddx - friction_;
         }
 
 
@@ -141,9 +141,9 @@ var Boss = function(juego, x, y, gravedad, impulso) {
         this.dx = juego.bound_(this.dx + (dt * this.ddx), -this.maxdx_, this.maxdx_);
         this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);
 
-        if ((this.wasleft  && (this.dx > 0)) ||
-            (this.wasright && (this.dx < 0))) {
-          this.dx = 0; // clamp at zero to prevent friction from making us jiggle side to side
+        if ((this.wasleft_  && (this.dx > 0)) ||
+            (this.wasright_ && (this.dx < 0))) {
+          this.dx = 0; // clamp at zero to prevent friction_ from making us jiggle side to side
         }
 
         //SI va pabajo
@@ -284,7 +284,7 @@ var Boss = function(juego, x, y, gravedad, impulso) {
         pieses[2] = [[ 1,  ,  , 1,  ,  ,  ]];
         pieses[3] = [[  , 1,  , 1,  ,  ,  ]];
        
-        this.que_pie = 3;
+        this.que_pie_ = 3;
         
 
         if(juego.you_win_){
@@ -302,18 +302,18 @@ var Boss = function(juego, x, y, gravedad, impulso) {
         var color_rosa = "#ffcad6";
         
         //Pinta cuerpo
-        juego.pinta_filas_columnas_(ctx, x_boss, y_boss, que_jugador, this.size_boss_pixel, color_boss, true);
+        juego.pinta_filas_columnas_(ctx, x_boss, y_boss, que_jugador, this.size_boss_pixel_, color_boss, true);
 
         //Pinta bata
-        juego.pinta_filas_columnas_(ctx, x_boss - 10, y_boss - 10, bata, this.size_boss_pixel*1.1, color_rosa, true);
+        juego.pinta_filas_columnas_(ctx, x_boss - 10, y_boss - 10, bata, this.size_boss_pixel_*1.1, color_rosa, true);
 
         //Pinta pies
-        juego.pinta_filas_columnas_(ctx, x_boss, y_boss + this.alto_ - this.size_boss_pixel, pieses[this.que_pie], this.size_boss_pixel, color_boss, true);
+        juego.pinta_filas_columnas_(ctx, x_boss, y_boss + this.alto_ - this.size_boss_pixel_, pieses[this.que_pie_], this.size_boss_pixel_, color_boss, true);
 
         var zapa_size = 8;
         //Pinta zapatillas
-        juego.pinta_filas_columnas_(ctx, x_boss, y_boss + this.alto_ - this.size_boss_pixel - 15, zapatilla, zapa_size, color_rosa, true);
-        juego.pinta_filas_columnas_(ctx, x_boss + (this.size_boss_pixel*2), y_boss + this.alto_ - this.size_boss_pixel - 15, zapatilla, zapa_size, color_rosa, true);
+        juego.pinta_filas_columnas_(ctx, x_boss, y_boss + this.alto_ - this.size_boss_pixel_ - 15, zapatilla, zapa_size, color_rosa, true);
+        juego.pinta_filas_columnas_(ctx, x_boss + (this.size_boss_pixel_*2), y_boss + this.alto_ - this.size_boss_pixel_ - 15, zapatilla, zapa_size, color_rosa, true);
 
         
         if(juego.you_win_){

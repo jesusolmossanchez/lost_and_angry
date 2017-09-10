@@ -1094,7 +1094,7 @@ var Game = function() {
                 if(!this.moustro_final_){
                     for (var j = 0; j < this.cuantos_enemigos_; j++) {
                         
-                        if(!this.enemigos_[j].muerto && this.timestamp_()>this.enemigos_[j].muriendo){
+                        if(!this.enemigos_[j].muerto && this.timestamp_()>this.enemigos_[j].muriendo_){
                             if(this.overlap_(this.enemigos_[j].x, this.enemigos_[j].y, this.enemigos_[j].ancho_, this.enemigos_[j].alto_, disparo.x - size_bala/2, disparo.y - size_bala/2, size_bala, size_bala)){
                                 this.tiempo_muerte_ = this.timestamp_()+200;
 
@@ -1134,7 +1134,7 @@ var Game = function() {
                                 );
 
                                 this.bullets_.splice(i, 1);
-                                this.enemigos_[j].muriendo = this.timestamp_() + 400;
+                                this.enemigos_[j].muriendo_ = this.timestamp_() + 400;
                                 this.enemigos_[j].muerto = true;
                                 continue;
 
@@ -1401,7 +1401,7 @@ var Game = function() {
 
             ctx.save();
             ctx.translate(zapa_centro_x_, zapa_centro_y_);
-            ctx.rotate(disparo_boss.angulo*Math.PI/180);
+            ctx.rotate(disparo_boss.angulo_*Math.PI/180);
             var zapa_relative = (-1) * zapa_size * zapatilla[0].length / 2;
 
 
@@ -1434,7 +1434,7 @@ var Game = function() {
 
             disparo_boss.x += disparo_boss.xv;
             disparo_boss.y += disparo_boss.yv;
-            disparo_boss.angulo += disparo_boss.xv;
+            disparo_boss.angulo_ += disparo_boss.xv;
 
         }
     }
@@ -1503,7 +1503,7 @@ var Game = function() {
     };
 
     //Pinta el cargador con un porcentaje
-    this.angulo_intro_ = 0;
+    this.angulo__intro_ = 0;
     this.tiempo_intro_ = this.timestamp_() + 5000;
     this.fin_intro_ = this.timestamp_();
     this.cambia_pantalla_intro_ = false;
@@ -1545,7 +1545,7 @@ var Game = function() {
 
         this.render_portal_(ctx);
         this.player_.pinta_home_();
-        this.angulo_intro_ = this.player_.pinta_player_(dt, ctx, this.counter, this.angulo_intro_);
+        this.angulo__intro_ = this.player_.pinta_player_(dt, ctx, this.counter, this.angulo__intro_);
 
 
 

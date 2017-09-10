@@ -5,13 +5,13 @@
 **************************************************/
 var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
 
-    this.que_pie                = 0;
-    this.angulo                 = 0;
-    this.size_player_pixel      = 4;
+    this.que_pie_                = 0;
+    this.angulo_                 = 0;
+    this.size_player_pixel_      = 4;
     this.x                      = x;
     this.y                      = y;
-    this.alto_                  = this.size_player_pixel * 12;
-    this.ancho_                 = this.size_player_pixel * 6 + 5;
+    this.alto_                  = this.size_player_pixel_ * 12;
+    this.ancho_                 = this.size_player_pixel_ * 6 + 5;
     this.centro_x_               = this.x + this.ancho_/2;
     this.centro_y_               = this.y + this.alto_/2;
 
@@ -104,11 +104,11 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         this.centro_x_ = this.x + this.ancho_/2;
         this.centro_y_ = this.y + this.alto_/2;
 
-        this.wasleft    = this.dx  < 0;
-        this.wasright   = this.dx  > 0;
+        this.wasleft_    = this.dx  < 0;
+        this.wasright_   = this.dx  > 0;
 
-        var friction   = this.friction_ * (this.falling ? 0.2 : 1);
-        var accel      = this.accel_;
+        var friction_   = this.friction_ * (this.falling ? 0.2 : 1);
+        var accel_      = this.accel_;
 
         //reseteo las velocidades
         this.ddx = 0;
@@ -116,19 +116,19 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
 
 
         if (this.left){
-          this.ddx = this.ddx - accel;
+          this.ddx = this.ddx - accel_;
           this.last_left_ = true;
         }
-        else if (this.wasleft){
-          this.ddx = this.ddx + friction;
+        else if (this.wasleft_){
+          this.ddx = this.ddx + friction_;
         }
       
         if (this.right){
-          this.ddx = this.ddx + accel;
+          this.ddx = this.ddx + accel_;
           this.last_left_ = false;
         }
-        else if (this.wasright){
-          this.ddx = this.ddx - friction;
+        else if (this.wasright_){
+          this.ddx = this.ddx - friction_;
         }
 
         //Salto
@@ -202,9 +202,9 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
 
         
       
-        if ((this.wasleft  && (this.dx > 0)) ||
-            (this.wasright && (this.dx < 0))) {
-          this.dx = 0; // clamp at zero to prevent friction from making us jiggle side to side
+        if ((this.wasleft_  && (this.dx > 0)) ||
+            (this.wasright_ && (this.dx < 0))) {
+          this.dx = 0; // clamp at zero to prevent friction_ from making us jiggle side to side
         }
         
 
@@ -288,7 +288,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         }
     };
 
-    this.pinta_player_ = function(dt, ctx, counter, angulo) {
+    this.pinta_player_ = function(dt, ctx, counter, angulo_) {
 
 
         if(juego.wait_start_ > juego.timestamp_()){
@@ -372,26 +372,26 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
 
         var negativo = -1;
         if(juego.wait_start_ > juego.timestamp_()){
-            this.angulo *= (negativo*1.1);
-            this.angulo += (negativo*1);
+            this.angulo_ *= (negativo*1.1);
+            this.angulo_ += (negativo*1);
             
             opacidad_jugador = 300/(juego.wait_start_-juego.timestamp_());
             if(opacidad_jugador>1){
                 opacidad_jugador = 1;
             }
-            this.angulo = 1000 * (opacidad_jugador - 1);
-            //console.log(this.angulo);
+            this.angulo_ = 1000 * (opacidad_jugador - 1);
+            //console.log(this.angulo_);
         }
         else if(this.tiempo_portal_ > juego.timestamp_()){
-            if(!angulo){
+            if(!angulo_){
 
-                this.angulo *= (negativo*1.1);
-                this.angulo += (negativo*1);
+                this.angulo_ *= (negativo*1.1);
+                this.angulo_ += (negativo*1);
                 ctx.globalAlpha -= 0.005;
             }
             else{
-                angulo = angulo * negativo * 1.1;
-                this.angulo = angulo + negativo * 1;
+                angulo_ = angulo_ * negativo * 1.1;
+                this.angulo_ = angulo_ + negativo * 1;
                 ctx.globalAlpha -= 0.009;
             }
 
@@ -400,31 +400,31 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         else{
             opacidad_jugador = 1;
             if(this.jumping){
-                this.que_pie = 1;
-                this.angulo = 0;
+                this.que_pie_ = 1;
+                this.angulo_ = 0;
             }
             else if(this.left || this.right || juego.is_game_over_){
                 if(juego.tween_frames_(counter, 30) < 0.5 ){
                     if(this.left){
-                        this.que_pie = 2;
+                        this.que_pie_ = 2;
                     }
                     else{
-                        this.que_pie = 0;
+                        this.que_pie_ = 0;
                     }
-                    this.angulo = -2;
+                    this.angulo_ = -2;
                 }
                 else if(this.left){
-                    this.que_pie = 3;
-                    this.angulo = 2;
+                    this.que_pie_ = 3;
+                    this.angulo_ = 2;
                 }
                 else{
-                    this.que_pie = 1;
-                    this.angulo = 2;
+                    this.que_pie_ = 1;
+                    this.angulo_ = 2;
                 }
 
             }
             else{
-                this.angulo = 0;
+                this.angulo_ = 0;
             }
         }
 
@@ -460,7 +460,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         //Fin del halo chungo
 
         //efecto de saltitos
-        ctx.rotate(this.angulo*Math.PI/180);
+        ctx.rotate(this.angulo_*Math.PI/180);
         //Pinta jugador
         var que_jugador = player;
         var que_pistola = pistola;
@@ -476,17 +476,17 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
 
         var color_player = "rgba(210,228,241,"+opacidad_jugador+")";
 
-        juego.pinta_filas_columnas_(ctx, 0, 0, que_jugador, this.size_player_pixel, color_player);
+        juego.pinta_filas_columnas_(ctx, 0, 0, que_jugador, this.size_player_pixel_, color_player);
         //Pinta pies
-        juego.pinta_filas_columnas_(ctx, 0, this.alto_ - this.size_player_pixel, pieses[this.que_pie], this.size_player_pixel, color_player);
+        juego.pinta_filas_columnas_(ctx, 0, this.alto_ - this.size_player_pixel_, pieses[this.que_pie_], this.size_player_pixel_, color_player);
   
 
         //Pinta pistola
-        //cambio el angulo de la pistola?
-        this.angulo_pistola_ = 0;
+        //cambio el angulo_ de la pistola?
+        this.angulo__pistola_ = 0;
         var color_pistola = "rgba(143,172,192,"+opacidad_jugador+")";
         ctx.translate(this.ancho_/2.5,  this.alto_/2);
-        ctx.rotate(this.angulo*Math.PI/180);
+        ctx.rotate(this.angulo_*Math.PI/180);
         if(!juego.is_game_over_){
             juego.pinta_filas_columnas_(ctx, x_pistola, 0, que_pistola, size_pistola_pixel, color_pistola);
         }
@@ -531,7 +531,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         }
 
 
-        return this.angulo;
+        return this.angulo_;
 
     };
 
