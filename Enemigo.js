@@ -3,7 +3,7 @@
 /**************************************************
 ** GAME Enemigo CLASS
 **************************************************/
-var Enemigo = function(juego, x, y, tipo) {
+var Enemigo = function(juego, x, y, tipo, r, g, b) {
 
     this.que_pie_                = 0;
     this.angulo_                 = 0;
@@ -43,6 +43,10 @@ var Enemigo = function(juego, x, y, tipo) {
 
     this.enemigo_ = [];
     this.enemigo_left_ = [];
+
+    this.r = r;
+    this.g = g;
+    this.b = b;
 
     this.enemigo_[0] =  [
                     [  ,  ,  , 1, 1, 1,],
@@ -580,7 +584,8 @@ var Enemigo = function(juego, x, y, tipo) {
         var opacidad = (1 - distancia_al_jugador/250);
 
 
-        var color_enemigo = "rgba(255, 153, 153, "+opacidad+")";
+        //var color_enemigo = "rgba(255, 153, 153, "+opacidad+")";
+        var color_enemigo = "rgba("+this.r+", "+this.g+", "+this.b+", "+opacidad+")";
         if(this.muerto){
             if(this.muriendo_ > juego.timestamp_()){
 
