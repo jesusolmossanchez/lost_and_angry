@@ -418,12 +418,15 @@ var Game = function() {
 
             var tipo_enemigo = this.randInt_(0,4);            
 
+            var r = this.randInt_ (180, 215);
+            var g = this.randInt_ (90, 155);
+            var b = this.randInt_ (90, 155);
             for (var i = 0; i < this.cuantos_enemigos_; i++) {
                 var x_enemigo = this.randInt_ (200, this.ancho_total_ - 200);
                 var y_enemigo = this.randInt_ (0, this.alto_total_ / 2);
 
-                var enemigo = new Enemigo(this, x_enemigo, y_enemigo, tipo_enemigo);
 
+                var enemigo = new Enemigo(this, x_enemigo, y_enemigo, tipo_enemigo, r, g, b);
                 while(enemigo.mal_situado_()){
                     enemigo.resitua_();
                 }
@@ -508,31 +511,35 @@ var Game = function() {
         }
 
         play_again =  [
-                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
-                        [ 1,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1,  ,  , 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1, 1,  ,  , 1,  , 1],
-                        [ 1,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  ,  , 1,  , 1],
-                        [ 1,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1, 1, 1,  , 1,  , 1],
-                        [ 1,  , 1, 1,  ,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  , 1, 1,  , 1],
-                        [ 1,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  ,  , 1,  , 1],
-                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
-                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1,  ,  , 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1, 1,  ,  , 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  ,  , 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1, 1, 1,  , 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  , 1, 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  ,  , 1,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
                     ];
 
         this.pinta_filas_columnas_(this.ctx, this.ancho_total_/2 - 330, 290, game_over, 16, "rgba(255,255,255,1)");
-        this.pinta_filas_columnas_(this.ctx, this.ancho_total_/2 - 130, 400, play_again,  6, "rgba(255,255,255,1)");
+        this.pinta_filas_columnas_(this.ctx, this.ancho_total_/2 - 130, 410, play_again,  6, "rgba(255,255,255,1)");
 
         document.getElementById("play_again").style.display = "block";
 
     };
     this.game_over_ = function(ganador) {
 
-        var juego = this;
         this.explosions_.push(
             new Explosion(this.ancho_total_/2, this.alto_total_/2, true, true, ganador)
         );
+        this.pre_game_over_ = true;
+        var juego = this;
         window.setTimeout(function function_name(argument) {
             
+            this.pre_game_over_ = false;
             juego.is_game_over_ = true;
             juego.you_win_ = ganador;
         }, 2000)
@@ -621,8 +628,11 @@ var Game = function() {
             this.radio_vision_ = this.ancho_total_;
             this.render_boss_(ctx, dt);
             this.render_player_(ctx, dt);
-            this.render_game_over_(ctx);
             this.render_explosion_(ctx);
+
+            ctx.fillStyle = "rgba(0,0,0,0.2)";
+            ctx.fillRect(0,0,this.ancho_total_,this.alto_total_);
+            this.render_game_over_(ctx);
             return;
         }
         //borro lo que hay y vuelvo a renderizar cosas
@@ -1452,6 +1462,7 @@ var Game = function() {
 
         var size_logo_px = 8;
         var x_logo = this.ancho_total_/2 - (size_logo_px * logo[0].length)/2;
+        var y_logo = 180;
 
 
         var loading =  [
@@ -1468,7 +1479,15 @@ var Game = function() {
         var x_loading = this.ancho_total_/2 - (size_loading_px * loading[0].length)/2;
         
 
-        this.pinta_filas_columnas_(ctx, x_logo, 180, logo, size_logo_px);
+        this.pinta_filas_columnas_(ctx, x_logo, y_logo, logo, size_logo_px, "#ffffff");
+        
+        for (var i = -2; i < 2; i++) {
+            var new_x_portal = x_logo + (0.5 - Math.random())*i*15;
+            var new_y_portal = y_logo + (0.5 - Math.random())*i*15;
+            this.pinta_filas_columnas_(ctx, new_x_portal, new_y_portal, logo, size_logo_px, "rgba("+this.randInt_(222,255)+","+this.randInt_(222,255)+","+this.randInt_(222,255)+",0.1)");
+        }
+        
+
 
         var opacidad = this.tween_frames_(this.counter, 60);
         var color_loading = "rgba(255,255,255,"+opacidad+")";
@@ -1490,17 +1509,7 @@ var Game = function() {
     };
 
 
-    //Pinta el cargador con un porcentaje
-    this.pinta_cargador_ = function(percent, ctx) {
-        
-        var ancho_cargador = 200;
-        var alto_cargador = 80;
-        ctx.fillRect((this.ancho_total_ - ancho_cargador)/2, this.alto_total_/2 - 50, percent * ancho_cargador, alto_cargador);
-
-        ctx.strokeStyle="#ffffff";
-        ctx.lineWidth=10;
-        ctx.strokeRect((this.ancho_total_ - ancho_cargador)/2, this.alto_total_/2 - 50, ancho_cargador - 5, alto_cargador);
-    };
+    
 
     //Pinta el cargador con un porcentaje
     this.angulo__intro_ = 0;
@@ -1810,7 +1819,7 @@ var Game = function() {
         last = juego.timestamp_();
 
 
-    var fpsInterval = 1000 / 30;
+    var fpsInterval = 1000 / 20;
 
     var then = juego.timestamp_();
 
@@ -1836,11 +1845,11 @@ var Game = function() {
         dt = dt + Math.min(1, (now - last) / 1000);
         while(dt > juego.step_) {
             dt = dt - juego.step_;
-            if(!juego.hay_disparo_){
+            if(!juego.pre_game_over_){
                 juego.update_(juego.step_);
             }
         }
-        if(false){
+        if(juego.pre_game_over_){
             var elapsed = now - then;
 
             if (elapsed > fpsInterval) {
