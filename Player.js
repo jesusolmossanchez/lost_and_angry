@@ -186,11 +186,11 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             
         }
         if(juego.is_game_over_){
-            this.dx  = 800 * dt;
+            this.dx  = 2000 * dt;
             this.last_left_ = false;
             if(juego.you_win_){
                 this.jump = true;
-                this.dx  = 1400 * dt;
+                this.dx  = 4000 * dt;
             }
         }
         this.x  = this.x  + (dt * this.dx);
