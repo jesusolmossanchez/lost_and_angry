@@ -45,7 +45,7 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
     this.tiempo_herido_         = juego.timestamp_();
 
-    this.salud_inicial_         = 2000;
+    this.salud_inicial_         = 2500;
     this.salud_                 = this.salud_inicial_;
 
     this.tiempo_terremoto_       = juego.timestamp_();
@@ -61,7 +61,8 @@ var Boss = function(juego, x, y, gravedad, impulso) {
             return;
         }
 
-        if(this.salud_ < 0){
+        if(this.salud_ < 0  && !this.pre_game_over_){
+            this.salud_ = 2000;
             juego.game_over_(true);
             return;
         }
@@ -118,7 +119,7 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
 
         //Salto
-        if (this.controla_salta_() && !this.jumping && this.tiempo_saltando_ < juego.timestamp_()){
+        if (this.controla_salta_() && !this.jumping && this.tiempo_saltando_ < juego.timestamp_() && !juego.is_game_over_){
             this.ddy = this.ddy - this.impulse_; 
             this.jumping = true;
             this.falling = true;
@@ -335,7 +336,7 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
 
     this.controla_dispara_ = function() {
-        var dispara = (Math.random()>0.975)?true:false;
+        var dispara = (Math.random()>0.965)?true:false;
         return dispara;
     };
 
@@ -412,7 +413,7 @@ var Boss = function(juego, x, y, gravedad, impulso) {
 
         var size_where = 7;
         var x_where = this.x - 350;
-        var y_where = this.y - 80;
+        var y_where = this.y - 100;
 
         juego.pinta_filas_columnas_(juego.ctx, x_where, y_where, where, size_where, "#ffffff");
     }

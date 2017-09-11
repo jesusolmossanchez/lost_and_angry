@@ -55,10 +55,10 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
 
 
         
-        if(this.salud_ < 0){
+        if(this.salud_ < 0 && !this.pre_game_over_){
+            this.salud_ = 0;
             this.jump = true;
-            juego.game_over_(false);
-            //return;
+            juego.game_over_(false)
         }
 
         if(juego.wait_start_ > juego.timestamp_()){
@@ -190,7 +190,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             this.last_left_ = false;
             if(juego.you_win_){
                 this.jump = true;
-                this.dx  = 4000 * dt;
+                this.dx  = 7000 * dt;
             }
         }
         this.x  = this.x  + (dt * this.dx);
@@ -540,12 +540,10 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         window.disparo_audio.currentTime = 0;
         window.disparo_audio.play();
         
-        //setTimeout(function () {    
-            window.disparo_audio2.playbackRate = 0.5;
-            window.disparo_audio2.pause();
-            window.disparo_audio2.currentTime = 0;
-            window.disparo_audio2.play();
-        //},150 * Math.random());
+        window.disparo_audio2.playbackRate = 0.5;
+        window.disparo_audio2.pause();
+        window.disparo_audio2.currentTime = 0;
+        window.disparo_audio2.play();
         
     }
 

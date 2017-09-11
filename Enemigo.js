@@ -273,7 +273,7 @@ var Enemigo = function(juego, x, y, tipo, r, g, b) {
 
 
         var colisiona = false;
-        if(this.colisiona_player_() && !this.muerto && !juego.is_game_over){
+        if(this.colisiona_player_() && !this.muerto && !juego.is_game_over_){
             colisiona = true;
             juego.player_.salud_--;
             juego.player_.suena_herida_();
@@ -282,7 +282,6 @@ var Enemigo = function(juego, x, y, tipo, r, g, b) {
         if(!this.muerto && !colisiona){
 
             var random_alcanzable = (Math.random()>0.9)?true:false;
-            var random_saltable = (Math.random()>0.9)?true:false;
 
             var hay_borde = this.hay_borde_();
             if(hay_borde && !this.jumping){
@@ -291,7 +290,7 @@ var Enemigo = function(juego, x, y, tipo, r, g, b) {
                 var random_vuelta = (random_decision<0.6)?true:false;
                 var random_jump = (random_decision>0.8)?true:false;
                 
-                if(random_jump){
+                if(random_jump || juego.is_game_over_){
                     this.jump = true;
                 }
                 else if(this.hay_alcanzable_() && random_alcanzable){
@@ -310,7 +309,7 @@ var Enemigo = function(juego, x, y, tipo, r, g, b) {
                 }
                 
             }
-            else if(this.borde_saltable_() && random_saltable){
+            else if(this.borde_saltable_() && random_alcanzable){
                 this.jump = true;
             }
             else if(this.hay_alcanzable_() && random_alcanzable){

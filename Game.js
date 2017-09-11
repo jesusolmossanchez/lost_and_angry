@@ -5,9 +5,7 @@
 **************************************************/
 var Game = function() {
 
-    //this.debug_ = true;
-
-
+ 
     //devuelve el tiempo en milisegundos
     this.timestamp_ = function() {
         return new Date().getTime();
@@ -138,9 +136,6 @@ var Game = function() {
 
 
     this.radio_vision_ = 220;
-    if(this.debug_){
-        this.radio_vision_ = 2200;
-    }
 
     //Preparado para el mapa
     this.MAP_ = {};
@@ -364,7 +359,6 @@ var Game = function() {
         this.enemigos_ = [];
         this.explosions_ = [];
         
-
         this.moustro_final_ = final;
         //this.moustro_final_ = true;
 
@@ -418,9 +412,9 @@ var Game = function() {
 
             var tipo_enemigo = this.randInt_(0,4);            
 
-            var r = this.randInt_ (180, 215);
-            var g = this.randInt_ (90, 155);
-            var b = this.randInt_ (90, 155);
+            var r = this.randInt_ (150, 215);
+            var g = this.randInt_ (90, 195);
+            var b = this.randInt_ (90, 195);
             for (var i = 0; i < this.cuantos_enemigos_; i++) {
                 var x_enemigo = this.randInt_ (200, this.ancho_total_ - 200);
                 var y_enemigo = this.randInt_ (0, this.alto_total_ / 2);
@@ -479,17 +473,9 @@ var Game = function() {
     };
 
 
-
-    this.empieza_ = function(){
-        
-        //Hacer cosas al empezar?
-
-    };
-
-
     this.render_game_over_ = function() {
         //Preparado para el game over
-       
+       var game_over;
         if(this.you_win_){
             game_over =  [
                             [ 1, 1,  , 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  ,  ,  , 1, 1,  , 1,  , 1,  , 1, 1,  , 1, 1,  ,  , 1,  ,  , 1,  , 1,  , 1,  ],
@@ -510,7 +496,7 @@ var Game = function() {
                         ];
         }
 
-        play_again =  [
+        var vplay_again =  [
                         [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                         [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
                         [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
@@ -524,8 +510,8 @@ var Game = function() {
                         [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
                     ];
 
-        this.pinta_filas_columnas_(this.ctx, this.ancho_total_/2 - 330, 290, game_over, 16, "rgba(255,255,255,1)");
-        this.pinta_filas_columnas_(this.ctx, this.ancho_total_/2 - 130, 410, play_again,  6, "rgba(255,255,255,1)");
+        this.pinta_filas_columnas_(this.ctx, this.ancho_total_/2 - 330, 260, game_over, 16, "rgba(255,255,255,1)");
+        this.pinta_filas_columnas_(this.ctx, this.ancho_total_/2 - 130, 380, play_again,  6, "rgba(255,255,255,1)");
 
         document.getElementById("play_again").style.display = "block";
 
@@ -536,12 +522,45 @@ var Game = function() {
             new Explosion(this.ancho_total_/2, this.alto_total_/2, true, true, ganador)
         );
         this.pre_game_over_ = true;
+
+        if(this.you_win_){
+            window.audio.playbackRate = 3;
+        }
+        else{
+            window.audio.playbackRate = 0.5;
+        }
+
+
         var juego = this;
         window.setTimeout(function function_name(argument) {
             
-            this.pre_game_over_ = false;
+            juego.pre_game_over_ = false;
             juego.is_game_over_ = true;
             juego.you_win_ = ganador;
+
+            if(ganador){
+
+                for (var i = 0; i < 20; i++) {
+                    var x_enemigo = juego.randInt_ (200, juego.ancho_total_ - 200);
+                    var y_enemigo = juego.randInt_ (0, juego.alto_total_ / 2);
+
+                    var tipo_enemigo = juego.randInt_(0,4);  
+
+                    var r = juego.randInt_ (150, 215);
+                    var g = juego.randInt_ (90, 195);
+                    var b = juego.randInt_ (90, 195);
+                    var enemigo = new Enemigo(juego, x_enemigo, y_enemigo, tipo_enemigo, r, g, b);
+                    while(enemigo.mal_situado_()){
+                        enemigo.resitua_();
+                    }
+
+
+                    juego.enemigos_.push(enemigo);
+                }
+
+            }
+
+
         }, 2000)
 
 
@@ -563,9 +582,6 @@ var Game = function() {
 
 
         this.salud_actual_ = this.player_.salud_;
-
-        this.update_fps_interval_();
-
 
         if(this.cambia_pantalla_ && this.player_.tiempo_portal_ < this.timestamp_()){
             this.cambia_pantalla_ = false;
@@ -589,7 +605,7 @@ var Game = function() {
         if(this.moustro_final_){
             this.final_boss_.update_(dt);
         }
-        else{
+        if(!this.moustro_final_ || this.is_game_over_){
             for (var i = 0; i < this.enemigos_.length; i++) {
                 this.enemigos_[i].update(dt);
             }
@@ -599,14 +615,6 @@ var Game = function() {
 
     };
 
-    this.update_fps_interval_ = function() {
-        if(this.tiempo_slow_motion_ < this.timestamp_()){
-
-            this.fps_            = 60;
-            this.fps_interval    = 1000/this.fps_;
-
-        }
-    }
     //-------------------------------------------------------------------------
     // FIN UPDATE
     //-------------------------------------------------------------------------
@@ -629,8 +637,9 @@ var Game = function() {
             this.render_boss_(ctx, dt);
             this.render_player_(ctx, dt);
             this.render_explosion_(ctx);
+            this.render_enemigos_(ctx, dt);
 
-            ctx.fillStyle = "rgba(0,0,0,0.2)";
+            ctx.fillStyle = "rgba(50,50,50,0.5)";
             ctx.fillRect(0,0,this.ancho_total_,this.alto_total_);
             this.render_game_over_(ctx);
             return;
@@ -750,6 +759,16 @@ var Game = function() {
 
     }
 
+    this.distancia_player_ = function(x,y){
+        var distancia_centro = 0;
+        var a = 0;
+        var b = 0;
+        a = Math.abs(x - this.player_.centro_x_);
+        b = Math.abs(y - this.player_.centro_y_);
+        distancia_centro = Math.sqrt( a*a + b*b );
+        return distancia_centro;
+    }
+
 
     this.render_portal_ = function(ctx) {
 
@@ -757,12 +776,7 @@ var Game = function() {
         var x_portal = this.portal_.x + this.portal_.ancho_ / 2;
         var y_portal = this.portal_.y + this.portal_.alto_ / 2;
 
-        var distancia_centro = 0;
-        var a = 0;
-        var b = 0;
-        a = Math.abs(x_portal - this.player_.centro_x_);
-        b = Math.abs(y_portal - this.player_.centro_y_);
-        distancia_centro = Math.sqrt( a*a + b*b );
+        distancia_centro = this.distancia_player_(x_portal, y_portal);
 
         if(distancia_centro > this.radio_vision_ ){
             return;
@@ -802,16 +816,10 @@ var Game = function() {
 
     this.render_medical_kit_ = function(ctx) {
 
-        var distancia_centro = 0;
-        var a = 0;
-        var b = 0;
+        
         var x_kit = this.medical_kit_.x + this.medical_kit_.ancho_ / 2;
         var y_kit = this.medical_kit_.y + this.medical_kit_.alto_ / 2;
-        a = Math.abs(x_kit - this.player_.centro_x_);
-        b = Math.abs(y_kit - this.player_.centro_y_);
-        distancia_centro = Math.sqrt( a*a + b*b );
-
-        
+        distancia_centro = this.distancia_player_(x_kit, y_kit);
 
 
         var opacity_medical = this.player_.tiempo_medical_ - this.timestamp_();
@@ -961,14 +969,9 @@ var Game = function() {
 
     //Llama a la funcion del objeto de jugador para pintarlo... lo pongo así, porque igual hay que pintar el jugador diferente según algo del juego
     this.render_enemigos_ = function(ctx, dt) {
-        var distancia_centro = 0;
-        var a = 0;
-        var b = 0;
         for (var i = 0; i < this.enemigos_.length; i++) {
 
-            a = Math.abs(this.enemigos_[i].x - this.player_.centro_x_);
-            b = Math.abs(this.enemigos_[i].y - this.player_.centro_y_);
-            distancia_jugador = Math.sqrt( a*a + b*b );
+            var distancia_jugador = this.distancia_player_(this.enemigos_[i].x, this.enemigos_[i].y);
             if(distancia_jugador<this.radio_vision_){
                 this.enemigos_[i].pinta_enemigo_(dt, ctx, this.counter);
             }
@@ -1522,7 +1525,6 @@ var Game = function() {
 
         if(this.fin_intro_ < this.timestamp_() && this.cambia_pantalla_intro_){
             this.setup_(false, 1800);
-            this.empieza_();
             window.audio.play();
             this.empezado_ = true;
             return;
@@ -1924,13 +1926,6 @@ var Game = function() {
         if (done) {
             //Se vuelve a controlar la orientación
             juego.controla_orientacion_();
-
-            //Y básicamente se lanza el juego
-            /*
-            juego.setup_(false);
-            juego.empieza_();
-            juego.empezado_ = true;
-            */
 
             //Ademas se limpia este intervalo que no de más el follón
             clearInterval(intervalo_cancion);
