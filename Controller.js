@@ -198,6 +198,12 @@ var Game = function() {
             air_console.message(AirConsole.SCREEN, "jump");
             this.className = "tecla_mobile pulsada";
         });
+
+        document.getElementById('accion_mobile').addEventListener('touchstart', function(e){ 
+            e.preventDefault();
+            air_console.message(AirConsole.SCREEN, "accion");
+            this.className = "tecla_mobile pulsada";
+        });
         /*
         document.getElementById('der_mobile').addEventListener('mousedown', function(e){
             e.preventDefault();
