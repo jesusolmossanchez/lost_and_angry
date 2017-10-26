@@ -1496,7 +1496,7 @@ var Game = function() {
 
 
 
-        this.playerintro_ = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 1000, 30000, this.salud_actual_);
+        this.player_ = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 1000, 30000, this.salud_actual_);
 
         this.portal_ = {};
         this.portal_.ancho_ = this.playeralto_;
@@ -1504,18 +1504,18 @@ var Game = function() {
         this.portal_.x = (this.ancho_total_ / 2) + 150;
         this.portal_.y = (this.alto_total_ / 2) + 100;
 
-        this.playerintro_.right = true;
-        if(this.playerintro_.x >= this.portal_.x + 10 && !this.cambia_pantalla_intro_){
+        this.player_.right = true;
+        if(this.player_.x >= this.portal_.x + 10 && !this.cambia_pantalla_intro_){
             this.cambia_pantalla_intro_ = true;
             this.fin_intro_ = this.timestamp_() + 3000;
         }
-        if(this.playerintro_.x >= this.portal_.x + 10){
-            this.playerintro_.tiempo_portal_ = this.timestamp_() + 3000;
+        if(this.player_.x >= this.portal_.x + 10){
+            this.player_.tiempo_portal_ = this.timestamp_() + 3000;
         }
 
         this.render_portal_(ctx);
-        this.playerintro_.pinta_home_();
-        this.angulo__intro_ = this.playerintro_.pinta_player_(dt, ctx, this.counter, this.angulo__intro_);
+        this.player_.pinta_home_();
+        this.angulo__intro_ = this.player_.pinta_player_(dt, ctx, this.counter, this.angulo__intro_);
 
 
 
@@ -1756,8 +1756,7 @@ var Game = function() {
 
 
     air_console.onMessage = function(data) {
-        console.log("EEENTRAA PLAYERRRR",data);
-        
+        console.log("entra alguien",data);
 
     };
 
