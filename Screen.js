@@ -192,6 +192,9 @@ var Game = function() {
     this.nivel_ = 0;
     this.tiempo_terremoto_fix_ = 2500;
 
+    this.playeralto_ = 48;
+    this.playerancho_ = 29;
+
 
 
 
@@ -199,40 +202,8 @@ var Game = function() {
     // UTILITIES
     //-------------------------------------------------------------------------
 
-    //Control si es un móvil o tablet
-    this.is_touch_device_ = function() {
-        return 'ontouchstart' in document.documentElement;
-    };
+   
 
-    //Control de la teclas
-    this.onkey_ = function(ev, key, down) {
-        switch(key) {
-            case this.KEY.LEFT:  
-                ev.preventDefault(); 
-                this.player_.left  = down;
-                return false;
-            case this.KEY.RIGHT: 
-                ev.preventDefault(); 
-                this.player_.right  = down; 
-                return false;
-            case this.KEY.UP: 
-                ev.preventDefault(); 
-                this.player_.jump  = down; 
-                return false;
-            case this.KEY.DOWN: 
-                ev.preventDefault(); 
-                this.player_.down  = down; 
-                return false;
-            case this.KEY.ENTER: 
-                ev.preventDefault(); 
-                this.player_.accion  = down; 
-                return false;
-            case this.KEY.X: 
-                ev.preventDefault(); 
-                this.player_.accion  = down; 
-                return false;
-        }
-    };
 
     //Limite entre dos máximos
     this.bound_ = function(x, min, max) {
@@ -383,8 +354,8 @@ var Game = function() {
             this.nivel_++;
 
             this.portal_ = {};
-            this.portal_.ancho_ = this.player_.alto_;
-            this.portal_.alto_ = this.player_.alto_;
+            this.portal_.ancho_ = this.playeralto_;
+            this.portal_.alto_ = this.playeralto_;
             this.situa_portal_(this.portal_);
 
             while(this.portal_mal_situado_(this.portal_)){
@@ -395,8 +366,8 @@ var Game = function() {
 
 
             if(Math.random() > 0.6){
-                this.medical_kit_.ancho_ = this.player_.alto_/2;
-                this.medical_kit_.alto_ = this.player_.alto_/2;
+                this.medical_kit_.ancho_ = this.playeralto_/2;
+                this.medical_kit_.alto_ = this.playeralto_/2;
                 this.situa_medical_kit_(this.medical_kit_);
 
                 while(this.medical_kit_mal_situado_(this.medical_kit_)){
@@ -451,7 +422,7 @@ var Game = function() {
     };
 
     this.situa_portal_ = function(portal) {
-        portal.x = this.randInt_ (this.player_.ancho_, this.ancho_total_ - this.player_.ancho_);
+        portal.x = this.randInt_ (this.playerancho_, this.ancho_total_ - this.playerancho_);
         portal.y = this.randInt_ (0, this.alto_total_ / 1.5);
     };
 
@@ -468,7 +439,7 @@ var Game = function() {
     };
 
     this.situa_medical_kit_ = function(medical_kit) {
-        medical_kit.x = this.randInt_ (this.player_.ancho_, this.ancho_total_ - this.player_.ancho_);
+        medical_kit.x = this.randInt_ (this.playerancho_, this.ancho_total_ - this.playerancho_);
         medical_kit.y = this.randInt_ (0, this.alto_total_ / 1.5);
     };
 
@@ -1373,7 +1344,7 @@ var Game = function() {
                     this.cell_(disparo_boss.x, disparo_boss.y + 30) || 
                     this.cell_(disparo_boss.x, disparo_boss.y + 40) || 
                     this.cell_(disparo_boss.x, disparo_boss.y + 50) ||
-                    this.overlap_(this.player_.x, this.player_.y, this.player_.ancho_, this.player_.alto_, disparo_boss.x - size_bala/2, disparo_boss.y - size_bala/2, size_bala, size_bala)
+                    this.overlap_(this.player_.x, this.player_.y, this.playerancho_, this.playeralto_, disparo_boss.x - size_bala/2, disparo_boss.y - size_bala/2, size_bala, size_bala)
                     ) && !disparo_boss.pre_muerto_){
 
 
@@ -1496,19 +1467,7 @@ var Game = function() {
         var color_loading = "rgba(255,255,255,"+opacidad+")";
 
         this.pinta_filas_columnas_(ctx, x_loading, 260, loading, size_loading_px, color_loading);
-
-        if(!this.is_touch_device_()){
-            var instrucciones =  [
-                            [ 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  ,1 , 1, 1, 1,  ,  ,  ,  ,  ,  , 1,  ,  ,  , 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1],
-                            [ 1, 1,  , 1,  , 1, 1,  , 1,  ,  , 1, 1,  , 1,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1,  , 1, 1,  ,  ,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  , 1, 1, 1,  , 1, 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,1 , 1,  ,  ,  ,  ,  ,  ,  ,  ,  , 1,  , 1,  ,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,  , 1, 1,  ],
-                            [ 1, 1,  , 1,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1,  , 1, 1, 1, 1,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  , 1, 1,  , 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,1 , 1, 1,  ,  ,  , 1, 1,  ,  ,  ,  , 1,  ,  ,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,  , 1, 1,  ],
-                            [ 1, 1, 1, 1,  , 1, 1,  , 1,  ,  , 1, 1,  , 1,  ,  , 1, 1,  , 1,  ,  , 1, 1, 1, 1,  ,  ,  ,  ,  , 1,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1,  , 1,  ,  , 1,  , 1,  ,1 , 1,  ,  ,  ,  ,  ,  ,  ,  ,  , 1,  , 1,  ,  ,  ,  , 1, 1,  ,  , 1, 1,  , 1,  ,  ,  ,  ,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  ,  , 1, 1,  ],
-                            [ 1, 1,  , 1,  , 1, 1,  ,  , 1,  , 1, 1,  ,  , 1,  , 1, 1, 1, 1,  ,  ,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  ,  ,  , 1, 1,  ,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  ,  , 1,  , 1, 1, 1, 1,  ,  ,  , 1,  ,  ,1 , 1, 1, 1,  ,  ,  ,  ,  ,  , 1,  ,  ,  , 1,  ,  ,  , 1, 1,  ,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  , 1, 1,  ]
-                    ];
-            var size_intruc_px = 2.5;
-            var x_instruciones = this.ancho_total_/2 - (size_intruc_px * instrucciones[0].length)/2;
-            this.pinta_filas_columnas_(ctx, x_instruciones, 550, instrucciones, size_intruc_px);
-        }
+        
     };
 
 
@@ -1537,26 +1496,26 @@ var Game = function() {
 
 
 
-        this.player_ = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 1000, 30000, this.salud_actual_);
+        this.playerintro_ = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 1000, 30000, this.salud_actual_);
 
         this.portal_ = {};
-        this.portal_.ancho_ = this.player_.alto_;
-        this.portal_.alto_ = this.player_.alto_;
+        this.portal_.ancho_ = this.playeralto_;
+        this.portal_.alto_ = this.playeralto_;
         this.portal_.x = (this.ancho_total_ / 2) + 150;
         this.portal_.y = (this.alto_total_ / 2) + 100;
 
-        this.player_.right = true;
-        if(this.player_.x >= this.portal_.x + 10 && !this.cambia_pantalla_intro_){
+        this.playerintro_.right = true;
+        if(this.playerintro_.x >= this.portal_.x + 10 && !this.cambia_pantalla_intro_){
             this.cambia_pantalla_intro_ = true;
             this.fin_intro_ = this.timestamp_() + 3000;
         }
-        if(this.player_.x >= this.portal_.x + 10){
-            this.player_.tiempo_portal_ = this.timestamp_() + 3000;
+        if(this.playerintro_.x >= this.portal_.x + 10){
+            this.playerintro_.tiempo_portal_ = this.timestamp_() + 3000;
         }
 
         this.render_portal_(ctx);
-        this.player_.pinta_home_();
-        this.angulo__intro_ = this.player_.pinta_player_(dt, ctx, this.counter, this.angulo__intro_);
+        this.playerintro_.pinta_home_();
+        this.angulo__intro_ = this.playerintro_.pinta_player_(dt, ctx, this.counter, this.angulo__intro_);
 
 
 
@@ -1571,17 +1530,6 @@ var Game = function() {
 
 
 
-
-    
-
-
-
-
-    this.controla_orientacion_ = function(){
-        if(this.is_touch_device_()){
-            window.location.href = 'controller.html';
-        }
-    };
 
 
 
@@ -1608,8 +1556,6 @@ var Game = function() {
 
     //Muestra el logo de buenas a primeras
 
-    //Control de orientación en mobile
-    juego.controla_orientacion_();
 
     //Contador de frames
     juego.counter = 0; 
@@ -1672,21 +1618,6 @@ var Game = function() {
     }
 
 
-    //Listeners de teclas
-    //document.addEventListener('keydown', function(ev) { return juego.onkey_(ev, ev.keyCode, true);  }, false);
-    //document.addEventListener('keyup',   function(ev) { return juego.onkey_(ev, ev.keyCode, false); }, false);
-
-
-    //Control de visibilidad para poner el pausa cuando no se ve la pantalla
-    function handleVisibilityChange() {
-        if (document.hidden) {
-            juego.pausa_ = true;
-        } else  {
-            juego.pausa_ = false;
-            juego.controla_orientacion_();
-        }
-    }
-    document.addEventListener("visibilitychange", handleVisibilityChange, false);
 
 
 
@@ -1722,8 +1653,6 @@ var Game = function() {
     var intervalo_cancion = setInterval(function () {
         //Al final cuando toda la música está cargada se lanza esto
         if (done) {
-            //Se vuelve a controlar la orientación
-            juego.controla_orientacion_();
 
             //Ademas se limpia este intervalo que no de más el follón
             clearInterval(intervalo_cancion);
@@ -1796,9 +1725,6 @@ var Game = function() {
     // Listen for messages from other devices
     air_console.onMessage = function(from, data) {
 
-        console.log(from);
-        console.log(data);
-
         switch(data) {
             case "left":   
                 juego.player_.left  = true;
@@ -1825,6 +1751,13 @@ var Game = function() {
                 juego.player_.accion  = false; 
                 return false;
         }
+
+    };
+
+
+    air_console.onMessage = function(data) {
+        console.log("EEENTRAA PLAYERRRR",data);
+        
 
     };
 
