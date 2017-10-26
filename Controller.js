@@ -182,46 +182,47 @@ var Game = function() {
         var self = this;
 
         document.getElementById('der_mobile').addEventListener('touchstart', function(e){
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "right");
             this.className = "tecla_mobile pulsada";
-            e.preventDefault();
         });
 
         document.getElementById('izq_mobile').addEventListener('touchstart', function(e){ 
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "left");
             this.className = "tecla_mobile pulsada";
-            e.preventDefault();
         });
 
         document.getElementById('arr_mobile').addEventListener('touchstart', function(e){ 
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "jump");
             this.className = "tecla_mobile pulsada";
-            e.preventDefault();
         });
-
+        /*
         document.getElementById('der_mobile').addEventListener('mousedown', function(e){
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "right");
             this.className = "tecla_mobile pulsada";
-            e.preventDefault();
         });
 
         document.getElementById('izq_mobile').addEventListener('mousedown', function(e){ 
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "left");
             this.className = "tecla_mobile pulsada";
-            e.preventDefault();
         });
 
         document.getElementById('arr_mobile').addEventListener('mousedown', function(e){ 
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "jump");
             this.className = "tecla_mobile pulsada";
-            e.preventDefault();
         });
 
         document.getElementById('accion_mobile').addEventListener('mousedown', function(e){ 
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "accion");
             this.className = "tecla_mobile pulsada";
-            e.preventDefault();
         });
+        */
 
         document.getElementById('lost').addEventListener('touchmove', function(e){ 
             var target = document.elementFromPoint(e.touches[0].pageX, e.touches[0].pageY);
@@ -250,55 +251,55 @@ var Game = function() {
 
 
 
-
+        /*
         document.getElementById('der_mobile').addEventListener('touchend', function(e){
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "right_false");
             this.className = "tecla_mobile";
-            e.preventDefault();
         });
 
         document.getElementById('izq_mobile').addEventListener('touchend', function(e){ 
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "left_false");
             this.className = "tecla_mobile";
-            e.preventDefault();
         });
 
         document.getElementById('arr_mobile').addEventListener('touchend', function(e){ 
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "jump_false");
             this.className = "tecla_mobile";
-            e.preventDefault();
         });
 
         document.getElementById('accion_mobile').addEventListener('touchend', function(e){ 
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "accion_false");
             this.className = "tecla_mobile";
-            e.preventDefault();
         });
 
         document.getElementById('der_mobile').addEventListener('mouseup', function(e){
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "right_false");
             this.className = "tecla_mobile";
-            e.preventDefault();
         });
 
         document.getElementById('izq_mobile').addEventListener('mouseup', function(e){ 
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "left_false");
             this.className = "tecla_mobile";
-            e.preventDefault();
         });
 
         document.getElementById('arr_mobile').addEventListener('mouseup', function(e){ 
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "jump_false");
             this.className = "tecla_mobile";
-            e.preventDefault();
         });
 
         document.getElementById('accion_mobile').addEventListener('mouseup', function(e){ 
+            e.preventDefault();
             air_console.message(AirConsole.SCREEN, "accion_false");
             this.className = "tecla_mobile";
-            e.preventDefault();
         });
-          
+        */
     };
 
 
@@ -360,7 +361,11 @@ var Game = function() {
     var juego = new Game();
 
     //Control de orientación en mobile
-    juego.controla_orientacion_();
+
+    document.addEventListener("DOMContentLoaded", function() {
+        juego.controla_orientacion_();
+    });
+
 
 
 
