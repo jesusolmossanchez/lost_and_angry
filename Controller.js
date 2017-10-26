@@ -1,4 +1,4 @@
-var air_console = new AirConsole();
+var air_console = new AirConsole(({"orientation": AirConsole.ORIENTATION_LANDSCAPE}););
 
 /**************************************************
 ** GAME CLASS
