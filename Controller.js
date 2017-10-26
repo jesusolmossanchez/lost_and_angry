@@ -86,57 +86,41 @@ var Game = function() {
     };
 
 
-    //-------------------------------------------------------------------------
-    // MOBILE    //Esto es para controlar el giro del movil y eso... No hacer mucho caso
-    //-------------------------------------------------------------------------
 
-    this.pinta_cosas_mobile_gira_ = function() {
+    //Pinta el logo
+    this.muestra_logo_ = function(ctx) {
+        var logo =  [
+                        [ 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1,  ,  , 1,  , 1, 1, 1,  ,  ,  ,  , 1, 1, 1, 1,  , 1, 1,  ,  , 1,  , 1, 1, 1, 1,  ,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  , 1, 1,],
+                        [ 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  ,  ,  ,  , 1, 1,  ,  ,  ,  , 1, 1,  , 1,  , 1, 1,  ,  , 1,  , 1, 1,  , 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  ,  , 1,  , 1, 1,  ,  ,  ,  , 1, 1,  , 1,  ,  ,  , 1, 1, 1, 1,  ,],
+                        [ 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  ,  ,  , 1, 1,  , 1,  , 1, 1, 1,  , 1,  , 1, 1,  , 1,  ,  ,  , 1, 1,  , 1,  , 1, 1, 1,  , 1,  , 1, 1,  , 1, 1,  , 1, 1, 1,  ,  ,  ,  ,  , 1, 1,  ,  ,],
+                        [ 1, 1,  ,  ,  , 1, 1,  , 1,  ,  ,  , 1, 1,  ,  , 1, 1,  ,  ,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1, 1,  , 1, 1,  , 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1, 1,  , 1, 1,  ,  , 1,  , 1, 1,  , 1,  ,  ,  ,  , 1, 1,  ,  ,],
+                        [ 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  ,  ,  , 1, 1,  , 1,  , 1, 1,  ,  , 1,  , 1, 1, 1,  ,  ,  ,  , 1, 1,  , 1,  , 1, 1,  ,  , 1,  , 1, 1, 1, 1, 1,  , 1, 1,  ,  , 1,  ,  ,  , 1, 1,  ,  ,]
+                ];
 
-        document.getElementById('controles_mobile').style.display = "none";
-        document.getElementById('canvas_mobile').style.display = "none";
-        var ancho_window = window.innerWidth;
-        var alto_window = window.innerHeight;
+        var size_logo_px = 6;
+        var x_logo = window.ancho/2 - (size_logo_px * logo[0].length)/2;
+        var y_logo = 50;
 
-
-        canvas_mobile_gira   = document.getElementById('canvas_mobile_gira');
-        canvas_mobile_gira.style.display = "block";
-        ctx_mobile_gira      = canvas_mobile_gira.getContext('2d');
-        canvas_mobile_gira.width  = ancho_window;
-        canvas_mobile_gira.height = alto_window;
-
-
-        var gira_mobile=  [
-                    [  ,  ,  , 1, 1, 1, 1,  ,  ,  ,  ],
-                    [  ,  , 1,  ,  ,  ,  , 1,  ,  ,  ],
-                    [  , 1,  ,  ,  ,  ,  ,  , 1,  , 1],
-                    [  , 1,  ,  ,  ,  ,  ,  ,  , 1, 1],
-                    [ 1, 1, 1,  ,  ,  ,  ,  , 1, 1, 1],
-                    [  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
-                    [  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
-                    [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                    [ 1,  ,  ,  ,  ,  ,  ,  , 1, 1, 1],
-                    [ 1,  ,  ,  ,  ,  ,  ,  , 1, 1, 1],
-                    [ 1,  ,  ,  ,  ,  ,  ,  , 1,  , 1],
-                    [ 1,  ,  ,  ,  ,  ,  ,  , 1, 1, 1],
-                    [ 1,  ,  ,  ,  ,  ,  ,  , 1, 1, 1],
-                    [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-            ];
-
-        var size_gira_px = 12;
-        var x_gira = ancho_window/2 - (size_gira_px * gira_mobile[0].length)/2;
-        this.pinta_filas_columnas_(ctx_mobile_gira, x_gira, 200, gira_mobile, size_gira_px);
-          
+        this.pinta_filas_columnas_(ctx, x_logo, y_logo, logo, size_logo_px, "#ffffff");
+        
+        for (var i = -2; i < 2; i++) {
+            var new_x_portal = x_logo + (0.5 - Math.random())*i*15;
+            var new_y_portal = y_logo + (0.5 - Math.random())*i*15;
+            this.pinta_filas_columnas_(ctx, new_x_portal, new_y_portal, logo, size_logo_px, "rgba("+this.randInt_(222,255)+","+this.randInt_(222,255)+","+this.randInt_(222,255)+",0.1)");
+        }
+        
     };
-  
+
     this.pinta_cosas_mobile_ = function() {
         document.getElementById('canvas_mobile_gira').style.display = "none";
 
         canvas_mobile   = document.getElementById('canvas_mobile');
         ctx_mobile      = canvas_mobile.getContext('2d');
         canvas_mobile.style.display = "block";
-        var ancho_window = window.innerWidth
+
         canvas_mobile.width  = this.ancho_total_;
-        canvas_mobile.height = 100;
+
+        canvas_mobile.height = window.alto;
 
 
         var flecha_der =  [
@@ -171,10 +155,12 @@ var Game = function() {
 
         var size_flecha_px = 12;
 
-        this.pinta_filas_columnas_(ctx_mobile, 20, 20, flecha_izq, size_flecha_px);
-        this.pinta_filas_columnas_(ctx_mobile, 120, 20, flecha_der, size_flecha_px);
-        this.pinta_filas_columnas_(ctx_mobile, window.innerHeight - 180, 20, flecha_arr, size_flecha_px);
-        this.pinta_filas_columnas_(ctx_mobile, window.innerHeight - 80, 20, accion_boton, size_flecha_px);
+        var alto_cosas = canvas_mobile.height - size_flecha_px*5 - 20;
+
+        this.pinta_filas_columnas_(ctx_mobile, 20, alto_cosas, flecha_izq, size_flecha_px);
+        this.pinta_filas_columnas_(ctx_mobile, 120, alto_cosas, flecha_der, size_flecha_px);
+        this.pinta_filas_columnas_(ctx_mobile, window.ancho - 180, alto_cosas, flecha_arr, size_flecha_px);
+        this.pinta_filas_columnas_(ctx_mobile, window.ancho - 80, alto_cosas, accion_boton, size_flecha_px);
 
         document.getElementById('controles_mobile').style.display = "block";
 
@@ -204,58 +190,6 @@ var Game = function() {
             air_console.message(AirConsole.SCREEN, "accion");
             this.className = "tecla_mobile pulsada";
         });
-        /*
-        document.getElementById('der_mobile').addEventListener('mousedown', function(e){
-            e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "right");
-            this.className = "tecla_mobile pulsada";
-        });
-
-        document.getElementById('izq_mobile').addEventListener('mousedown', function(e){ 
-            e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "left");
-            this.className = "tecla_mobile pulsada";
-        });
-
-        document.getElementById('arr_mobile').addEventListener('mousedown', function(e){ 
-            e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "jump");
-            this.className = "tecla_mobile pulsada";
-        });
-
-        document.getElementById('accion_mobile').addEventListener('mousedown', function(e){ 
-            e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "accion");
-            this.className = "tecla_mobile pulsada";
-        });
-
-        document.getElementById('lost').addEventListener('touchmove', function(e){ 
-            var target = document.elementFromPoint(e.touches[0].pageX, e.touches[0].pageY);
-
-            e.preventDefault();
-            if(target.id === "der_mobile"){
-                air_console.message(AirConsole.SCREEN, "right");
-                document.getElementById('der_mobile').className = "tecla_mobile pulsada";
-            }
-            else{
-                air_console.message(AirConsole.SCREEN, "right_false");
-                document.getElementById('der_mobile').className = "tecla_mobile";
-
-            }
-            if(target.id === "izq_mobile"){
-                air_console.message(AirConsole.SCREEN, "left");
-                document.getElementById('izq_mobile').className = "tecla_mobile pulsada";
-            }
-            else{
-                air_console.message(AirConsole.SCREEN, "left_false");
-                document.getElementById('izq_mobile').className = "tecla_mobile";
-                
-            }
-            
-        });
-
-        */
-
 
         document.getElementById('der_mobile').addEventListener('touchend', function(e){
             e.preventDefault();
@@ -280,32 +214,6 @@ var Game = function() {
             air_console.message(AirConsole.SCREEN, "accion_false");
             this.className = "tecla_mobile";
         });
-        /*
-
-        document.getElementById('der_mobile').addEventListener('mouseup', function(e){
-            e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "right_false");
-            this.className = "tecla_mobile";
-        });
-
-        document.getElementById('izq_mobile').addEventListener('mouseup', function(e){ 
-            e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "left_false");
-            this.className = "tecla_mobile";
-        });
-
-        document.getElementById('arr_mobile').addEventListener('mouseup', function(e){ 
-            e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "jump_false");
-            this.className = "tecla_mobile";
-        });
-
-        document.getElementById('accion_mobile').addEventListener('mouseup', function(e){ 
-            e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "accion_false");
-            this.className = "tecla_mobile";
-        });
-        */
     };
 
 
@@ -313,28 +221,7 @@ var Game = function() {
     var ctx_mobile;
     var self = this;
     this.controla_orientacion_ = function(){
-        console.log("innerHeight",window.innerHeight);
-        console.log("innerWidth",window.innerWidth);
-        if(this.is_touch_device_() || true){
-            self.pinta_cosas_mobile_();
-            
-            /*
-            if (window.innerHeight > window.innerWidth) {
-                self.pinta_cosas_mobile_gira_();
-            } else {
-                self.pinta_cosas_mobile_();
-            }
-            window.addEventListener('orientationchange', function (argument) {
-                window.setTimeout(function () {
-                    if (window.innerHeight > window.innerWidth) {
-                        self.pinta_cosas_mobile_gira_();
-                    } else {
-                        self.pinta_cosas_mobile_();
-                    }
-                },300);
-            });
-            */
-        }
+        self.pinta_cosas_mobile_();
     };
 
 
@@ -364,12 +251,20 @@ var Game = function() {
 (function() { // module pattern
 
     //Creo una instacia del juego
-
     //Control de orientación en mobile
-
     document.addEventListener("DOMContentLoaded", function() {
+        //AIR
+        window.alto = window.innerWidth;
+        window.ancho = window.innerHeight;
+        //NO AIR
+        //window.ancho = window.innerWidth;
+        //window.alto = window.innerHeight;
+
         var juego = new Game();
         juego.controla_orientacion_();
+        canvas_mobile   = document.getElementById('canvas_mobile');
+        ctx_mobile      = canvas_mobile.getContext('2d');
+        juego.muestra_logo_(ctx_mobile);
     });
 
 
