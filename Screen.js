@@ -1755,8 +1755,8 @@ var Game = function() {
     };
 
 
-    air_console.onMessage = function(data) {
-        console.log("entra alguien",data);
+    air_console.onConnect = function(device_id) {
+        console.log("entra alguien",device_id);
 
     };
 
