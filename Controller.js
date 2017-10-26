@@ -173,8 +173,8 @@ var Game = function() {
 
         this.pinta_filas_columnas_(ctx_mobile, 20, 20, flecha_izq, size_flecha_px);
         this.pinta_filas_columnas_(ctx_mobile, 120, 20, flecha_der, size_flecha_px);
-        this.pinta_filas_columnas_(ctx_mobile, alto_window - 180, 20, flecha_arr, size_flecha_px);
-        this.pinta_filas_columnas_(ctx_mobile, alto_window - 80, 20, accion_boton, size_flecha_px);
+        this.pinta_filas_columnas_(ctx_mobile, window.innerHeight - 180, 20, flecha_arr, size_flecha_px);
+        this.pinta_filas_columnas_(ctx_mobile, window.innerHeight - 80, 20, accion_boton, size_flecha_px);
 
         document.getElementById('controles_mobile').style.display = "block";
 
