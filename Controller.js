@@ -251,7 +251,6 @@ var Game = function() {
 
 
 
-        /*
         document.getElementById('der_mobile').addEventListener('touchend', function(e){
             e.preventDefault();
             air_console.message(AirConsole.SCREEN, "right_false");
@@ -275,6 +274,7 @@ var Game = function() {
             air_console.message(AirConsole.SCREEN, "accion_false");
             this.className = "tecla_mobile";
         });
+        /*
 
         document.getElementById('der_mobile').addEventListener('mouseup', function(e){
             e.preventDefault();
@@ -358,11 +358,11 @@ var Game = function() {
 (function() { // module pattern
 
     //Creo una instacia del juego
-    var juego = new Game();
 
     //Control de orientación en mobile
 
     document.addEventListener("DOMContentLoaded", function() {
+        var juego = new Game();
         juego.controla_orientacion_();
     });
 
