@@ -228,7 +228,6 @@ var Game = function() {
             air_console.message(AirConsole.SCREEN, "accion");
             this.className = "tecla_mobile pulsada";
         });
-        */
 
         document.getElementById('lost').addEventListener('touchmove', function(e){ 
             var target = document.elementFromPoint(e.touches[0].pageX, e.touches[0].pageY);
@@ -255,6 +254,7 @@ var Game = function() {
             
         });
 
+        */
 
 
         document.getElementById('der_mobile').addEventListener('touchend', function(e){
