@@ -1651,6 +1651,11 @@ var Game = function() {
             requestAnimationFrame(frame, canvas);
             return;
         }
+        
+
+        if (juego.playeres_["intro"] !== undefined) {
+            juego.playeres_.splice("intro", 1);
+        }
         now = juego.timestamp_();
         dt = dt + Math.min(1, (now - last) / 1000);
         while(dt > juego.step_) {
@@ -1791,28 +1796,28 @@ var Game = function() {
 
         switch(data) {
             case "left":   
-                juego.playeres_[data].left  = true;
+                juego.playeres_[from].left  = true;
                 return false;
             case "left_false":   
-                juego.playeres_[data].left  = false;
+                juego.playeres_[from].left  = false;
                 return false;
             case "right":  
-                juego.playeres_[data].right  = true; 
+                juego.playeres_[from].right  = true; 
                 return false;
             case "right_false":  
-                juego.playeres_[data].right  = false; 
+                juego.playeres_[from].right  = false; 
                 return false;
             case "jump":  
-                juego.playeres_[data].jump  = true; 
+                juego.playeres_[from].jump  = true; 
                 return false;
             case "jump_false":  
-                juego.playeres_[data].jump  = false; 
+                juego.playeres_[from].jump  = false; 
                 return false;
             case "accion":  
-                juego.playeres_[data].accion  = true; 
+                juego.playeres_[from].accion  = true; 
                 return false;
             case "accion_false":  
-                juego.playeres_[data].accion  = false; 
+                juego.playeres_[from].accion  = false; 
                 return false;
         }
 
@@ -1820,10 +1825,6 @@ var Game = function() {
 
     air_console.onConnect = function(device_id) {
         console.log("entra alguien",device_id);
-
-        if (juego.playeres_["intro"] !== undefined) {
-            juego.playeres_.splice("intro", 1);
-        }
 
         juego.playeres_[device_id] = new Player(juego, 60 * Math.random(), juego.alto_total_ - 100, 1000, 30000, juego.salud_inicial_);
 
