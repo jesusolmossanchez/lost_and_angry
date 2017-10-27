@@ -582,6 +582,7 @@ var Game = function() {
 
         if(this.cambia_pantalla_){
             this.tiempo_portal_ = this.timestamp_() + 3000;
+            this.cambia_pantalla_ = false;
         }
 
         //TODO: cambio de pantalla
