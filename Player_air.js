@@ -50,7 +50,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
 
     this.is_intro = false;
 
-
+    this.muerto_ = false;
  
 
     this.update_ = function(dt) {
@@ -60,7 +60,12 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         if(this.salud_ < 0 && !this.pre_game_over_){
             this.salud_ = 0;
             this.jump = true;
-            juego.game_over_(false);
+            this.muerto_ = true;
+            //juego.game_over_(false);
+        }
+
+        if(this.muerto_){
+            return;
         }
 
         if(juego.wait_start_ > juego.timestamp_()){
@@ -400,7 +405,19 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
         }
         else{
             opacidad_jugador = 1;
-            if(this.jumping){
+
+
+            if(this.muerto_){
+                this.que_pie_ = 1;
+                
+                if(this.last_left_){
+                    this.angulo_ = 90;
+                }
+                else{
+                    this.angulo_ = -90;
+                }
+            }
+            else if(this.jumping){
                 this.que_pie_ = 1;
                 this.angulo_ = 0;
             }
