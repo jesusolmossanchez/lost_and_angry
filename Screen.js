@@ -1651,10 +1651,10 @@ var Game = function() {
             requestAnimationFrame(frame, canvas);
             return;
         }
-        
+
 
         if (juego.playeres_["intro"] !== undefined) {
-            juego.playeres_.splice("intro", 1);
+            delete juego.playeres_["intro"];
         }
         now = juego.timestamp_();
         dt = dt + Math.min(1, (now - last) / 1000);
