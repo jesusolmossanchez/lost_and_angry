@@ -110,7 +110,13 @@ var Game = function() {
         var x_logo = window.ancho/2 - (size_logo_px * logo[0].length)/2;
         var y_logo = 50;
 
-        this.pinta_filas_columnas_(ctx, x_logo, y_logo, logo, size_logo_px, "#ffffff");
+
+        var color_logo = "#ffffff";
+        if(window.color){
+            color_logo = window.color;
+        }
+
+        this.pinta_filas_columnas_(ctx, x_logo, y_logo, logo, size_logo_px, color_logo);
         
         for (var i = -2; i < 2; i++) {
             var new_x_portal = x_logo + (0.5 - Math.random())*i*15;
@@ -268,13 +274,6 @@ var Game = function() {
         //NO AIR
         //window.ancho = window.innerWidth;
         //window.alto = window.innerHeight;
-
-        if(window.color){
-            elements = document.getElementsByClassName("tecla_mobile");
-            for (var i = 0; i < elements.length; i++) {
-                elements[i].style.backgroundColor = window.color;
-            }
-        }
 
         var juego = new Game();
         juego.controla_orientacion_();
