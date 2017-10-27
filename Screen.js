@@ -1869,6 +1869,10 @@ var Game = function() {
             nuevo_jugador.color = "#"+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
         }
 
+        var data_send = {};
+        data_send.mensaje = "nuevo_color";
+        data_send.color = nuevo_jugador.color;
+        air_console.message(device_id, data_send);
 
         window.jugadores.push(nuevo_jugador);
 
