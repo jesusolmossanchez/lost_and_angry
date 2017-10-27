@@ -48,6 +48,8 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     this.dentro_portal_ = false;
     this.tiempo_medical_ = juego.timestamp_();
 
+    this.is_intro = false;
+
 
  
 
@@ -381,7 +383,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             this.angulo_ = 1000 * (opacidad_jugador - 1);
             //console.log(this.angulo_);
         }
-        else if(this.dentro_portal_ && juego.cambia_pantalla_completo){
+        else if(this.dentro_portal_ && (juego.cambia_pantalla_completo || this.is_intro)){
             if(!angulo_){
 
                 this.angulo_ *= (negativo*1.1);
