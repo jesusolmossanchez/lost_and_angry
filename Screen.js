@@ -566,10 +566,19 @@ var Game = function() {
     this.update_ = function(dt) {
 
         var salud = 9999999;
+        var pasa_a_game_over = true;
+
         for (var jugador in this.playeres_) {
             if(this.playeres_[jugador].salud_ < salud){
                 this.salud_actual_[jugador] = this.playeres_[jugador].salud_;
             }
+            if(!this.playeres_[jugador].muerto_){
+                pasa_a_game_over = false;
+            }
+        }
+
+        if(pasa_a_game_over){
+            juego.game_over_(true);
         }
 
         this.cambia_pantalla_ = true;
