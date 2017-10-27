@@ -2,7 +2,7 @@ var air_console = new AirConsole({"orientation": AirConsole.ORIENTATION_LANDSCAP
 
  // Listen for messages from other devices
 air_console.onMessage = function(from, data) {
-
+    console.log("recibe data",data);
     if(data.mensaje === "nuevo_color"){
         elements = document.getElementsByClassName("tecla_mobile");
         for (var i = 0; i < elements.length; i++) {
