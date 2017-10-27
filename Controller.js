@@ -1,5 +1,17 @@
 var air_console = new AirConsole({"orientation": AirConsole.ORIENTATION_LANDSCAPE});
 
+ // Listen for messages from other devices
+air_console.onMessage = function(from, data) {
+
+    if(data.mensaje === "nuevo_color"){
+        elements = document.getElementsByClassName("tecla_mobile");
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.backgroundColor = data.mensaje;
+        }
+    }
+
+};
+
 /**************************************************
 ** GAME CLASS
 **************************************************/
