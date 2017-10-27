@@ -569,8 +569,19 @@ var Game = function() {
         }
         this.salud_actual_ = salud;
 
+        this.cambia_pantalla_ = true;
+        for (var jugador in this.playeres_) {
+            if (!this.playeres_[jugador].dentro_portal_){
+                this.cambia_pantalla_ = false;
+            }
+        }
+
+        if(this.cambia_pantalla_){
+            this.tiempo_portal_ = this.timestamp_() + 3000;
+        }
+
         //TODO: cambio de pantalla
-        if(this.cambia_pantalla_ && this.player_.tiempo_portal_ < this.timestamp_()){
+        if(this.tiempo_portal_ < this.timestamp_()){
             this.cambia_pantalla_ = false;
             this.ctx.globalAlpha = 1;
             this.cuantas_pantallas_++;
@@ -1576,7 +1587,7 @@ var Game = function() {
             this.fin_intro_ = this.timestamp_() + 3000;
         }
         if(this.playeres_["intro"].x >= this.portal_.x + 10){
-            this.playeres_["intro"].tiempo_portal_ = this.timestamp_() + 3000;
+            this.playeres_["intro"].dentro_portal_ = this.timestamp_() + 3000;
         }
 
         this.render_portal_(ctx);
