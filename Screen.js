@@ -1820,11 +1820,9 @@ var Game = function() {
 
     air_console.onConnect = function(device_id) {
         console.log("entra alguien",device_id);
-        
-        var index = juego.playeres_.indexOf("intro");
 
-        if (index > -1) {
-            juego.playeres_.splice(index, 1);
+        if (juego.playeres_["intro"] !== undefined) {
+            juego.playeres_.splice("intro", 1);
         }
 
         juego.playeres_[device_id] = new Player(juego, 60 * Math.random(), juego.alto_total_ - 100, 1000, 30000, juego.salud_inicial_);
