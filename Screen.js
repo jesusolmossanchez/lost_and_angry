@@ -195,6 +195,8 @@ var Game = function() {
     this.playeralto_ = 48;
     this.playerancho_ = 29;
 
+    this.playeres_ = [];
+
 
 
 
@@ -281,12 +283,20 @@ var Game = function() {
             for (var i_x = 0; i_x < row.length; i_x++) {
                 if (row[i_x]) {
                     if(controla_distancia){
-                        var distancia_centro = 0;
-                        var a = 0;
-                        var b = 0;
-                        a = Math.abs(currX + i_x * size - this.player_.centro_x_);
-                        b = Math.abs(currY - this.player_.centro_y_);
-                        distancia_centro = Math.sqrt( a*a + b*b );
+                        var distancia_centro = 99999999;
+
+                        for (var jugador in this.playeres_) {
+                            
+                            var a = 0;
+                            var b = 0;
+                            a = Math.abs(currX + i_x * size - this.playeres_[jugador].centro_x_);
+                            b = Math.abs(currY - this.playeres_[jugador].centro_y_);
+                            var new_distancia_centro = Math.sqrt( a*a + b*b );
+                            if(new_distancia_centro < distancia_centro){
+                                distancia_centro = new_distancia_centro;
+                            }
+                        }
+
 
 
 
@@ -343,7 +353,7 @@ var Game = function() {
         }
         this.wait_start_ = this.timestamp_() + nuevo_wait;
 
-        this.player_ = new Player(this, 40, this.alto_total_ - 100, 1000, 30000, this.salud_actual_);
+        //this.playeres_["player1"] = new Player(this, 40, this.alto_total_ - 100, 1000, 30000, this.salud_actual_);
 
         if(this.moustro_final_){
 
@@ -551,9 +561,15 @@ var Game = function() {
     //Actualizo entidades del juego
     this.update_ = function(dt) {
 
+        var salud = 9999999;
+        for (var jugador in this.playeres_) {
+            if(this.playeres_[jugador].salud_ < salud){
+                salud = this.playeres_[jugador].salud_;
+            }
+        }
+        this.salud_actual_ = salud;
 
-        this.salud_actual_ = this.player_.salud_;
-
+        //TODO: cambio de pantalla
         if(this.cambia_pantalla_ && this.player_.tiempo_portal_ < this.timestamp_()){
             this.cambia_pantalla_ = false;
             this.ctx.globalAlpha = 1;
@@ -565,11 +581,15 @@ var Game = function() {
                 final = true;
             }
 
-
+            //TODO: ver si llamo al setup o que hago
             this.setup_(final);
         }
 
-        this.player_.update_(dt);
+
+        for (var jugador in this.playeres_) {
+            this.playeres_[jugador].update_(dt);
+        }
+        
 
 
 
@@ -686,57 +706,73 @@ var Game = function() {
     };
 
     this.render_map_ = function(ctx, dt, pre) {
-        //Aqui para renderizar el mapa
-        var x, y, cell;
 
-        var empieza_y = 0;
-        if((this.player_.centro_y_ - this.radio_vision_) > 0){
-            empieza_y = Math.floor((this.player_.centro_y_ - this.radio_vision_) / this.MAP_.size_bloques_);
-        }
-        var fin_y = Math.floor((this.alto_total_) / this.MAP_.size_bloques_);
-        if((this.player_.centro_y_ + this.radio_vision_) < this.alto_total_){
-            fin_y = Math.floor((this.player_.centro_y_ + this.radio_vision_) / this.MAP_.size_bloques_);
-        }
 
-        var empieza_x = 0;
-        if((this.player_.centro_x_ - this.radio_vision_) > 0){
-            empieza_x = Math.floor((this.player_.centro_x_ - this.radio_vision_) / this.MAP_.size_bloques_);
-        }
-        var fin_x = Math.floor((this.ancho_total_) / this.MAP_.size_bloques_);
-        if((this.player_.centro_x_ + this.radio_vision_) < this.ancho_total_){
-            fin_x = Math.floor((this.player_.centro_x_ + this.radio_vision_) / this.MAP_.size_bloques_);
-        }
 
-        var distancia_centro = 0;
-        var a = 0;
-        var b = 0;
-        for(y = empieza_y ; y <= fin_y ; y++) {
-            for(x = empieza_x ; x <= fin_x ; x++) {
-                cell = this.tcell_(x, y);
-                if (cell) {
-                    a = Math.abs(x - Math.floor(this.player_.centro_x_/this.MAP_.size_bloques_));
-                    b = Math.abs(y - Math.floor(this.player_.centro_y_/this.MAP_.size_bloques_));
-                    distancia_centro = Math.sqrt( a*a + b*b );
-                    opacidad = 1/distancia_centro*2.5;
-                    if(!pre){
-                        opacidad = opacidad/2;
+        for (var jugador in this.playeres_) {
+            //Aqui para renderizar el mapa
+            var x, y, cell;
+
+            var empieza_y = 0;
+            if((this.playeres_[jugador].centro_y_ - this.radio_vision_) > 0){
+                empieza_y = Math.floor((this.playeres_[jugador].centro_y_ - this.radio_vision_) / this.MAP_.size_bloques_);
+            }
+            var fin_y = Math.floor((this.alto_total_) / this.MAP_.size_bloques_);
+            if((this.playeres_[jugador].centro_y_ + this.radio_vision_) < this.alto_total_){
+                fin_y = Math.floor((this.playeres_[jugador].centro_y_ + this.radio_vision_) / this.MAP_.size_bloques_);
+            }
+
+            var empieza_x = 0;
+            if((this.playeres_[jugador].centro_x_ - this.radio_vision_) > 0){
+                empieza_x = Math.floor((this.playeres_[jugador].centro_x_ - this.radio_vision_) / this.MAP_.size_bloques_);
+            }
+            var fin_x = Math.floor((this.ancho_total_) / this.MAP_.size_bloques_);
+            if((this.playeres_[jugador].centro_x_ + this.radio_vision_) < this.ancho_total_){
+                fin_x = Math.floor((this.playeres_[jugador].centro_x_ + this.radio_vision_) / this.MAP_.size_bloques_);
+            }
+
+            var distancia_centro = 0;
+            var a = 0;
+            var b = 0;
+            for(y = empieza_y ; y <= fin_y ; y++) {
+                for(x = empieza_x ; x <= fin_x ; x++) {
+                    cell = this.tcell_(x, y);
+                    if (cell) {
+                        a = Math.abs(x - Math.floor(this.playeres_[jugador].centro_x_/this.MAP_.size_bloques_));
+                        b = Math.abs(y - Math.floor(this.playeres_[jugador].centro_y_/this.MAP_.size_bloques_));
+                        distancia_centro = Math.sqrt( a*a + b*b );
+                        opacidad = 1/distancia_centro*2.5;
+                        if(!pre){
+                            opacidad = opacidad/2;
+                        }
+                        ctx.fillStyle = "rgba(250,250,250,"+opacidad+")";
+                        ctx.fillRect(x * this.MAP_.size_bloques_, y * this.MAP_.size_bloques_, this.MAP_.size_bloques_, this.MAP_.size_bloques_);
                     }
-                    ctx.fillStyle = "rgba(250,250,250,"+opacidad+")";
-                    ctx.fillRect(x * this.MAP_.size_bloques_, y * this.MAP_.size_bloques_, this.MAP_.size_bloques_, this.MAP_.size_bloques_);
                 }
             }
         }
+        
 
 
     }
 
     this.distancia_player_ = function(x,y){
-        var distancia_centro = 0;
-        var a = 0;
-        var b = 0;
-        a = Math.abs(x - this.player_.centro_x_);
-        b = Math.abs(y - this.player_.centro_y_);
-        distancia_centro = Math.sqrt( a*a + b*b );
+
+
+        var distancia_centro = 99999999;
+
+        for (var jugador in this.playeres_) {
+            
+            var a = 0;
+            var b = 0;
+            a = Math.abs(x - this.playeres_[jugador].centro_x_);
+            b = Math.abs(y - this.playeres_[jugador].centro_y_);
+            var new_distancia_centro = Math.sqrt( a*a + b*b );
+            if(new_distancia_centro < distancia_centro){
+                distancia_centro = new_distancia_centro;
+            }
+        }
+
         return distancia_centro;
     }
 
@@ -792,8 +828,15 @@ var Game = function() {
         var y_kit = this.medical_kit_.y + this.medical_kit_.alto_ / 2;
         distancia_centro = this.distancia_player_(x_kit, y_kit);
 
+        var tiempo_medical = this.timestamp_() - 10;
+        for (var jugador in this.playeres_) {
+            if(this.playeres_[jugador].tiempo_medical_ < tiempo_medical){
+                tiempo_medical = this.playeres_[jugador].tiempo_medical_;
+            }
+        }
 
-        var opacity_medical = this.player_.tiempo_medical_ - this.timestamp_();
+
+        var opacity_medical = tiempo_medical- this.timestamp_();
         if(opacity_medical < 0){
             opacity_medical = 1;
         }
@@ -855,10 +898,6 @@ var Game = function() {
 
             new_diff = divisiones_pantalla - new_diff;
 
-
-
-
-
             var divisiones_alto_ola = 20;
             this.alto_ola_diff_ = new_diff%divisiones_alto_ola;
 
@@ -914,16 +953,20 @@ var Game = function() {
             x_empieza_terremoto = this.final_boss_.x - primera_distancia + rand2;
             x_final_terremoto = this.final_boss_.x - distancia + rand3;
 
-            if(this.player_.centro_x_ < x_empieza_terremoto && this.player_.centro_x_ > x_final_terremoto){
-                if(this.player_.centro_y_ > (this.alto_total_ - 100)){
-                    this.player_.salud_ = this.player_.salud_ - 5;
-                    this.player_.suena_herida_();
-                    for (var i = 0; i < 10; i++) {
-                        this.explosions_.push(
-                            new Explosion(this.player_.centro_x_, this.player_.centro_y_, true)
-                        );
+
+            for (var jugador in this.playeres_) {
+
+                if(this.playeres_[jugador].centro_x_ < x_empieza_terremoto && this.playeres_[jugador].centro_x_ > x_final_terremoto){
+                    if(this.playeres_[jugador].centro_y_ > (this.alto_total_ - 100)){
+                        this.playeres_[jugador].salud_ = this.playeres_[jugador].salud_ - 5;
+                        this.playeres_[jugador].suena_herida_();
+                        for (var i = 0; i < 10; i++) {
+                            this.explosions_.push(
+                                new Explosion(this.playeres_[jugador].centro_x_, this.playeres_[jugador].centro_y_, true)
+                            );
+                        }
+                        this.playeres_[jugador].tiempo_atacado_ = this.timestamp_() + 2200;
                     }
-                    this.player_.tiempo_atacado_ = this.timestamp_() + 2200;
                 }
             }
 
@@ -935,7 +978,10 @@ var Game = function() {
 
     //Llama a la funcion del objeto de jugador para pintarlo... lo pongo así, porque igual hay que pintar el jugador diferente según algo del juego
     this.render_player_ = function(ctx, dt) {
-        this.player_.pinta_player_(dt, ctx, this.counter);
+
+        for (var jugador in this.playeres_) {
+            this.playeres_[jugador].pinta_player_(dt, ctx, this.counter);
+        }
     };
 
     //Llama a la funcion del objeto de jugador para pintarlo... lo pongo así, porque igual hay que pintar el jugador diferente según algo del juego
@@ -982,12 +1028,19 @@ var Game = function() {
             for (var ii = 0; ii < particles.length; ii++) {
                 var particle = particles[ii];
 
-                var distancia_centro = 0;
-                var a = 0;
-                var b = 0;
-                a = Math.abs(particle.x - this.player_.centro_x_);
-                b = Math.abs(particle.y - this.player_.centro_y_);
-                distancia_centro = Math.sqrt( a*a + b*b );
+                var distancia_centro = 999999999999;
+   
+                for (var jugador in this.playeres_) {
+                    
+                    var a = 0;
+                    var b = 0;
+                    a = Math.abs(particle.x - this.playeres_[jugador].centro_x_);
+                    b = Math.abs(particle.y - this.playeres_[jugador].centro_y_);
+                    var new_distancia_centro = Math.sqrt( a*a + b*b );
+                    if(new_distancia_centro < distancia_centro){
+                        distancia_centro = new_distancia_centro;
+                    }
+                }
 
                 if(this.is_game_over_ && particle.final){
                     particlesAfterRemoval.splice(ii, 1);
@@ -1064,13 +1117,19 @@ var Game = function() {
             var disparo = this.bullets_[i];
             var size_bala = disparo.size * 8;
 
+            var distancia_centro = 999999999999;
 
-            var distancia_centro = 0;
-            var a = 0;
-            var b = 0;
-            a = Math.abs(disparo.x - this.player_.centro_x_);
-            b = Math.abs(disparo.y - this.player_.centro_y_);
-            distancia_centro = Math.sqrt( a*a + b*b );
+            for (var jugador in this.playeres_) {
+                
+                var a = 0;
+                var b = 0;
+                a = Math.abs(disparo.x - this.playeres_[jugador].centro_x_);
+                b = Math.abs(disparo.y - this.playeres_[jugador].centro_y_);
+                var new_distancia_centro = Math.sqrt( a*a + b*b );
+                if(new_distancia_centro < distancia_centro){
+                    distancia_centro = new_distancia_centro;
+                }
+            }
 
 
             if(distancia_centro < this.radio_vision_ * 1.2){
@@ -1294,21 +1353,27 @@ var Game = function() {
                 var rand_exp2 = (Math.random() - 0.5) * 10;
                 var rand_exp3 = (Math.random() - 0.5) * 10;
 
-                
-
                 var radio_explosion_muerte = Math.random() * 80;
-                if(this.dentro_circulo_(this.player_.centro_x_, this.player_.centro_y_, disparo_boss.x, disparo_boss.y, radio_explosion_muerte) &&
-                    !disparo_boss.muerto_){
-                    this.player_.salud_ -= 5;
-                    this.player_.suena_herida_();
 
-                    for (var i = 0; i < 10; i++) {
-                        this.explosions_.push(
-                            new Explosion(this.player_.centro_x_, this.player_.centro_y_, true)
-                        );
+
+
+                for (var jugador in this.playeres_) {
+                    
+                    if(this.dentro_circulo_(this.playeres_[jugador].centro_x_, this.playeres_[jugador].centro_y_, disparo_boss.x, disparo_boss.y, radio_explosion_muerte) &&
+                        !disparo_boss.muerto_){
+                        this.playeres_[jugador].salud_ -= 5;
+                        this.playeres_[jugador].suena_herida_();
+
+                        for (var i = 0; i < 10; i++) {
+                            this.explosions_.push(
+                                new Explosion(this.playeres_[jugador].centro_x_, this.playeres_[jugador].centro_y_, true)
+                            );
+                        }
+                        this.playeres_[jugador].tiempo_atacado_ = this.timestamp_() + 2000; 
                     }
-                    this.player_.tiempo_atacado_ = this.timestamp_() + 2000; 
                 }
+
+
 
          
                 var blue = Math.floor(Math.random() * 255);
@@ -1333,24 +1398,27 @@ var Game = function() {
             
 
             //TODO: optimizar esto
-            if((this.cell_(disparo_boss.x,disparo_boss.y) || 
-                    this.cell_(disparo_boss.x - 5 ,disparo_boss.y) || 
-                    this.cell_(disparo_boss.x - 10 ,disparo_boss.y) || 
-                    this.cell_(disparo_boss.x, disparo_boss.y - 5) || 
-                    this.cell_(disparo_boss.x, disparo_boss.y - 10) ||  
-                    this.cell_(disparo_boss.x, disparo_boss.y + 5) || 
-                    this.cell_(disparo_boss.x, disparo_boss.y + 10) || 
-                    this.cell_(disparo_boss.x, disparo_boss.y + 20) ||
-                    this.cell_(disparo_boss.x, disparo_boss.y + 30) || 
-                    this.cell_(disparo_boss.x, disparo_boss.y + 40) || 
-                    this.cell_(disparo_boss.x, disparo_boss.y + 50) ||
-                    this.overlap_(this.player_.x, this.player_.y, this.playerancho_, this.playeralto_, disparo_boss.x - size_bala/2, disparo_boss.y - size_bala/2, size_bala, size_bala)
-                    ) && !disparo_boss.pre_muerto_){
+
+            for (var jugador in this.playeres_) {
+                if((this.cell_(disparo_boss.x,disparo_boss.y) || 
+                        this.cell_(disparo_boss.x - 5 ,disparo_boss.y) || 
+                        this.cell_(disparo_boss.x - 10 ,disparo_boss.y) || 
+                        this.cell_(disparo_boss.x, disparo_boss.y - 5) || 
+                        this.cell_(disparo_boss.x, disparo_boss.y - 10) ||  
+                        this.cell_(disparo_boss.x, disparo_boss.y + 5) || 
+                        this.cell_(disparo_boss.x, disparo_boss.y + 10) || 
+                        this.cell_(disparo_boss.x, disparo_boss.y + 20) ||
+                        this.cell_(disparo_boss.x, disparo_boss.y + 30) || 
+                        this.cell_(disparo_boss.x, disparo_boss.y + 40) || 
+                        this.cell_(disparo_boss.x, disparo_boss.y + 50) ||
+                        this.overlap_(this.playeres_[jugador].x, this.playeres_[jugador].y, this.playerancho_, this.playeralto_, disparo_boss.x - size_bala/2, disparo_boss.y - size_bala/2, size_bala, size_bala)
+                        ) && !disparo_boss.pre_muerto_){
 
 
-                disparo_boss.muriendo_ = this.timestamp_() + 500;
-                disparo_boss.pre_muerto_ = true;
+                    disparo_boss.muriendo_ = this.timestamp_() + 500;
+                    disparo_boss.pre_muerto_ = true;
 
+                }
             }
             
 
@@ -1494,9 +1562,7 @@ var Game = function() {
             this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + this.counter*2;
         }
 
-
-
-        this.player_ = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 1000, 30000, this.salud_actual_);
+        this.playeres_["intro"] = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 1000, 30000, this.salud_actual_);
 
         this.portal_ = {};
         this.portal_.ancho_ = this.playeralto_;
@@ -1504,20 +1570,18 @@ var Game = function() {
         this.portal_.x = (this.ancho_total_ / 2) + 150;
         this.portal_.y = (this.alto_total_ / 2) + 100;
 
-        this.player_.right = true;
-        if(this.player_.x >= this.portal_.x + 10 && !this.cambia_pantalla_intro_){
+        this.playeres_["intro"].right = true;
+        if(this.playeres_["intro"].x >= this.portal_.x + 10 && !this.cambia_pantalla_intro_){
             this.cambia_pantalla_intro_ = true;
             this.fin_intro_ = this.timestamp_() + 3000;
         }
-        if(this.player_.x >= this.portal_.x + 10){
-            this.player_.tiempo_portal_ = this.timestamp_() + 3000;
+        if(this.playeres_["intro"].x >= this.portal_.x + 10){
+            this.playeres_["intro"].tiempo_portal_ = this.timestamp_() + 3000;
         }
 
         this.render_portal_(ctx);
-        this.player_.pinta_home_();
-        this.angulo__intro_ = this.player_.pinta_player_(dt, ctx, this.counter, this.angulo__intro_);
-
-
+        this.playeres_["intro"].pinta_home_();
+        this.angulo__intro_ = this.playeres_["intro"].pinta_player_(dt, ctx, this.counter, this.angulo__intro_);
 
     };
 
@@ -1727,38 +1791,46 @@ var Game = function() {
 
         switch(data) {
             case "left":   
-                juego.player_.left  = true;
+                juego.playeres_[data].left  = true;
                 return false;
             case "left_false":   
-                juego.player_.left  = false;
+                juego.playeres_[data].left  = false;
                 return false;
             case "right":  
-                juego.player_.right  = true; 
+                juego.playeres_[data].right  = true; 
                 return false;
             case "right_false":  
-                juego.player_.right  = false; 
+                juego.playeres_[data].right  = false; 
                 return false;
             case "jump":  
-                juego.player_.jump  = true; 
+                juego.playeres_[data].jump  = true; 
                 return false;
             case "jump_false":  
-                juego.player_.jump  = false; 
+                juego.playeres_[data].jump  = false; 
                 return false;
             case "accion":  
-                juego.player_.accion  = true; 
+                juego.playeres_[data].accion  = true; 
                 return false;
             case "accion_false":  
-                juego.player_.accion  = false; 
+                juego.playeres_[data].accion  = false; 
                 return false;
         }
 
     };
 
-
     air_console.onConnect = function(device_id) {
         console.log("entra alguien",device_id);
+        
+        var index = juego.playeres_.indexOf("intro");
+
+        if (index > -1) {
+            juego.playeres_.splice(index, 1);
+        }
+
+        this.playeres_[device_id] = new Player(this, 60 * Math.random(), this.alto_total_ - 100, 1000, 30000, this.salud_actual_);
 
     };
+
 
 
 })();
