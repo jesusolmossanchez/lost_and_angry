@@ -381,7 +381,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
             this.angulo_ = 1000 * (opacidad_jugador - 1);
             //console.log(this.angulo_);
         }
-        else if(this.dentro_portal_){
+        else if(this.dentro_portal_ && juego.cambia_pantalla_completo){
             if(!angulo_){
 
                 this.angulo_ *= (negativo*1.1);
