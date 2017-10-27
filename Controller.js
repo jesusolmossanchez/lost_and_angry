@@ -2,12 +2,9 @@ var air_console = new AirConsole({"orientation": AirConsole.ORIENTATION_LANDSCAP
 
  // Listen for messages from other devices
 air_console.onMessage = function(from, data) {
-    console.log("recibe data",data);
+
     if(data.mensaje === "nuevo_color"){
-        elements = document.getElementsByClassName("tecla_mobile");
-        for (var i = 0; i < elements.length; i++) {
-            elements[i].style.backgroundColor = data.mensaje;
-        }
+        window.color = data.color;
     }
 
 };
@@ -272,11 +269,21 @@ var Game = function() {
         //window.ancho = window.innerWidth;
         //window.alto = window.innerHeight;
 
+        if(window.color){
+            elements = document.getElementsByClassName("tecla_mobile");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].style.backgroundColor = window.color;
+            }
+        }
+
         var juego = new Game();
         juego.controla_orientacion_();
         canvas_mobile   = document.getElementById('canvas_mobile');
         ctx_mobile      = canvas_mobile.getContext('2d');
         juego.muestra_logo_(ctx_mobile);
+
+
+
     });
 
 
