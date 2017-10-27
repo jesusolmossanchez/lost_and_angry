@@ -354,6 +354,10 @@ var Game = function() {
         this.wait_start_ = this.timestamp_() + nuevo_wait;
 
         //this.playeres_["player1"] = new Player(this, 40, this.alto_total_ - 100, 1000, 30000, this.salud_actual_);
+        for (var i = 0; i < window.jugadores.length; i++) {
+            //TODO: controlar salud inicial
+            this.playeres_[window.jugadores[i].id] = new Player(this, 60 * Math.random(), this.alto_total_ - 100, 1000, 30000, this.salud_inicial_);
+        }
 
         if(this.moustro_final_){
 
@@ -1834,9 +1838,15 @@ var Game = function() {
 
     };
 
+    window.jugadores = [];
     air_console.onConnect = function(device_id) {
         console.log("entra alguien",device_id);
 
+        var nuevo_jugador = {};
+        nuevo_jugador.id = device_id;
+        nuevo_jugador.color = "color1";
+
+        window.jugadores.push(nuevo_jugador);
         juego.playeres_[device_id] = new Player(juego, 60 * Math.random(), juego.alto_total_ - 100, 1000, 30000, juego.salud_inicial_);
 
     };
