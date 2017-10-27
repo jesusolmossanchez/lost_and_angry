@@ -179,6 +179,7 @@ var Game = function() {
 
     this.tiempo_muerte_ = this.timestamp_();
     this.tiempo_shacke_ = this.timestamp_();
+    this.tiempo_portal_ = this.timestamp_();
 
 
     this.cambia_pantalla_ = false;
@@ -580,15 +581,15 @@ var Game = function() {
             }
         }
 
-        if(this.cambia_pantalla_){
+        if(this.cambia_pantalla_ && !this.cambia_pantalla_completo){
             this.tiempo_portal_ = this.timestamp_() + 3000;
-            this.cambia_pantalla_ = false;
+            this.cambia_pantalla_completo = true;
         }
 
         //TODO: cambio de pantalla
         console.log(this.tiempo_portal_ - this.timestamp_());
 
-        if(this.tiempo_portal_ < this.timestamp_()){
+        if(this.tiempo_portal_ < this.timestamp_() && this.cambia_pantalla_completo){
             this.cambia_pantalla_ = false;
             this.ctx.globalAlpha = 1;
             this.cuantas_pantallas_++;
@@ -601,6 +602,7 @@ var Game = function() {
 
             //TODO: ver si llamo al setup o que hago
             this.setup_(final);
+            this.cambia_pantalla_completo = false;
         }
 
 
