@@ -588,7 +588,6 @@ var Game = function() {
         }
 
         //TODO: cambio de pantalla
-        console.log((this.tiempo_portal_ < this.timestamp_()) && this.cambia_pantalla_completo);
 
         if((this.tiempo_portal_ < this.timestamp_()) && this.cambia_pantalla_completo){
             this.cambia_pantalla_ = false;
@@ -1584,6 +1583,7 @@ var Game = function() {
         }
 
         this.playeres_["intro"] = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 1000, 30000, this.salud_actual_);
+        this.playeres_["intro"].is_intro = true;
 
         this.portal_ = {};
         this.portal_.ancho_ = this.playeralto_;
@@ -1597,7 +1597,7 @@ var Game = function() {
             this.fin_intro_ = this.timestamp_() + 3000;
         }
         if(this.playeres_["intro"].x >= this.portal_.x + 10){
-            this.playeres_["intro"].dentro_portal_ = this.timestamp_() + 3000;
+            this.playeres_["intro"].dentro_portal_ = true;
         }
 
         this.render_portal_(ctx);
