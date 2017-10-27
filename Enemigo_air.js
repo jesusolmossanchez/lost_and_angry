@@ -483,7 +483,7 @@ var Enemigo = function(juego, x, y, tipo, r, g, b) {
             var x_player = juego.playeres_[jugador].x + (juego.playeres_[jugador].dx * dt);
             var y_player = juego.playeres_[jugador].y + (juego.playeres_[jugador].dy * dt);
 
-            if(this.colisiona_player_() && !this.muerto){
+            if(this.colisiona_player_(juego.playeres_[jugador]) && !this.muerto){
                 juego.playeres_[jugador].tiempo_atacado_ = juego.timestamp_() + 2000;
                 var x_explosion = this.x + this.ancho_/2;
                 var y_explosion = this.y + this.alto_/2;
