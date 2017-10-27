@@ -1827,7 +1827,7 @@ var Game = function() {
             juego.playeres_.splice(index, 1);
         }
 
-        this.playeres_[device_id] = new Player(this, 60 * Math.random(), this.alto_total_ - 100, 1000, 30000, this.salud_actual_);
+        juego.playeres_[device_id] = new Player(juego, 60 * Math.random(), juego.alto_total_ - 100, 1000, 30000, juego.salud_inicial_);
 
     };
 
