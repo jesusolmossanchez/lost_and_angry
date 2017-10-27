@@ -587,7 +587,7 @@ var Game = function() {
         }
 
         //TODO: cambio de pantalla
-        console.log(this.tiempo_portal_ - this.timestamp_());
+        console.log(this.tiempo_portal_ < this.timestamp_() && this.cambia_pantalla_completo);
 
         if(this.tiempo_portal_ < this.timestamp_() && this.cambia_pantalla_completo){
             this.cambia_pantalla_ = false;
