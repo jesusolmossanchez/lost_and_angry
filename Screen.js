@@ -187,7 +187,7 @@ var Game = function() {
     this.cuantas_pantallas_ = 0;
 
     this.salud_inicial_ = 250;
-    this.salud_actual_ = this.salud_inicial_;
+    this.salud_actual_ = [];
 
     this.tiempo_slow_motion_ = this.timestamp_();
 
@@ -355,10 +355,8 @@ var Game = function() {
         }
         this.wait_start_ = this.timestamp_() + nuevo_wait;
 
-        //this.playeres_["player1"] = new Player(this, 40, this.alto_total_ - 100, 1000, 30000, this.salud_actual_);
         for (var i = 0; i < window.jugadores.length; i++) {
-            //TODO: controlar salud inicial
-            this.playeres_[window.jugadores[i].id] = new Player(this, 60 * Math.random(), this.alto_total_ - 100, 1000, 30000, this.salud_inicial_);
+            this.playeres_[window.jugadores[i].id] = new Player(this, 60 * Math.random(), this.alto_total_ - 100, 1000, 30000, this.salud_actual_[window.jugadores[i].id]);
         }
 
         if(this.moustro_final_){
@@ -570,10 +568,9 @@ var Game = function() {
         var salud = 9999999;
         for (var jugador in this.playeres_) {
             if(this.playeres_[jugador].salud_ < salud){
-                salud = this.playeres_[jugador].salud_;
+                this.salud_actual_[jugador] = this.playeres_[jugador].salud_;
             }
         }
-        this.salud_actual_ = salud;
 
         this.cambia_pantalla_ = true;
         for (var jugador in this.playeres_) {
@@ -1582,7 +1579,7 @@ var Game = function() {
             this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + this.counter*2;
         }
 
-        this.playeres_["intro"] = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 1000, 30000, this.salud_actual_);
+        this.playeres_["intro"] = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 1000, 30000, this.salud_inicial_);
         this.playeres_["intro"].is_intro = true;
 
         this.portal_ = {};
