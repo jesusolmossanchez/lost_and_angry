@@ -180,6 +180,7 @@ var Game = function() {
     this.tiempo_muerte_ = this.timestamp_();
     this.tiempo_shacke_ = this.timestamp_();
     this.tiempo_portal_ = this.timestamp_();
+    this.cambia_pantalla_completo = false;
 
 
     this.cambia_pantalla_ = false;
