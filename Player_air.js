@@ -3,7 +3,7 @@
 /**************************************************
 ** GAME PLAYER CLASS
 **************************************************/
-var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
+var Player = function(juego, x, y, gravedad, impulso, salud_actual, color) {
 
     this.que_pie_                = 0;
     this.angulo_                 = 0;
@@ -51,6 +51,8 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
     this.is_intro = false;
 
     this.muerto_ = false;
+
+    this.color_ = juego.hex_to_rgb_(color);
  
 
     this.update_ = function(dt) {
@@ -492,7 +494,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual) {
 
         ctx.translate(- this.ancho_ / 2, - this.alto_/2);
 
-        var color_player = "rgba(210,228,241,"+opacidad_jugador+")";
+        var color_player = "rgba("+this.color_.r+","+this.color_.g+","+this.color_.b+","+opacidad_jugador+")";
 
         juego.pinta_filas_columnas_(ctx, 0, 0, que_jugador, this.size_player_pixel_, color_player);
         //Pinta pies
