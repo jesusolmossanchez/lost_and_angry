@@ -356,7 +356,8 @@ var Game = function() {
         this.wait_start_ = this.timestamp_() + nuevo_wait;
 
         for (var i = 0; i < window.jugadores.length; i++) {
-            this.playeres_[window.jugadores[i].id] = new Player(this, 60 * Math.random(), this.alto_total_ - 100, 1000, 30000, this.salud_actual_[window.jugadores[i].id]);
+            var color_player = window.jugadores[i].color;
+            this.playeres_[window.jugadores[i].id] = new Player(this, 60 * Math.random(), this.alto_total_ - 100, 1000, 30000, this.salud_actual_[window.jugadores[i].id], color_player);
         }
 
         if(this.moustro_final_){
@@ -1588,7 +1589,10 @@ var Game = function() {
             this.intro_mueve_derecha_ = (this.ancho_total_ / 2) - 200 + this.counter*2;
         }
 
-        this.playeres_["intro"] = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 1000, 30000, this.salud_inicial_);
+
+        var color_intro = "#d2e4f1";
+
+        this.playeres_["intro"] = new Player(this, this.intro_mueve_derecha_, (this.alto_total_ / 2) + 100, 1000, 30000, this.salud_inicial_, color_intro);
         this.playeres_["intro"].is_intro = true;
 
         this.portal_ = {};
@@ -1851,15 +1855,24 @@ var Game = function() {
     };
 
     window.jugadores = [];
+    window.primer_jugador = true;
     air_console.onConnect = function(device_id) {
-        console.log("entra alguien",device_id);
 
         var nuevo_jugador = {};
         nuevo_jugador.id = device_id;
-        nuevo_jugador.color = "color1";
+
+        if(window.primer_jugador){
+            nuevo_jugador.color = "#d2e4f1";
+            window.primer_jugador = false;
+        }
+        else{
+            nuevo_jugador.color = "#"+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
+        }
+
 
         window.jugadores.push(nuevo_jugador);
-        juego.playeres_[device_id] = new Player(juego, 60 * Math.random(), juego.alto_total_ - 100, 1000, 30000, juego.salud_inicial_);
+
+        juego.playeres_[device_id] = new Player(juego, 60 * Math.random(), juego.alto_total_ - 100, 1000, 30000, juego.salud_inicial_, nuevo_jugador.color);
 
     };
 
