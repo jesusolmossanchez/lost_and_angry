@@ -268,10 +268,10 @@ var Game = function() {
 
         var alto_cosas = canvas_mobile.height - size_flecha_px*5 - 20;
 
-        this.pinta_filas_columnas_(ctx_mobile, 20, alto_cosas, flecha_izq, size_flecha_px);
-        this.pinta_filas_columnas_(ctx_mobile, 120, alto_cosas, flecha_der, size_flecha_px);
-        this.pinta_filas_columnas_(ctx_mobile, window.ancho - 180, alto_cosas, flecha_arr, size_flecha_px);
-        this.pinta_filas_columnas_(ctx_mobile, window.ancho - 80, alto_cosas, accion_boton, size_flecha_px);
+        this.pinta_filas_columnas_(ctx_mobile, 20, alto_cosas, flecha_izq, size_flecha_px, "rgba(255,255,255,0.4)");
+        this.pinta_filas_columnas_(ctx_mobile, 120, alto_cosas, flecha_der, size_flecha_px, "rgba(255,255,255,0.4)");
+        this.pinta_filas_columnas_(ctx_mobile, window.ancho - 180, alto_cosas, flecha_arr, size_flecha_px, "rgba(255,255,255,0.4)");
+        this.pinta_filas_columnas_(ctx_mobile, window.ancho - 80, alto_cosas, accion_boton, size_flecha_px, "rgba(255,255,255,0.4)");
 
         document.getElementById('controles_mobile').style.display = "block";
 
