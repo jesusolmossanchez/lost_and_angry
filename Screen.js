@@ -363,7 +363,7 @@ var Game = function() {
                 salud_player = this.salud_actual_[window.jugadores[i].id];
             }
 
-            this.playeres_[window.jugadores[i].id] = new Player(this, 60 * Math.random(), this.alto_total_ - 100, 1000, 30000, salud_player, color_player);
+            this.playeres_[window.jugadores[i].id] = new Player(this, 60 * Math.random(), this.alto_total_ - 100, 1000, 30000, salud_player, color_player, window.jugadores[i].numero);
         }
 
         if(this.moustro_final_){
@@ -1879,11 +1879,12 @@ var Game = function() {
         data_send.mensaje = "nuevo_color";
         data_send.color = nuevo_jugador.color;
         data_send.numero = window.jugadores.length + 1;
+        nuevo_jugador.numero = window.jugadores.length + 1;
         air_console.message(device_id, data_send);
 
         window.jugadores.push(nuevo_jugador);
 
-        juego.playeres_[device_id] = new Player(juego, 60 * Math.random(), juego.alto_total_ - 100, 1000, 30000, juego.salud_inicial_, nuevo_jugador.color);
+        juego.playeres_[device_id] = new Player(juego, 60 * Math.random(), juego.alto_total_ - 100, 1000, 30000, juego.salud_inicial_, nuevo_jugador.color, nuevo_jugador.numero);
 
     };
 

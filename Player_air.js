@@ -3,7 +3,82 @@
 /**************************************************
 ** GAME PLAYER CLASS
 **************************************************/
-var Player = function(juego, x, y, gravedad, impulso, salud_actual, color) {
+var Player = function(juego, x, y, gravedad, impulso, salud_actual, color, numero) {
+
+    this.numero = numero;
+    this.numeros_ = {
+                '0': [
+                    [1, 1, 1],
+                    [1, ,  1],
+                    [1, ,  1],
+                    [1, ,  1],
+                    [1, 1, 1]
+                ],
+                '1': [
+                    [ , , 1],
+                    [ , , 1],
+                    [ , , 1],
+                    [ , , 1],
+                    [ , , 1]
+                ],
+                '2': [
+                    [ 1, 1, 1],
+                    [  ,  , 1],
+                    [ 1, 1, 1],
+                    [ 1,  ,  ],
+                    [ 1, 1, 1]
+                ],
+                '3': [
+                    [ 1, 1, 1],
+                    [  ,  , 1],
+                    [ 1, 1, 1],
+                    [  ,  , 1],
+                    [ 1, 1, 1]
+                ],
+                '4': [
+                    [ 1,  , 1],
+                    [ 1,  , 1],
+                    [ 1, 1, 1],
+                    [  ,  , 1],
+                    [  ,  , 1]
+                ],
+                '5': [
+                    [ 1, 1, 1],
+                    [ 1,  ,  ],
+                    [ 1, 1, 1],
+                    [  ,  , 1],
+                    [ 1, 1, 1]
+                ],
+                '6': [
+                    [ 1, 1, 1],
+                    [ 1,  ,  ],
+                    [ 1, 1, 1],
+                    [ 1,  , 1],
+                    [ 1, 1, 1]
+                ],
+                '7': [
+                    [ 1, 1, 1],
+                    [  ,  , 1],
+                    [  ,  , 1],
+                    [  ,  , 1],
+                    [  ,  , 1]
+                ],
+                '8': [
+                    [ 1, 1, 1],
+                    [ 1,  , 1],
+                    [ 1, 1, 1],
+                    [ 1,  , 1],
+                    [ 1, 1, 1]
+                ],
+                '9': [
+                    [ 1, 1, 1],
+                    [ 1,  , 1],
+                    [ 1, 1, 1],
+                    [  ,  , 1],
+                    [ 1, 1, 1]
+                ],
+            };
+
 
     this.que_pie_                = 0;
     this.angulo_                 = 0;
@@ -495,6 +570,26 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual, color) {
         ctx.translate(- this.ancho_ / 2, - this.alto_/2);
 
         var color_player = "rgba("+this.color_.r+","+this.color_.g+","+this.color_.b+","+opacidad_jugador+")";
+
+
+
+        var p =  [
+                [ 1, 1, 1, 1,  ],
+                [ 1, 1,  , 1,  ],
+                [ 1, 1, 1, 1,  ],
+                [ 1, 1,  ,  ,  ],
+                [ 1, 1,  ,  ,  ],
+        ];
+        var flecha =  [
+                [ 1, 1, 1, 1, 1],
+                [  , 1, 1, 1,  ],
+                [  ,  , 1,  ,  ]
+        ];
+
+        this.pinta_filas_columnas_(ctx, 10, -30, p, this.size_player_pixel_, color_player);
+        this.pinta_filas_columnas_(ctx, 40, -30, this.numeros_[this.numero], this.size_player_pixel_, color_player);
+        this.pinta_filas_columnas_(ctx, 25, -30, flecha, this.size_player_pixel_, color_player);
+
 
         juego.pinta_filas_columnas_(ctx, 0, 0, que_jugador, this.size_player_pixel_, color_player);
         //Pinta pies
