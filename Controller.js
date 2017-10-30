@@ -7,10 +7,10 @@ air_console.onMessage = function(from, data) {
         window.color = data.color;
         window.numero = data.numero;
 
-        ctx.clearRect(0, 0, window.ancho, window.alto);
-        window.juego.controla_orientacion_();
         canvas_mobile   = document.getElementById('canvas_mobile');
         ctx_mobile      = canvas_mobile.getContext('2d');
+        ctx.clearRect(0, 0, window.ancho, window.alto);
+        window.juego.controla_orientacion_();
         window.juego.muestra_logo_(ctx_mobile);
     }
 
