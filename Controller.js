@@ -204,9 +204,15 @@ var Game = function() {
                 [ 1, 1,  ,  ,  ],
                 [ 1, 1,  ,  ,  ],
         ];
+        var flecha =  [
+                [ 1, 1, 1, 1, 1],
+                [  , 1, 1, 1,  ],
+                [  ,  , 1,  ,  ]
+        ];
 
-        this.pinta_filas_columnas_(ctx, window.ancho/2 - 50, y_logo + 60, p, size_logo_px, color_logo);
-        this.pinta_filas_columnas_(ctx, window.ancho/2, y_logo + 60, this.numeros_[window.numero], size_logo_px, color_logo);
+        this.pinta_filas_columnas_(ctx, window.ancho/2 - 50, y_logo + 60, p, size_logo_px * 2, color_logo);
+        this.pinta_filas_columnas_(ctx, window.ancho/2, y_logo + 60, this.numeros_[window.numero], size_logo_px * 2, color_logo);
+        this.pinta_filas_columnas_(ctx, window.ancho/2 - 25, y_logo + 110, flecha, size_logo_px * 2, color_logo);
         
         for (var i = -2; i < 2; i++) {
             var new_x_portal = x_logo + (0.5 - Math.random())*i*15;
