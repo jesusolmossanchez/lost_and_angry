@@ -18,7 +18,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual, color) {
     this.dx                     = 0;
     this.dy                     = 0;
 
-    this.friction_              = 850;
+    this.friction_              = 1850;
     this.accel_                 = 850;
     this.shoot_back_            = 2500;
 
@@ -58,7 +58,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual, color) {
     this.update_ = function(dt) {
 
 
-        
+        console.log(this.salud_);
         if(this.salud_ < 0 && !this.pre_game_over_){
             this.salud_ = 0;
             this.jump = true;
