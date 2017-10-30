@@ -243,7 +243,7 @@ var Enemigo = function(juego, x, y, tipo, r, g, b) {
             distancia_al_jugador = Math.sqrt( a*a + b*b );
 
             if(distancia_al_jugador > juego.alto_total_/2){
-                return;
+                //return;
             }
             
             if(b < 60 && a < juego.ancho_total_/2){
@@ -276,7 +276,7 @@ var Enemigo = function(juego, x, y, tipo, r, g, b) {
 
 
             var colisiona = false;
-            if(this.colisiona_player_(juego.playeres_[jugador]) && !this.muerto && !juego.is_game_over_){
+            if(this.colisiona_player_(juego.playeres_[jugador]) && !juego.playeres_[jugador].muerto_ && !this.muerto && !juego.is_game_over_){
                 colisiona = true;
                 juego.playeres_[jugador].salud_--;
                 juego.playeres_[jugador].suena_herida_();
