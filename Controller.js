@@ -212,7 +212,7 @@ var Game = function() {
 
         this.pinta_filas_columnas_(ctx, window.ancho/2 - 50, y_logo + 60, p, size_logo_px * 2, color_logo);
         this.pinta_filas_columnas_(ctx, window.ancho/2 + 10, y_logo + 60, this.numeros_[window.numero], size_logo_px * 2, color_logo);
-        this.pinta_filas_columnas_(ctx, window.ancho/2 - 25, y_logo + 130, flecha, size_logo_px * 2, color_logo);
+        this.pinta_filas_columnas_(ctx, window.ancho/2 - 20, y_logo + 130, flecha, size_logo_px * 2, color_logo);
         
         for (var i = -2; i < 2; i++) {
             var new_x_portal = x_logo + (0.5 - Math.random())*i*15;
