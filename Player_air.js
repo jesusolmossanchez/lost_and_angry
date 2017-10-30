@@ -590,7 +590,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual, color, numer
 
             juego.pinta_filas_columnas_(ctx, 0, -40, p, this.size_player_pixel_, color_player);
             juego.pinta_filas_columnas_(ctx, 20, -40, this.numeros_[this.numero], this.size_player_pixel_, color_player);
-            juego.pinta_filas_columnas_(ctx, 15, -15, flecha, this.size_player_pixel_, color_player);
+            juego.pinta_filas_columnas_(ctx, 15, -5, flecha, this.size_player_pixel_, color_player);
         }
 
 
