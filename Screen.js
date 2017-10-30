@@ -585,7 +585,7 @@ var Game = function() {
         }
 
         if(pasa_a_game_over){
-            juego.game_over_(true);
+            juego.game_over_(false);
         }
 
         this.cambia_pantalla_ = true;
