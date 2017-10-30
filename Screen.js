@@ -1878,7 +1878,7 @@ var Game = function() {
         var data_send = {};
         data_send.mensaje = "nuevo_color";
         data_send.color = nuevo_jugador.color;
-        data_send.numero = window.jugadores.length;
+        data_send.numero = window.jugadores.length + 1;
         air_console.message(device_id, data_send);
 
         window.jugadores.push(nuevo_jugador);
