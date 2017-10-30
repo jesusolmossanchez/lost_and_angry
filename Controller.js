@@ -7,6 +7,8 @@ air_console.onMessage = function(from, data) {
         window.color = data.color;
         window.numero = data.numero;
 
+        ctx.clearRect(0, 0, window.ancho, window.alto);
+        window.juego.controla_orientacion_();
         canvas_mobile   = document.getElementById('canvas_mobile');
         ctx_mobile      = canvas_mobile.getContext('2d');
         window.juego.muestra_logo_(ctx_mobile);
@@ -203,8 +205,8 @@ var Game = function() {
                 [ 1, 1,  ,  ,  ],
         ];
 
-        this.pinta_filas_columnas_(ctx, window.ancho/2 - 40, y_logo + 30, p, size_logo_px, color_logo);
-        this.pinta_filas_columnas_(ctx, window.ancho/2 - 20, y_logo + 30, this.numeros_[window.numero], size_logo_px, color_logo);
+        this.pinta_filas_columnas_(ctx, window.ancho/2 - 50, y_logo + 60, p, size_logo_px, color_logo);
+        this.pinta_filas_columnas_(ctx, window.ancho/2, y_logo + 60, this.numeros_[window.numero], size_logo_px, color_logo);
         
         for (var i = -2; i < 2; i++) {
             var new_x_portal = x_logo + (0.5 - Math.random())*i*15;
