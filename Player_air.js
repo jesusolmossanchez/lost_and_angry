@@ -586,9 +586,12 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual, color, numer
                 [  ,  , 1,  ,  ]
         ];
 
-        juego.pinta_filas_columnas_(ctx, 10, -30, p, this.size_player_pixel_, color_player);
-        juego.pinta_filas_columnas_(ctx, 40, -30, this.numeros_[this.numero], this.size_player_pixel_, color_player);
-        juego.pinta_filas_columnas_(ctx, 25, -30, flecha, this.size_player_pixel_, color_player);
+        if(this.numero){
+            
+            juego.pinta_filas_columnas_(ctx, 10, -30, p, this.size_player_pixel_, color_player);
+            juego.pinta_filas_columnas_(ctx, 40, -30, this.numeros_[this.numero], this.size_player_pixel_, color_player);
+            juego.pinta_filas_columnas_(ctx, 25, -30, flecha, this.size_player_pixel_, color_player);
+        }
 
 
         juego.pinta_filas_columnas_(ctx, 0, 0, que_jugador, this.size_player_pixel_, color_player);
