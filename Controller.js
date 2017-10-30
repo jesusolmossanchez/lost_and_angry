@@ -9,7 +9,7 @@ air_console.onMessage = function(from, data) {
 
         canvas_mobile   = document.getElementById('canvas_mobile');
         ctx_mobile      = canvas_mobile.getContext('2d');
-        ctx.clearRect(0, 0, window.ancho, window.alto);
+        ctx_mobile.clearRect(0, 0, window.ancho, window.alto);
         window.juego.controla_orientacion_();
         window.juego.muestra_logo_(ctx_mobile);
     }
@@ -211,7 +211,7 @@ var Game = function() {
         ];
 
         this.pinta_filas_columnas_(ctx, window.ancho/2 - 50, y_logo + 60, p, size_logo_px * 2, color_logo);
-        this.pinta_filas_columnas_(ctx, window.ancho/2, y_logo + 70, this.numeros_[window.numero], size_logo_px * 2, color_logo);
+        this.pinta_filas_columnas_(ctx, window.ancho/2 + 10, y_logo + 60, this.numeros_[window.numero], size_logo_px * 2, color_logo);
         this.pinta_filas_columnas_(ctx, window.ancho/2 - 20, y_logo + 130, flecha, size_logo_px * 2, color_logo);
         
         for (var i = -2; i < 2; i++) {
