@@ -1877,7 +1877,7 @@ var Game = function() {
         window.jugadores.push(nuevo_jugador);
 
         juego.playeres_[device_id] = new Player(juego, 60 * Math.random(), juego.alto_total_ - 100, 1000, 30000, 250, nuevo_jugador.color);
-
+        console.log(juego.playeres_)
     };
 
 

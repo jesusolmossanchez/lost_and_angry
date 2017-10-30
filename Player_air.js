@@ -58,7 +58,7 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual, color) {
     this.update_ = function(dt) {
 
 
-        console.log(this.salud_);
+        //console.log(this.salud_);
         if(this.salud_ < 0 && !this.pre_game_over_){
             this.salud_ = 0;
             this.jump = true;
