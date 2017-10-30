@@ -40,7 +40,6 @@ var Player = function(juego, x, y, gravedad, impulso, salud_actual, color) {
 
     this.no_dispares_counter_   = 0;
 
-    console.log("salud_",salud_actual);
     this.salud_inicial_         = salud_actual;
     this.salud_                 = salud_actual;
     //this.salud_                 = 10000000;

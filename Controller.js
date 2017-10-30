@@ -1,10 +1,15 @@
 var air_console = new AirConsole({"orientation": AirConsole.ORIENTATION_LANDSCAPE});
-
+window.numero = "0";
  // Listen for messages from other devices
 air_console.onMessage = function(from, data) {
 
     if(data.mensaje === "nuevo_color"){
         window.color = data.color;
+        window.numero = data.numero;
+
+        canvas_mobile   = document.getElementById('canvas_mobile');
+        ctx_mobile      = canvas_mobile.getContext('2d');
+        window.juego.muestra_logo_(ctx_mobile);
     }
 
 };
@@ -14,6 +19,78 @@ air_console.onMessage = function(from, data) {
 **************************************************/
 var Game = function() {
 
+    this.numeros_ = {
+                '0': [
+                    [1, 1, 1],
+                    [1, ,  1],
+                    [1, ,  1],
+                    [1, ,  1],
+                    [1, 1, 1]
+                ],
+                '1': [
+                    [ , , 1],
+                    [ , , 1],
+                    [ , , 1],
+                    [ , , 1],
+                    [ , , 1]
+                ],
+                '2': [
+                    [ 1, 1, 1],
+                    [  ,  , 1],
+                    [ 1, 1, 1],
+                    [ 1,  ,  ],
+                    [ 1, 1, 1]
+                ],
+                '3': [
+                    [ 1, 1, 1],
+                    [  ,  , 1],
+                    [ 1, 1, 1],
+                    [  ,  , 1],
+                    [ 1, 1, 1]
+                ],
+                '4': [
+                    [ 1,  , 1],
+                    [ 1,  , 1],
+                    [ 1, 1, 1],
+                    [  ,  , 1],
+                    [  ,  , 1]
+                ],
+                '5': [
+                    [ 1, 1, 1],
+                    [ 1,  ,  ],
+                    [ 1, 1, 1],
+                    [  ,  , 1],
+                    [ 1, 1, 1]
+                ],
+                '6': [
+                    [ 1, 1, 1],
+                    [ 1,  ,  ],
+                    [ 1, 1, 1],
+                    [ 1,  , 1],
+                    [ 1, 1, 1]
+                ],
+                '7': [
+                    [ 1, 1, 1],
+                    [  ,  , 1],
+                    [  ,  , 1],
+                    [  ,  , 1],
+                    [  ,  , 1]
+                ],
+                '8': [
+                    [ 1, 1, 1],
+                    [ 1,  , 1],
+                    [ 1, 1, 1],
+                    [ 1,  , 1],
+                    [ 1, 1, 1]
+                ],
+                '9': [
+                    [ 1, 1, 1],
+                    [ 1,  , 1],
+                    [ 1, 1, 1],
+                    [  ,  , 1],
+                    [ 1, 1, 1]
+                ],
+            };
  
     //devuelve el tiempo en milisegundos
     this.timestamp_ = function() {
@@ -117,6 +194,17 @@ var Game = function() {
         }
 
         this.pinta_filas_columnas_(ctx, x_logo, y_logo, logo, size_logo_px, color_logo);
+
+        var p =  [
+                [ 1, 1, 1, 1,  ],
+                [ 1, 1,  , 1,  ],
+                [ 1, 1, 1, 1,  ],
+                [ 1, 1,  ,  ,  ],
+                [ 1, 1,  ,  ,  ],
+        ];
+
+        this.pinta_filas_columnas_(ctx, window.ancho/2 - 40, y_logo + 30, p, size_logo_px, color_logo);
+        this.pinta_filas_columnas_(ctx, window.ancho/2 - 20, y_logo + 30, this.numeros_[window.numero], size_logo_px, color_logo);
         
         for (var i = -2; i < 2; i++) {
             var new_x_portal = x_logo + (0.5 - Math.random())*i*15;
@@ -275,11 +363,11 @@ var Game = function() {
         //window.ancho = window.innerWidth;
         //window.alto = window.innerHeight;
 
-        var juego = new Game();
-        juego.controla_orientacion_();
+        window.juego = new Game();
+        window.juego.controla_orientacion_();
         canvas_mobile   = document.getElementById('canvas_mobile');
         ctx_mobile      = canvas_mobile.getContext('2d');
-        juego.muestra_logo_(ctx_mobile);
+        window.juego.muestra_logo_(ctx_mobile);
 
 
 
