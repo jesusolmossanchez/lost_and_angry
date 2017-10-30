@@ -279,7 +279,7 @@ var Enemigo = function(juego, x, y, tipo, r, g, b) {
             if(this.colisiona_player_(juego.playeres_[jugador]) && !juego.playeres_[jugador].muerto_ && !this.muerto && !juego.is_game_over_){
                 colisiona = true;
                 juego.playeres_[jugador].salud_--;
-                juego.playeres_[jugador].suena_herida_();
+                //juego.playeres_[jugador].suena_herida_();
             }
 
             if(!this.muerto && !colisiona){
