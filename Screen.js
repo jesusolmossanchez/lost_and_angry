@@ -590,7 +590,7 @@ var Game = function() {
 
         this.cambia_pantalla_ = true;
         for (var jugador in this.playeres_) {
-            if (!this.playeres_[jugador].dentro_portal_){
+            if (!this.playeres_[jugador].dentro_portal_ && !this.playeres_[jugador].muerto_){
                 this.cambia_pantalla_ = false;
             }
         }
@@ -992,7 +992,7 @@ var Game = function() {
                 if(this.playeres_[jugador].centro_x_ < x_empieza_terremoto && this.playeres_[jugador].centro_x_ > x_final_terremoto){
                     if(this.playeres_[jugador].centro_y_ > (this.alto_total_ - 100)){
                         this.playeres_[jugador].salud_ = this.playeres_[jugador].salud_ - 5;
-                        this.playeres_[jugador].suena_herida_();
+                        //this.playeres_[jugador].suena_herida_();
                         for (var i = 0; i < 10; i++) {
                             this.explosions_.push(
                                 new Explosion(this.playeres_[jugador].centro_x_, this.playeres_[jugador].centro_y_, true)
