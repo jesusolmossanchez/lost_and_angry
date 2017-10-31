@@ -258,10 +258,13 @@ var Game = function() {
 
         this.pinta_filas_columnas_(ctx, x_logo, y_logo, play_again, size_logo_px, color_logo);
 
-        var again = document.getElementById("play_again").style.display = "block";
+        var again = document.getElementById("play_again");
+        var controles_mobile = document.getElementById("controles_mobile");
+
+        again.style.display = "block";
+        controles_mobile.style.display = "none";
 
         again.onclick = function() {
-            console.log("click")
             air_console.message(AirConsole.SCREEN, "jugar_again");
             
             canvas_mobile   = document.getElementById('canvas_mobile');
@@ -269,6 +272,8 @@ var Game = function() {
             ctx_mobile.clearRect(0, 0, window.ancho, window.alto);
             window.juego.controla_orientacion_();
             window.juego.muestra_logo_(ctx_mobile);
+
+            controles_mobile.style.display = "block";
             
             return false;
         };
