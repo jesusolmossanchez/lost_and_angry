@@ -263,10 +263,6 @@ var Game = function() {
         again.onclick = function() {
             console.log("click")
             air_console.message(AirConsole.SCREEN, "jugar_again");
-
-            //NO AIR
-            window.ancho = window.innerWidth;
-            window.alto = window.innerHeight;
             
             canvas_mobile   = document.getElementById('canvas_mobile');
             ctx_mobile      = canvas_mobile.getContext('2d');
