@@ -18,7 +18,7 @@ air_console.onMessage = function(from, data) {
         canvas_mobile   = document.getElementById('canvas_mobile');
         ctx_mobile      = canvas_mobile.getContext('2d');
         ctx_mobile.clearRect(0, 0, window.ancho, window.alto);
-        window.juego.pinta_play_again();
+        window.juego.pinta_play_again(ctx_mobile);
 
     }
 
