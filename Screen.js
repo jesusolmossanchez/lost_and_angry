@@ -538,10 +538,13 @@ var Game = function() {
 
         }, 2000)
 
-        var data_send = {};
-        data_send.mensaje = "game_over";
-        air_console.broadcast(data_send);
+        if(!window.mando_gameover){
+            var data_send = {};    
+            data_send.mensaje = "game_over";
 
+            air_console.broadcast(data_send);
+            window.mando_gameover = true;
+        }
     };
 
 
@@ -1845,6 +1848,8 @@ var Game = function() {
                 juego.playeres_[from].accion  = false; 
                 return false;
             case "jugar_again":
+
+                window.mando_gameover = false;
                 delete juego;
                 juego = new Game();
                 juego.setup_(false, 1800);
