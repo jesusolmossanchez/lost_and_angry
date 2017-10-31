@@ -261,17 +261,19 @@ var Game = function() {
         var again = document.getElementById("play_again").style.display = "block";
 
         again.onclick = function() {
+            console.log("click")
             window.air_console.message(AirConsole.SCREEN, "jugar_again");
-            window.location.href=window.location.href;
 
-            /*
+            //NO AIR
+            window.ancho = window.innerWidth;
+            window.alto = window.innerHeight;
+            
             canvas_mobile   = document.getElementById('canvas_mobile');
             ctx_mobile      = canvas_mobile.getContext('2d');
             ctx_mobile.clearRect(0, 0, window.ancho, window.alto);
             window.juego.controla_orientacion_();
             window.juego.muestra_logo_(ctx_mobile);
-            */
-
+            
             return false;
         };
         
