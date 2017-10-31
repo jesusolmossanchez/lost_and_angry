@@ -445,9 +445,6 @@ var Game = function() {
     this.situa_portal_ = function(portal) {
         portal.x = this.randInt_ (this.playerancho_, this.ancho_total_ - this.playerancho_);
         portal.y = this.randInt_ (0, this.alto_total_ / 1.5);        
-
-        portal.x = 120;
-        portal.y = this.alto_total_ - 120;
     };
 
     this.medical_kit_mal_situado_ = function(medical_kit) {
@@ -866,7 +863,7 @@ var Game = function() {
 
         var tiempo_medical = this.timestamp_() - 10;
         for (var jugador in this.playeres_) {
-            if(this.playeres_[jugador].tiempo_medical_ < tiempo_medical){
+            if(this.playeres_[jugador].tiempo_medical_ > tiempo_medical){
                 tiempo_medical = this.playeres_[jugador].tiempo_medical_;
             }
         }
