@@ -229,7 +229,7 @@ var Enemigo = function(juego, x, y, tipo, r, g, b) {
 
 
             if(juego.playeres_[jugador].tiempo_portal_ > juego.timestamp_()){
-                return;
+                //return;
             }
 
             if(juego.wait_start_ > juego.timestamp_()){
@@ -283,7 +283,7 @@ var Enemigo = function(juego, x, y, tipo, r, g, b) {
         //reseteo las velocidades
         this.ddx = 0;
         this.ddy = this.gravity_;
-        
+
         if(!this.muerto && !colisiona){
 
             var random_alcanzable = (Math.random()>0.9)?true:false;
