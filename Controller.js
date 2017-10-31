@@ -262,14 +262,16 @@ var Game = function() {
 
         again.onclick = function() {
             air_console.message(AirConsole.SCREEN, "jugar_again");
+            window.location.href=window.location.href;
 
-
+            /*
             canvas_mobile   = document.getElementById('canvas_mobile');
             ctx_mobile      = canvas_mobile.getContext('2d');
             ctx_mobile.clearRect(0, 0, window.ancho, window.alto);
             window.juego.controla_orientacion_();
             window.juego.muestra_logo_(ctx_mobile);
-
+            */
+            
             return false;
         };
         
