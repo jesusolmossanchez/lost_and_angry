@@ -261,213 +261,206 @@ var Enemigo = function(juego, x, y, tipo, r, g, b) {
             
 
 
-            this.centro_x_ = this.x + this.ancho_/2;
-            this.centro_y_ = this.y + this.alto_/2;
-
-            this.wasleft_    = this.dx  < 0;
-            this.wasright_   = this.dx  > 0;
-
-            var friction_   = this.friction_ * (this.falling ? 0.2 : 1);
-            var accel_      = this.accel_;
-
-            //reseteo las velocidades
-            this.ddx = 0;
-            this.ddy = this.gravity_;
-
-
             var colisiona = false;
             if(this.colisiona_player_(juego.playeres_[jugador]) && !juego.playeres_[jugador].muerto_ && !this.muerto && !juego.is_game_over_){
                 colisiona = true;
                 juego.playeres_[jugador].salud_--;
                 //juego.playeres_[jugador].suena_herida_();
             }
+        }
 
-            if(!this.muerto && !colisiona){
 
-                var random_alcanzable = (Math.random()>0.9)?true:false;
 
-                var hay_borde = this.hay_borde_();
-                if(hay_borde && !this.jumping){
-                    var random_decision = Math.random();
-                    var random_parado = (random_decision<0.1)?true:false;
-                    var random_vuelta = (random_decision<0.6)?true:false;
-                    var random_jump = (random_decision>0.8)?true:false;
-                    
-                    if(random_jump || juego.is_game_over_){
-                        this.jump = true;
-                    }
-                    else if(this.hay_alcanzable_() && random_alcanzable){
-                        this.jump = true;
-                    }
-                    else if(random_parado){
-                        this.tiempo_parado_ = juego.timestamp_() + 1000;
-                        this.jump = false;
-                    }
-                    else if(random_vuelta){
-                        //this.izquierdo_ = !this.izquierdo_;
-                        this.jump = false;
-                    }
-                    else{
-                        this.jump = false;
-                    }
-                    
-                }
-                else if(this.borde_saltable_() && random_alcanzable){
+        this.centro_x_ = this.x + this.ancho_/2;
+        this.centro_y_ = this.y + this.alto_/2;
+
+        this.wasleft_    = this.dx  < 0;
+        this.wasright_   = this.dx  > 0;
+
+        var friction_   = this.friction_ * (this.falling ? 0.2 : 1);
+        var accel_      = this.accel_;
+
+        //reseteo las velocidades
+        this.ddx = 0;
+        this.ddy = this.gravity_;
+        
+        if(!this.muerto && !colisiona){
+
+            var random_alcanzable = (Math.random()>0.9)?true:false;
+
+            var hay_borde = this.hay_borde_();
+            if(hay_borde && !this.jumping){
+                var random_decision = Math.random();
+                var random_parado = (random_decision<0.1)?true:false;
+                var random_vuelta = (random_decision<0.6)?true:false;
+                var random_jump = (random_decision>0.8)?true:false;
+                
+                if(random_jump || juego.is_game_over_){
                     this.jump = true;
                 }
                 else if(this.hay_alcanzable_() && random_alcanzable){
                     this.jump = true;
                 }
+                else if(random_parado){
+                    this.tiempo_parado_ = juego.timestamp_() + 1000;
+                    this.jump = false;
+                }
+                else if(random_vuelta){
+                    //this.izquierdo_ = !this.izquierdo_;
+                    this.jump = false;
+                }
                 else{
                     this.jump = false;
                 }
-
                 
-               
-                if (this.izquierdo_ && juego.timestamp_() > this.tiempo_parado_){
-                  this.ddx = this.ddx - accel_;
-                  this.last_left = true;
-                }
-                else if (this.wasleft_){
-                  this.ddx = this.ddx + friction_;
-                }
-              
-                if (!this.izquierdo_ && juego.timestamp_() > this.tiempo_parado_){
-                  this.ddx = this.ddx + accel_;
-                  this.last_left = false;
-                }
-                else if (this.wasright_){
-                  this.ddx = this.ddx - friction_;
-                }
-
-                
-
-                //Salto
-                if (this.jump && !this.jumping && this.tiempo_saltando_ < juego.timestamp_()){
-                    this.ddy = this.ddy - this.impulse_; 
-                    this.jumping = true;
-                    this.falling = true;
-                    this.tiempo_saltando_ = juego.timestamp_() + 1000;
-                }
-
-
-                //Si se pulsa acción
-                if(this.accion && juego.counter > this.no_dispares_counter_){
-
-
-                }
-
-
-        
             }
-        
-            this.x  = this.x  + (dt * this.dx);
-            this.y  = this.y  + (dt * this.dy);
-
-            var max_dx = this.maxdx_;
-            var acelera = this.ddx;
-            if(!this.rapido && !this.jumping){
-                max_dx = this.maxdx_ * 0.5;
-                acelera = this.ddx * 0.5;
+            else if(this.borde_saltable_() && random_alcanzable){
+                this.jump = true;
             }
-
-
-            if(!this.muerto && !colisiona){
-                this.dx = juego.bound_(this.dx + (dt * this.ddx), -max_dx, max_dx);
-                this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);
+            else if(this.hay_alcanzable_() && random_alcanzable){
+                this.jump = true;
             }
             else{
-                this.dx = 0;
-                this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);    
+                this.jump = false;
             }
+
             
+           
+            if (this.izquierdo_ && juego.timestamp_() > this.tiempo_parado_){
+              this.ddx = this.ddx - accel_;
+              this.last_left = true;
+            }
+            else if (this.wasleft_){
+              this.ddx = this.ddx + friction_;
+            }
           
-            if ((this.wasleft_  && (this.dx > 0)) ||
-                (this.wasright_ && (this.dx < 0))) {
-              this.dx = 0;
+            if (!this.izquierdo_ && juego.timestamp_() > this.tiempo_parado_){
+              this.ddx = this.ddx + accel_;
+              this.last_left = false;
             }
+            else if (this.wasright_){
+              this.ddx = this.ddx - friction_;
+            }
+
             
 
-            var abajo_exacto        = (this.y + this.alto_) % juego.MAP_.ancho_bloques_;
-            var arriba_exacto       = this.y % juego.MAP_.ancho_bloques_;
+            //Salto
+            if (this.jump && !this.jumping && this.tiempo_saltando_ < juego.timestamp_()){
+                this.ddy = this.ddy - this.impulse_; 
+                this.jumping = true;
+                this.falling = true;
+                this.tiempo_saltando_ = juego.timestamp_() + 1000;
+            }
+    
+        }
+    
+        this.x  = this.x  + (dt * this.dx);
+        this.y  = this.y  + (dt * this.dy);
+
+        var max_dx = this.maxdx_;
+        var acelera = this.ddx;
+        if(!this.rapido && !this.jumping){
+            max_dx = this.maxdx_ * 0.5;
+            acelera = this.ddx * 0.5;
+        }
 
 
-            var tiene_up = false;
-            for (var i = this.x + 5; i <= this.x + this.ancho_ - 5; i++) {
-                if(juego.cell_(i, this.y - 2)){
-                    tiene_up = true;
-                }
-            }
-            var tiene_down = false;
-            for (var j = this.x + 5; j <= this.x + this.ancho_ - 5; j++) {
-                if(juego.cell_(j, this.y + this.alto_)){
-                    tiene_down = true;
-                }
-            }
-            var tiene_left = false;
-            for (var k = this.y + 5 ; k <= this.y + this.alto_ - 5; k++) {
-                if(juego.cell_(this.x - 6, k)){
-                    tiene_left = true;
-                }
-            }
-            var tiene_right = false;
-            for (var l = this.y + 5; l <= this.y + this.alto_ - 5; l++) {
-                if(juego.cell_(this.x + this.ancho_ + 2, l)){
-                    tiene_right = true;
-                }
-            }
+        if(!this.muerto && !colisiona){
+            this.dx = juego.bound_(this.dx + (dt * this.ddx), -max_dx, max_dx);
+            this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);
+        }
+        else{
+            this.dx = 0;
+            this.dy = juego.bound_(this.dy + (dt * this.ddy), -this.maxdy_, this.maxdy_);    
+        }
+        
+      
+        if ((this.wasleft_  && (this.dx > 0)) ||
+            (this.wasright_ && (this.dx < 0))) {
+          this.dx = 0;
+        }
+        
 
-            //SI va pabajo
-            if (this.dy >= 0) {
-                if(this.y + this.alto_ > juego.alto_total_){
-                    this.y = juego.alto_total_ - this.alto_;
-                    this.dy = 0;
-                    this.jumping = false;
-                    this.falling = false;
-                }
-                if(tiene_down){
-                    this.dy = 0;
-                    this.jumping = false;
-                    this.falling = false;
-                    if(abajo_exacto){
-                        this.y = Math.floor((this.y + this.alto_)/ 20) * 20 - this.alto_;
-                    }
-                }
-            }
+        var abajo_exacto        = (this.y + this.alto_) % juego.MAP_.ancho_bloques_;
+        var arriba_exacto       = this.y % juego.MAP_.ancho_bloques_;
 
-            //Si va parriba
-            /* Lo comento, porque nunca debería tocar el techo, no? ... lo dejo por si hago algo al saltar */
-            else if (this.dy < 0) {
-                if(tiene_up && arriba_exacto){
-                    this.dy = 0;
-                }
-            }
-            
-            //Si va a la derecha
-            if (this.dx > 0) {
 
-                if(this.x + this.ancho_ >= this.limite_derecha_){
-                    this.x = 10;
-                    this.dx = -this.dx;
-                }
-                else if(tiene_right){
-                    this.dx = 0;
-                    this.izquierdo_ = !this.izquierdo_;
-                }
+        var tiene_up = false;
+        for (var i = this.x + 5; i <= this.x + this.ancho_ - 5; i++) {
+            if(juego.cell_(i, this.y - 2)){
+                tiene_up = true;
             }
-            //Si va a la izquierda
-            else if (this.dx < 0) {
+        }
+        var tiene_down = false;
+        for (var j = this.x + 5; j <= this.x + this.ancho_ - 5; j++) {
+            if(juego.cell_(j, this.y + this.alto_)){
+                tiene_down = true;
+            }
+        }
+        var tiene_left = false;
+        for (var k = this.y + 5 ; k <= this.y + this.alto_ - 5; k++) {
+            if(juego.cell_(this.x - 6, k)){
+                tiene_left = true;
+            }
+        }
+        var tiene_right = false;
+        for (var l = this.y + 5; l <= this.y + this.alto_ - 5; l++) {
+            if(juego.cell_(this.x + this.ancho_ + 2, l)){
+                tiene_right = true;
+            }
+        }
 
-                if(this.x <= this.limite_izquierda_){
-                    this.x = juego.ancho_total_ - this.ancho_;
-                    this.dx = -this.dx;
-                }
-                else if(tiene_left){
-                    this.dx = 0;
-                    this.izquierdo_ = !this.izquierdo_;
+        //SI va pabajo
+        if (this.dy >= 0) {
+            if(this.y + this.alto_ > juego.alto_total_){
+                this.y = juego.alto_total_ - this.alto_;
+                this.dy = 0;
+                this.jumping = false;
+                this.falling = false;
+            }
+            if(tiene_down){
+                this.dy = 0;
+                this.jumping = false;
+                this.falling = false;
+                if(abajo_exacto){
+                    this.y = Math.floor((this.y + this.alto_)/ 20) * 20 - this.alto_;
                 }
             }
         }
+
+        //Si va parriba
+        /* Lo comento, porque nunca debería tocar el techo, no? ... lo dejo por si hago algo al saltar */
+        else if (this.dy < 0) {
+            if(tiene_up && arriba_exacto){
+                this.dy = 0;
+            }
+        }
+        
+        //Si va a la derecha
+        if (this.dx > 0) {
+
+            if(this.x + this.ancho_ >= this.limite_derecha_){
+                this.x = 10;
+                this.dx = -this.dx;
+            }
+            else if(tiene_right){
+                this.dx = 0;
+                this.izquierdo_ = !this.izquierdo_;
+            }
+        }
+        //Si va a la izquierda
+        else if (this.dx < 0) {
+
+            if(this.x <= this.limite_izquierda_){
+                this.x = juego.ancho_total_ - this.ancho_;
+                this.dx = -this.dx;
+            }
+            else if(tiene_left){
+                this.dx = 0;
+                this.izquierdo_ = !this.izquierdo_;
+            }
+        }
+        
     };
 
     this.pinta_enemigo_ = function(dt, ctx, counter) {
