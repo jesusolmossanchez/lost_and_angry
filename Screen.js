@@ -1821,7 +1821,7 @@ var Game = function() {
 
     // Listen for messages from other devices
     air_console.onMessage = function(from, data) {
-
+        console.log(data);
         switch(data) {
             case "left":   
                 juego.playeres_[from].left  = true;
@@ -1848,16 +1848,14 @@ var Game = function() {
                 juego.playeres_[from].accion  = false; 
                 return false;
             case "jugar_again":
-                console.log("oootra")
-                window.location.href=window.location.href;
-                /*
+                console.log("oootra??")
+                
                 window.mando_gameover = false;
                 delete juego;
                 juego = new Game();
                 juego.setup_(false, 1800);
                 window.audio.play();
                 juego.empezado_ = true;
-                */
         }
 
     };
