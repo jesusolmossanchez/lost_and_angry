@@ -252,7 +252,7 @@ var Game = function() {
 
         var size_logo_px = 6;
         var x_logo = window.ancho/2 - (size_logo_px * play_again[0].length)/2;
-        var y_logo = 50;
+        var y_logo = 100;
 
         var color_logo = "#ffffff";
 
