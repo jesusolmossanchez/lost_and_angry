@@ -274,6 +274,7 @@ var Game = function() {
             window.juego.muestra_logo_(ctx_mobile);
 
             controles_mobile.style.display = "block";
+            again.style.display = "none";
             
             return false;
         };
