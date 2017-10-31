@@ -1,7 +1,7 @@
-var air_console = new AirConsole({"orientation": AirConsole.ORIENTATION_LANDSCAPE});
+window.air_console = new AirConsole({"orientation": AirConsole.ORIENTATION_LANDSCAPE});
 window.numero = "0";
  // Listen for messages from other devices
-air_console.onMessage = function(from, data) {
+window.air_console.onMessage = function(from, data) {
 
     if(data.mensaje === "nuevo_color"){
         window.color = data.color;
@@ -261,7 +261,7 @@ var Game = function() {
         var again = document.getElementById("play_again").style.display = "block";
 
         again.onclick = function() {
-            air_console.message(AirConsole.SCREEN, "jugar_again");
+            window.air_console.message(AirConsole.SCREEN, "jugar_again");
             window.location.href=window.location.href;
 
             /*
@@ -271,7 +271,7 @@ var Game = function() {
             window.juego.controla_orientacion_();
             window.juego.muestra_logo_(ctx_mobile);
             */
-            
+
             return false;
         };
         
@@ -335,49 +335,49 @@ var Game = function() {
 
         document.getElementById('der_mobile').addEventListener('touchstart', function(e){
             e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "right");
+            window.air_console.message(AirConsole.SCREEN, "right");
             this.className = "tecla_mobile pulsada";
         });
 
         document.getElementById('izq_mobile').addEventListener('touchstart', function(e){ 
             e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "left");
+            window.air_console.message(AirConsole.SCREEN, "left");
             this.className = "tecla_mobile pulsada";
         });
 
         document.getElementById('arr_mobile').addEventListener('touchstart', function(e){ 
             e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "jump");
+            window.air_console.message(AirConsole.SCREEN, "jump");
             this.className = "tecla_mobile pulsada";
         });
 
         document.getElementById('accion_mobile').addEventListener('touchstart', function(e){ 
             e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "accion");
+            window.air_console.message(AirConsole.SCREEN, "accion");
             this.className = "tecla_mobile pulsada";
         });
 
         document.getElementById('der_mobile').addEventListener('touchend', function(e){
             e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "right_false");
+            window.air_console.message(AirConsole.SCREEN, "right_false");
             this.className = "tecla_mobile";
         });
 
         document.getElementById('izq_mobile').addEventListener('touchend', function(e){ 
             e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "left_false");
+            window.air_console.message(AirConsole.SCREEN, "left_false");
             this.className = "tecla_mobile";
         });
 
         document.getElementById('arr_mobile').addEventListener('touchend', function(e){ 
             e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "jump_false");
+            window.air_console.message(AirConsole.SCREEN, "jump_false");
             this.className = "tecla_mobile";
         });
 
         document.getElementById('accion_mobile').addEventListener('touchend', function(e){ 
             e.preventDefault();
-            air_console.message(AirConsole.SCREEN, "accion_false");
+            window.air_console.message(AirConsole.SCREEN, "accion_false");
             this.className = "tecla_mobile";
         });
     };
