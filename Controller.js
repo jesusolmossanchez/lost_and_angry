@@ -250,7 +250,7 @@ var Game = function() {
                         [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
                     ];
 
-        var size_logo_px = 2;
+        var size_logo_px = 6;
         var x_logo = window.ancho/2 - (size_logo_px * play_again[0].length)/2;
         var y_logo = 50;
 
@@ -263,13 +263,13 @@ var Game = function() {
         again.onclick = function() {
             air_console.message(AirConsole.SCREEN, "jugar_again");
 
-            
+
             canvas_mobile   = document.getElementById('canvas_mobile');
             ctx_mobile      = canvas_mobile.getContext('2d');
             ctx_mobile.clearRect(0, 0, window.ancho, window.alto);
             window.juego.controla_orientacion_();
             window.juego.muestra_logo_(ctx_mobile);
-            
+
             return false;
         };
         
