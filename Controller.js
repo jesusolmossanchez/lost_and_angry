@@ -13,6 +13,14 @@ air_console.onMessage = function(from, data) {
         window.juego.controla_orientacion_();
         window.juego.muestra_logo_(ctx_mobile);
     }
+    else if(data.mensaje === "game_over"){
+
+        canvas_mobile   = document.getElementById('canvas_mobile');
+        ctx_mobile      = canvas_mobile.getContext('2d');
+        ctx_mobile.clearRect(0, 0, window.ancho, window.alto);
+        window.juego.pinta_play_again();
+
+    }
 
 };
 
@@ -219,6 +227,43 @@ var Game = function() {
             var new_y_portal = y_logo + (0.5 - Math.random())*i*15;
             this.pinta_filas_columnas_(ctx, new_x_portal, new_y_portal, logo, size_logo_px, "rgba("+this.randInt_(222,255)+","+this.randInt_(222,255)+","+this.randInt_(222,255)+",0.1)");
         }
+        
+    };
+
+
+
+    //Pinta el logo
+    this.pinta_play_again = function(ctx) {
+      
+
+        var play_again =  [
+                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1,  ,  , 1,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1, 1,  ,  , 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  ,  , 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1, 1, 1,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  ,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1, 1, 1,  , 1, 1,  , 1, 1, 1,  , 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  , 1, 1,  ,  , 1],
+                        [ 1,  ,  , 1, 1,  ,  ,  , 1, 1, 1, 1,  , 1, 1,  , 1,  ,  , 1, 1,  ,  ,  , 1, 1,  , 1,  , 1, 1, 1, 1,  , 1, 1,  , 1,  , 1, 1,  , 1, 1,  ,  , 1,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1],
+                        [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                    ];
+
+        var size_logo_px = 2;
+        var x_logo = window.ancho/2 - (size_logo_px * play_again[0].length)/2;
+        var y_logo = 50;
+
+        var color_logo = "#ffffff";
+
+        this.pinta_filas_columnas_(ctx, x_logo, y_logo, play_again, size_logo_px, color_logo);
+
+        var again = document.getElementById("play_again").style.display = "block";
+        
+        again.onclick = function() {
+            air_console.message(AirConsole.SCREEN, "jugar_again");
+            return false;
+        };
         
     };
 
