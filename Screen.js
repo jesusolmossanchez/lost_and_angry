@@ -1845,6 +1845,7 @@ var Game = function() {
                 juego.playeres_[from].accion  = false; 
                 return false;
             case "jugar_again":
+                delete juego;
                 juego = new Game();
                 juego.setup_(false, 1800);
                 window.audio.play();
