@@ -2,10 +2,10 @@
     "lang": "en",
     "dir": "ltr",
     "name": "Lost And Angry",
-    "short_name": "L&A",
+    "short_name": "Lost and Angry",
     "icons": [
       {
-        "src": "\/icono.png",
+        "src": "icono.png",
         "sizes": "80x80",
         "type": "image\/png"
       }
