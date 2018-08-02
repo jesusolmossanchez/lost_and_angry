@@ -48,7 +48,6 @@
     "theme_color": "#a9aba5",
     "background_color": "#a9aba5",
     "start_url": "\/lost_and_angry\/",
-    "display": "standalone",
     "orientation": "landscape",
     "display" : "fullscreen"
   }
