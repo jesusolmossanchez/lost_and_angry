@@ -1,0 +1,18 @@
+{
+    "lang": "en",
+    "dir": "ltr",
+    "name": "Lost And Angry",
+    "short_name": "L&A",
+    "icons": [
+      {
+        "src": "\/icono.png",
+        "sizes": "80x80",
+        "type": "image\/png"
+      }
+    ],
+    "theme_color": "#a9aba5",
+    "background_color": "#a9aba5",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "landscape"
+  }
